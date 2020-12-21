@@ -1,0 +1,19 @@
+---
+- name: Install Insights/OpenSCAP and register Insights Client
+  hosts: all
+  gather_facts: false
+  collections:
+    - redhat.insights
+    
+  tasks:
+  - name: Install Insights and OpenSCAP
+    yum:
+      name:
+        - openscap-scanner
+        - scap-security-guide
+        - insights-client
+      state: latest
+  
+  - name: Register Insights Client
+    insights_register:
+      state: present

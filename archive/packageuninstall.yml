@@ -1,0 +1,8 @@
+- name: Uninstall a package
+  hosts: all
+  tasks: 
+    - name: Uninstall a new package
+      yum:  
+        name: "{{ package }}"
+        state: removed
+

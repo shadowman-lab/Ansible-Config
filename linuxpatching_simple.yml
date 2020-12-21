@@ -1,0 +1,18 @@
+---
+- name: Patch RHEL Servers
+  hosts: all
+
+  tasks:
+    - name: upgrade all packages (yum)
+      yum:
+        name: '*'
+        state: latest
+        exclude: "{{ exclude_packages }}"
+      when: ansible_pkg_mgr == "yum"
+
+    - name: upgrade all packages (dnf)
+      dnf:
+        name: '*'
+        state: latest
+        exclude: "{{ exclude_packages }}"
+      when: ansible_pkg_mgr == "dnf"

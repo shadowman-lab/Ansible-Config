@@ -1,0 +1,12 @@
+- name: Install or uninstall a package
+  hosts: all
+  gather_facts: false
+
+  collections:
+    - chocolatey.chocolatey
+  tasks: 
+    - name: Maintain software
+      win_chocolatey:  
+        name: "{{ software }}"
+        state: "{{ state }}"
+

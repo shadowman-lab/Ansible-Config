@@ -1,0 +1,51 @@
+---
+- hosts: all
+  name: API call to access.redhat.com
+  gather_facts: false
+
+  tasks:
+
+  - name: Create empty list
+    set_fact:
+      finaloutput: []
+
+  - name: Use offline Token
+    shell: 
+      cmd: curl https://sso.redhat.com/auth/realms/redhat-external/protocol/openid-connect/token -d grant_type=refresh_token -d client_id=rhsm-api -d refresh_token={{ offline_token }}
+    register: result
+
+  - name: Split out token
+    set_fact:
+      auth_token: "{{ result.stdout.split('token\":\"')[1].split('\",\"')[0] }}"
+
+  - name: Display auth token
+    debug: 
+      var: auth_token
+
+  - name: Connect to API to pull systems
+    uri:
+      url: https://api.access.redhat.com/management/v1/subscriptions?offset={{ item }}
+      method: GET
+      return_content: yes
+      headers:
+        Authorization: "Bearer {{ auth_token }}"
+    register: output
+    loop: "{{ range(0, 500 + 1, 100)|list }}"
+    
+  - name: Gather results
+    set_fact:
+      finaloutput: "{{ finaloutput + item.json.body }}"
+    loop: "{{ output.results|flatten(levels=1) }}"
+    loop_control:
+      label: ""
+
+  - name: Display results
+    debug: 
+      msg: "{{ finaloutput }}"
+
+  - name: Create File
+    copy:
+      content: "{{ finaloutput | to_nice_json }}"
+      dest: ~/output.json
+
+   

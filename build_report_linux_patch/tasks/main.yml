@@ -1,0 +1,37 @@
+- name: create HTML report
+  template:
+    src: report.j2
+    dest: "{{ file_path }}/linuxpatch.html"
+  check_mode: no
+
+- name: copy CSS over
+  copy:
+    src: "css"
+    dest: "{{ file_path }}"
+    directory_mode: true
+  check_mode: no
+
+- name: copy logo over
+  copy:
+    src: "webpage_logo.png"
+    dest: "{{ file_path }}"
+    directory_mode: true
+  check_mode: no
+
+- name: display link to inventory report
+  debug:
+    msg: "Please go to http://{{ansible_host}}/linuxpatch.html"
+
+- name: Send Report via E-mail
+  mail:
+    host: "{{ EMAIL_HOST }}"
+    username: "{{ EMAIL_USERNAME }}"
+    password: "{{ EMAIL_PASSWORD }}"
+    port: "{{ EMAIL_PORT }}"
+    subject: "Linux Patching Report"
+    body: "{{ lookup('template', 'report.j2') }}"
+    from: tower@shadowman.dev
+    to: "alex@shadowman.dev"
+    subtype: html
+  delegate_to: localhost  
+  check_mode: no

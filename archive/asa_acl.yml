@@ -1,0 +1,16 @@
+---
+
+- hosts: all
+  gather_facts: false
+
+  tasks:
+  - name: MODIFY ACL WITH ANSIBLE
+    asa_acl:
+      lines:
+        - access-list ACL-ANSIBLE extended permit tcp any any eq 82
+        - access-list ACL-ANSIBLE extended permit tcp any any eq www
+        - access-list ACL-ANSIBLE extended permit tcp any any eq 97
+        - access-list ACL-ANSIBLE extended permit tcp any any eq 98
+        - access-list ACL-ANSIBLE extended permit tcp any any eq 99
+      match: strict
+      replace: block

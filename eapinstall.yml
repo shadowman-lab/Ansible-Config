@@ -1,0 +1,39 @@
+---
+
+- name: Install JBOSS Common and EAP
+  hosts: "{{ vm_name }}"
+  gather_facts: true
+
+  vars:
+    rhsm_subscribe_host: false
+    rhsm_disable_existing_repositories: false
+    rhsm_enable_required_repositories: false
+
+  roles:
+    - redhat-cop.jboss-common
+    - redhat-cop.jboss_eap
+
+  collections:
+    - ansible.posix
+
+  tasks:
+  
+  - name: Open Firewalld for management port
+    firewalld:
+      port: 9990/tcp
+      permanent: yes
+      state: enabled 
+    notify: restart_firewalld
+
+  - name: Open Firewalld for http
+    firewalld:
+      port: 8080/tcp
+      permanent: yes
+      state: enabled 
+    notify: restart_firewalld
+    
+  handlers:
+    - name: restart_firewalld
+      service:
+        name: firewalld
+        state: restarted

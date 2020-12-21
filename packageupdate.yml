@@ -1,0 +1,8 @@
+- name: Install or uninstall a package
+  hosts: all
+  tasks: 
+    - name: Install a new package
+      yum:  
+        name: "{{ package }}"
+        state: "{{ state }}"
+

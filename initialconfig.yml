@@ -1,0 +1,14 @@
+---
+- name: Perform inital configs of lab VMs
+  hosts: "{{ vm_name | default('all')}}"
+  gather_facts: true
+
+  tasks:
+
+  - name: RHEL config
+    include_tasks: config_rhel.yml
+    when: ansible_os_family is match("RedHat")
+
+  - name: Windows Config
+    include_tasks: config_windows.yml
+    when: ansible_os_family is match("Windows")

@@ -1,0 +1,28 @@
+---
+- name: Update firewall ports
+  hosts: all
+  gather_facts: false
+   
+  collections:
+    - ansible.posix
+
+  tasks:  
+  - name: Open Firewalld for apache
+    firewalld:
+      service: http
+      permanent: yes
+      state: enabled 
+    notify: restart_firewalld
+
+  - name: Open Firewalld for SSL
+    firewalld:
+      service: https
+      permanent: yes
+      state: enabled
+    notify: restart_firewalld
+    
+  handlers:
+    - name: restart_firewalld
+      service:
+        name: firewalld
+        state: restarted

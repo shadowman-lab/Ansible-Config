@@ -1,0 +1,11 @@
+---
+- name: Scan for compliance
+  hosts: all
+  gather_facts: false
+  tasks: 
+
+    - name: Run compliance scan using created policies
+      command: insights-client --compliance
+      register: command_result
+      failed_when: "'command not found' in command_result.stdout"
+      changed_when: command_result.rc == 0

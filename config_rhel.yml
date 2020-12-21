@@ -1,0 +1,59 @@
+---
+- name: copy SSH key
+  authorized_key:
+    user: root
+    state: present
+    key: https://github.com/lynndixon.keys
+
+- name: Set hostname
+  hostname:
+    name: "{{ inventory_hostname }}"
+  when: ansible_facts['nodename'] != inventory_hostname
+
+- name: Install Katello RPM for Satellite Server for RHEL 7
+  yum:
+    name: https://sat6.shadowman.dev/pub/katello-ca-consumer-latest.noarch.rpm
+    state: present
+  when: ansible_distribution_version is match("7.*")
+
+- name: Install Katello RPM for Satellite Server for RHEL 8
+  dnf:
+    name: https://sat6.shadowman.dev/pub/katello-ca-consumer-latest.noarch.rpm
+    state: present
+  when: ansible_distribution_version is match("8.*")
+
+- name: Use Activation Key to Register RHEL7 Machine to Satellite
+  redhat_subscription:
+    state: present
+    activationkey: "RHEL7 Everything"
+    org_id: Shadow_Man
+  when: ansible_distribution_version is match("7.*")
+
+- name: Use Activation Key to Register RHEL8 Machine to Satellite
+  redhat_subscription:
+    state: present
+    activationkey: "RHEL8"
+    org_id: Shadow_Man
+  when: ansible_distribution_version is match("8.*")
+
+- name: Enable Repositories for RHEL 7
+  rhsm_repository:
+    name:
+      - rhel-7-server-rpms
+      - rhel-7-server-extras-rpms
+      - rhel-7-server-optional-rpms
+    purge: True
+  when: ansible_distribution_version is match("7.*")
+
+- name: Enable Repositories for RHEL 8
+  rhsm_repository:
+    name:
+      - rhel-8-for-x86_64-appstream-rpms
+      - rhel-8-for-x86_64-baseos-rpms
+    purge: True
+  when: ansible_distribution_version is match("8.*")
+
+- name: Add Fancy Legal Disclaimer
+  copy:
+    src: templates/add_motd
+    dest: /etc/motd

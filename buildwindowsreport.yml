@@ -1,0 +1,26 @@
+---
+- name: Gather Facts
+  hosts: tag_Windows
+
+  vars:
+    scan_use_checksum: false
+    scan_use_recursive: false
+
+  tasks:
+
+    - name: "Scan packages (Windows)"
+      win_scan_packages:
+      when: ansible_os_family == "Windows"
+
+    - name: "Scan services (Windows)"
+      win_scan_services:
+      when: ansible_os_family == "Windows"
+
+- name: Build report with facts
+  hosts: report.shadowman.dev
+  gather_facts: no
+  tasks:
+
+    - name: build a report
+      include_role:
+        name: build_report_windows

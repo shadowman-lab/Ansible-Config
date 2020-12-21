@@ -1,0 +1,9 @@
+- name: Run exe
+  hosts: all
+  gather_facts: false
+  tasks: 
+    - name: Run hello world
+      win_command: helloworld.exe
+      args:
+        chdir: C:\Users\Administrator\Downloads
+   

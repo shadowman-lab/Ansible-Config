@@ -1,0 +1,50 @@
+---
+- hosts: tag_Windows
+  name: Windows patching playbook
+
+  collections:
+    - ansible.windows
+    
+  tasks:
+
+  - name: Check for packages to include
+    set_fact:
+      whitelist_packages: "{{ whitelist.split(',') }}"
+    when: whitelist != ''
+
+  - name: Check for packages to exclude
+    set_fact:
+      blacklist_packages: "{{ blacklist.split(',') }}"
+    when: blacklist != ''
+
+  - name: Install Windows Updates
+    win_updates:
+      category_names: "{{ categories | default(omit) }}"
+      reboot: '{{ reboot_server | default(yes) }}'
+      whitelist: "{{ whitelist_packages | default(omit) }}"
+      blacklist: "{{ blacklist_packages | default(omit) }}"
+    register: patchresult
+
+  - name: Display Patching Results
+    debug:
+      msg: "{{ patchresult.updates }}" 
+
+  - name: Set patching data for ServiceNow
+    set_stats:
+      data:
+        work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] {{ patchresult.updates | to_nice_json }}"
+    when: patchresult.found_update_count | int > 0
+
+  - name: Set patching data for ServiceNow
+    set_stats:
+      data:
+        work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] Compliant"
+    when: patchresult.found_update_count | int <= 0
+
+- name: Build patching report
+  hosts: report.shadowman.dev
+  tasks:
+
+    - name: build a report
+      include_role:
+        name: build_report_windows_patch

@@ -1,0 +1,10 @@
+- name: Update user password
+  hosts: all
+  gather_facts: false
+  tasks: 
+    - name: Change User password
+      win_user:
+        name: "{{ user_name }}"  
+        password: "{{ password }}"
+      no_log: true
+   

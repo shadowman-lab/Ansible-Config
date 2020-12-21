@@ -1,0 +1,10 @@
+- name: Update user password
+  hosts: all
+  gather_facts: false
+  tasks: 
+    - name: Change User password
+      user:
+        name: "{{ user_name }}"  
+        password: "{{ password | password_hash('sha512') }}"
+      no_log: true
+   
