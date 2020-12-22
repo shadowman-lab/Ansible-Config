@@ -1,5 +1,8 @@
 - name: Playbook to configure IPA clients with username/password
   hosts: all
+
+  collections:
+    - freeipa.ansible_freeipa
   
   roles:
   - role: ipaclient
