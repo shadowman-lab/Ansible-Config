@@ -2,3 +2,10 @@
 - name: Set timezone
   community.windows.win_timezone:
     timezone: Eastern Standard Time
+
+- name: Add to DNS
+  community.general.ipa_host:
+    name: "{{ fqdn }}"
+    ipaddress: "{{ ansible_host }}"
+    state: present
+    force: yes
