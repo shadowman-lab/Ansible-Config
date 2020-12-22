@@ -4,7 +4,7 @@
     timezone: Eastern Standard Time
 
 - name: Add to DNS
-  community.general.ipa_host:
+  ipa_host:
     name: "{{ fqdn }}"
     ip_address: "{{ ansible_host }}"
     ipa_pass: "{{ IPA_PASS }}"

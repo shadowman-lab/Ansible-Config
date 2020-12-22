@@ -11,15 +11,5 @@ collections:
 
   - name: ansible.posix
 
-  - name: ansible.netcommon
-
-  - name: google.cloud
-
-  - name: community.kubernetes
-    source: https://towerhub.shadowman.dev/api/galaxy/content/community/
-
-  - name: community.general
-    source: https://towerhub.shadowman.dev/api/galaxy/content/community/
-
 
   
