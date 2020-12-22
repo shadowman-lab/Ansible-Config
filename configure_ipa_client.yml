@@ -1,10 +1,20 @@
-- name: Playbook to configure IPA clients with username/password
+- name: Playbook to configure IPA clients
   hosts: all
+  gather_facts: false
 
-  collections:
-    - freeipa.ansible_freeipa
-  
-  roles:
-  - role: ipaclient
-    state: present
-   
+  tasks:
+
+  - name: Install IPA Client for RHEL 7
+    yum:
+      name: ipa-client
+      state: present
+    when: ansible_distribution_version is match("7.*")
+
+  - name: Install IPA Client for RHEL 8
+    dnf:
+      name: ipa-client
+      state: present
+    when: ansible_distribution_version is match("8.*")
+
+  - name: run ipa client script
+    command: "ipa-client-install --principal '{{IPA_USER}}' --password '{{ IPA_PASS }}' --enable-dns-updates --mkhomedir --unattended"
