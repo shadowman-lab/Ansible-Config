@@ -9,5 +9,8 @@ collections:
   - name: ansible.windows
     source: https://towerhub.shadowman.dev/api/galaxy/content/community/
 
+  - name: freeipa.ansible_freeipa
+    source: https://towerhub.shadowman.dev/api/galaxy/content/community/
+
   - name: ansible.posix
   
