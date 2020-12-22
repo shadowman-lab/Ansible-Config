@@ -13,4 +13,5 @@
     state: present
     force: yes
   delegate_to: localhost
+  no_log: true
   become: no
