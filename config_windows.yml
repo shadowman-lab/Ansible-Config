@@ -12,3 +12,4 @@
     ipa_user: "{{ IPA_USER }}"
     state: present
     force: yes
+  delegate_to: localhost
