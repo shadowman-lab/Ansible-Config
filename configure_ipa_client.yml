@@ -1,5 +1,5 @@
 - name: Playbook to configure IPA clients
-  hosts: all
+  hosts: "{{ vm_name | default('all')}}"
 
   tasks:
 
