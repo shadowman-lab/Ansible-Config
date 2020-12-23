@@ -16,5 +16,5 @@
 
   - name: Wait for host to come back up
     wait_for:
-      timeout: 15
+      timeout: 45
   
