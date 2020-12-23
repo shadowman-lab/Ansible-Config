@@ -24,6 +24,7 @@
       password: "{{ rhvm_password }}"
       ca_file: "{{ rhvm_cafile | default(omit) }}"
       insecure: "{{ rhvm_insecure | default(true) }}"
+    delegate_to: localhost
     when: ansible_os_family is match("RedHat")
 
   - name: Check if VM is up
@@ -35,10 +36,12 @@
     retries: 60
     delay: 5
     loop: "{{ vm_names }}"
+    delegate_to: localhost
     when: ansible_os_family is match("RedHat")
 
   - name: Logout from RHV
     ovirt_auth:
       state: absent
       ovirt_auth: "{{ ovirt_auth }}"
+    delegate_to: localhost  
     when: ansible_os_family is match("RedHat")
