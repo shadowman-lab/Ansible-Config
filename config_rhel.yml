@@ -65,19 +65,6 @@
     state: present
   when: ansible_distribution_version is match("8.*")
 
-- name: Add to DNS
-  ipa_host:
-    name: "{{ fqdn }}"
-    ip_address: "{{ ansible_host }}"
-    ipa_pass: "{{ IPA_PASS }}"
-    ipa_host: "{{ IPA_HOST }}"
-    ipa_user: "{{ IPA_USER }}"
-    state: present
-    force: yes
-  delegate_to: localhost
-  no_log: true
-  become: no
-
 - name: run ipa client script
   command: "ipa-client-install --principal '{{IPA_USER}}' --password '{{ IPA_PASS }}' --domain 'shadowman.dev' --server '{{IPA_HOST }}' --hostname '{{ fqdn }}' --enable-dns-updates --mkhomedir --unattended"
   register: output
