@@ -5,11 +5,6 @@
     state: present
     key: https://github.com/lynndixon.keys
 
-- name: Set hostname
-  hostname:
-    name: "{{ inventory_hostname }}"
-  when: ansible_facts['nodename'] != inventory_hostname
-
 - name: Install Katello RPM for Satellite Server for RHEL 7
   yum:
     name: https://sat6.shadowman.dev/pub/katello-ca-consumer-latest.noarch.rpm

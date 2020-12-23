@@ -1,0 +1,17 @@
+---
+- name: Perform hostname Set
+  hosts: "{{ vm_name | default('all')}}"
+  gather_facts: true
+
+  tasks:
+
+  - name: RHEL config
+    hostname:
+      name: "{{ inventory_hostname }}"
+    when: ansible_os_family is match("RedHat")
+
+  - name: Reboot server
+    reboot:
+    when: ansible_os_family is match("RedHat")
+
+  
