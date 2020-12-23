@@ -71,4 +71,4 @@
   when: ansible_distribution_version is match("8.*")
 
 - name: run ipa client script
-  command: "ipa-client-install --principal '{{IPA_USER}}' --password '{{ IPA_PASS }}' --enable-dns-updates --mkhomedir --unattended"
+  command: "ipa-client-install --principal '{{IPA_USER}}' --password '{{ IPA_PASS }}' --domain 'shadowman.dev' --enable-dns-updates --mkhomedir --unattended"
