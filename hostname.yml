@@ -14,4 +14,7 @@
     reboot:
     when: ansible_os_family is match("RedHat")
 
+  - name: Wait for host to come back up
+    wait_for:
+      timeout: 15
   
