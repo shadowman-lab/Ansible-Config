@@ -17,6 +17,8 @@
 
   - name: run ipa client script
     command: "ipa-client-install --principal '{{IPA_USER}}' --password '{{ IPA_PASS }}' --domain 'shadowman.dev' --server '{{IPA_HOST }}' --enable-dns-updates --mkhomedir --unattended"
+    register: output
+    failed_when: output.rc == 2
 
   - name: Add to DNS
     ipa_host:
