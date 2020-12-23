@@ -8,7 +8,7 @@
     
   tasks:
 
-  - name: RHEL config
+  - name: RHEL Hostname Set
     hostname:
       name: "{{ inventory_hostname }}"
     when: ansible_os_family is match("RedHat")
