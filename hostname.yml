@@ -3,6 +3,9 @@
   hosts: "{{ vm_name | default('all')}}"
   gather_facts: true
 
+  vars:
+    - vm_names: "{{ vm_name.split(',') }}"
+    
   tasks:
 
   - name: RHEL config
@@ -14,7 +17,28 @@
     reboot:
     when: ansible_os_family is match("RedHat")
 
-  - name: Wait for host to come back up
-    wait_for:
-      timeout: 45
-  
+  - name: Login to RHV
+    ovirt_auth:
+      hostname: "{{ rhvm_fqdn }}"
+      username: "{{ rhvm_user }}"
+      password: "{{ rhvm_password }}"
+      ca_file: "{{ rhvm_cafile | default(omit) }}"
+      insecure: "{{ rhvm_insecure | default(true) }}"
+    when: ansible_os_family is match("RedHat")
+
+  - name: Check if VM is up
+    ovirt_vm_info:
+      auth: "{{ ovirt_auth }}"
+      pattern: name={{ item }}
+    register: result
+    until:  result.ovirt_vms[0].status == "up"
+    retries: 60
+    delay: 5
+    loop: "{{ vm_names }}"
+    when: ansible_os_family is match("RedHat")
+
+  - name: Logout from RHV
+    ovirt_auth:
+      state: absent
+      ovirt_auth: "{{ ovirt_auth }}"
+    when: ansible_os_family is match("RedHat")
