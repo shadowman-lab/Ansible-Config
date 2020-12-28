@@ -13,38 +13,7 @@
       name: "{{ inventory_hostname }}"
     when: ansible_os_family is match("RedHat")
 
-  - name: Reboot server
-    reboot:
-    when: ansible_os_family is match("RedHat")
-
-  - name: Login to RHV
-    ovirt_auth:
-      hostname: "{{ rhvm_fqdn }}"
-      username: "{{ rhvm_user }}"
-      password: "{{ rhvm_password }}"
-      ca_file: "{{ rhvm_cafile | default(omit) }}"
-      insecure: "{{ rhvm_insecure | default(true) }}"
-    become: no
-    delegate_to: localhost
-    when: ansible_os_family is match("RedHat")
-
-  - name: Check if VM is up
-    ovirt_vm_info:
-      auth: "{{ ovirt_auth }}"
-      pattern: name={{ item }}
-    register: result
-    until:  result.ovirt_vms[0].status == "up"
-    retries: 60
-    delay: 5
-    loop: "{{ vm_names }}"
-    become: no
-    delegate_to: localhost
-    when: ansible_os_family is match("RedHat")
-
-  - name: Logout from RHV
-    ovirt_auth:
-      state: absent
-      ovirt_auth: "{{ ovirt_auth }}"
-    become: no
-    delegate_to: localhost  
-    when: ansible_os_family is match("RedHat")
+  - name: Restart qemu agent
+    service:
+      name: qemu-guest-agent
+      state: restarted
