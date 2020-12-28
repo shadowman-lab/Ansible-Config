@@ -1,7 +1,4 @@
 ---
-- name: Set timezone
-  community.windows.win_timezone:
-    timezone: Eastern Standard Time
 
 - name: Add to DNS
   ipa_host:
