@@ -1,0 +1,61 @@
+---
+- name: Patch RHEL Servers
+  hosts: all
+  vars:
+    exclude_packages: "{{ exclude.split(',') }}"
+
+  tasks:
+    - name: upgrade all packages (yum)
+      yum:
+        name: '*'
+        state: latest
+        exclude: "{{ exclude_packages }}"
+      when: ansible_pkg_mgr == "yum"
+      register: patchingresult
+
+    - name: upgrade all packages (dnf)
+      dnf:
+        name: '*'
+        state: latest
+        exclude: "{{ exclude_packages }}"
+      when: ansible_pkg_mgr == "dnf"
+      register: patchingresultdnf
+
+    - name: Gathering Package Facts
+      package_facts:
+
+    - name: set fact (kernel_latest_dict)
+      set_fact:
+        kernel_latest_dict: "{{ ansible_facts.packages.kernel | sort(attribute='release') | first }}"
+
+    - name: set fact (kernel_latest)
+      set_fact:
+        kernel_latest: "{{ kernel_latest_dict.version }}-{{ kernel_latest_dict.release }}.{{ kernel_latest_dict.arch }}"
+
+    - name: reboot when kernel update is available
+      reboot:
+      when: not kernel_latest == ansible_kernel
+
+    - name: Set patching data for ServiceNow Yum
+      set_stats:
+        data:
+          work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] {{ patchingresult.changes.updated | flatten(levels=1) | to_nice_json }}"
+      when: ansible_pkg_mgr == "yum" and patchingresult.changes.updated is defined
+
+    - name: Set patching data for ServiceNow Yum
+      set_stats:
+        data:
+          work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] Compliant"
+      when: ansible_pkg_mgr == "yum" and patchingresult.changes.updated is not defined
+
+    - name: Set patching data for ServiceNow DNF
+      set_stats:
+        data:
+          work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] {{ patchingresultdnf.changes.updated | flatten(levels=1)| to_nice_json }}"
+      when: ansible_pkg_mgr == "dnf" and patchingresultdnf.changes.updated is defined
+
+    - name: Set patching data for ServiceNow DNF
+      set_stats:
+        data:
+          work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] Compliant"
+      when: ansible_pkg_mgr == "dnf" and patchingresultdnf.changes.updated is not defined
