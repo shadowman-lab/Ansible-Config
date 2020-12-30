@@ -21,6 +21,14 @@
       when: ansible_pkg_mgr == "dnf"
       register: patchingresultdnf
 
+    - name: check to see if we need a reboot
+      command: needs-restarting -r
+      register: result
+
+    - name: Reboot Server if Necessary
+      reboot:
+      when: result.rc == 1
+
     - name: Set patching data for ServiceNow Yum
       set_stats:
         data:
