@@ -24,6 +24,7 @@
     - name: check to see if we need a reboot
       command: needs-restarting -r
       register: result
+      changed_when: result.rc == 1
 
     - name: Reboot Server if Necessary
       reboot:
