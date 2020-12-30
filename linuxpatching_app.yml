@@ -25,6 +25,7 @@
       command: needs-restarting -r
       register: result
       changed_when: result.rc == 1
+      check_mode: no
 
     - name: Reboot Server if Necessary
       reboot:
