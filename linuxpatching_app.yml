@@ -21,21 +21,6 @@
       when: ansible_pkg_mgr == "dnf"
       register: patchingresultdnf
 
-    - name: Gathering Package Facts
-      package_facts:
-
-    - name: set fact (kernel_latest_dict)
-      set_fact:
-        kernel_latest_dict: "{{ ansible_facts.packages.kernel | sort(attribute='release') | first }}"
-
-    - name: set fact (kernel_latest)
-      set_fact:
-        kernel_latest: "{{ kernel_latest_dict.version }}-{{ kernel_latest_dict.release }}.{{ kernel_latest_dict.arch }}"
-
-    - name: reboot when kernel update is available
-      reboot:
-      when: not kernel_latest == ansible_kernel
-
     - name: Set patching data for ServiceNow Yum
       set_stats:
         data:
