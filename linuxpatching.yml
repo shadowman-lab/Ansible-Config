@@ -21,7 +21,7 @@
       when: ansible_pkg_mgr == "dnf"
       register: patchingresultdnf
 
-    - name: check to see if we need a reboot
+    - name: Check to see if we need a reboot
       command: needs-restarting -r
       register: result
       changed_when: result.rc == 1
