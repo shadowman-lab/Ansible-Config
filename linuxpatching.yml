@@ -26,7 +26,7 @@
 
     - name: set fact (kernel_latest_dict)
       set_fact:
-        kernel_latest_dict: "{{ ansible_facts.packages.kernel | sort(attribute='release') | last }}"
+        kernel_latest_dict: "{{ ansible_facts.packages.kernel | sort(attribute='release') | first }}"
 
     - name: set fact (kernel_latest)
       set_fact:
