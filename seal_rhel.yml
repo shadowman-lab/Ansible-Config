@@ -1,9 +1,9 @@
 ---
-- name: Patch RHEL Servers
+- name: Setup RHEL for Template
   hosts: all
 
   tasks:
-  
+
     - name: Install Katello RPM for Satellite Server for RHEL 7
       yum:
         name: https://sat6.shadowman.dev/pub/katello-ca-consumer-latest.noarch.rpm
