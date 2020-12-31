@@ -1,24 +1,24 @@
-- name: create HTML report
+- name: Create HTML report
   template:
     src: report.j2
     dest: "{{ file_path }}/windowspatch.html"
   check_mode: no
 
-- name: copy CSS over
+- name: Copy CSS over
   copy:
     src: "css"
     dest: "{{ file_path }}"
     directory_mode: true
   check_mode: no
 
-- name: copy logo over
+- name: Copy logo over
   copy:
     src: "webpage_logo.png"
     dest: "{{ file_path }}"
     directory_mode: true
   check_mode: no
 
-- name: display link to inventory report
+- name: Display link to Patch report
   debug:
     msg: "Please go to http://{{ansible_host}}/windowspatch.html"
 
