@@ -47,12 +47,6 @@
         purge: True
       when: ansible_distribution_version is match("8.*")
 
-    - name: Install dnf utils RHEL 8
-      dnf:
-        name: dnf-utils
-        state: present
-      when: ansible_distribution_version is match("8.*")
-
     - name: upgrade all packages (yum)
       yum:
         name: '*'
@@ -64,16 +58,6 @@
         name: '*'
         state: latest
       when: ansible_pkg_mgr == "dnf"
-
-    - name: Check to see if we need a reboot
-      command: needs-restarting -r
-      register: result
-      changed_when: result.rc == 1
-      failed_when: result.rc > 1
-
-    - name: Reboot Server if Necessary
-      reboot:
-      when: result.rc == 1
 
     - name: Enable initial-setup service
       systemd:
