@@ -1,7 +1,6 @@
 ---
 - name: Windows patching playbook
   hosts: tag_Windows
-  gather_facts: false
 
   collections:
     - ansible.windows
