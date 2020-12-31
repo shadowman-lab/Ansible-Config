@@ -31,27 +31,3 @@
     - name: Reboot Server if Necessary
       reboot:
       when: result.rc == 1
-
-    - name: Set patching data for ServiceNow Yum
-      set_stats:
-        data:
-          work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] {{ patchingresult.changes.updated | flatten(levels=1) | to_nice_json }}"
-      when: ansible_pkg_mgr == "yum" and patchingresult.changes.updated is defined
-
-    - name: Set patching data for ServiceNow Yum
-      set_stats:
-        data:
-          work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] Compliant"
-      when: ansible_pkg_mgr == "yum" and patchingresult.changes.updated is not defined
-
-    - name: Set patching data for ServiceNow DNF
-      set_stats:
-        data:
-          work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] {{ patchingresultdnf.changes.updated | flatten(levels=1)| to_nice_json }}"
-      when: ansible_pkg_mgr == "dnf" and patchingresultdnf.changes.updated is defined
-
-    - name: Set patching data for ServiceNow DNF
-      set_stats:
-        data:
-          work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] Compliant"
-      when: ansible_pkg_mgr == "dnf" and patchingresultdnf.changes.updated is not defined

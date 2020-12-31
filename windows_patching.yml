@@ -1,6 +1,7 @@
 ---
-- hosts: tag_Windows
-  name: Windows patching playbook
+- name: Windows patching playbook
+  hosts: tag_Windows
+  gather_facts: false
 
   collections:
     - ansible.windows
@@ -33,13 +34,17 @@
     set_stats:
       data:
         work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] {{ patchresult.updates | to_nice_json }}"
-    when: patchresult.found_update_count | int > 0
+    when: 
+      - patchresult.found_update_count | int > 0
+      - ticket_number is defined
 
   - name: Set patching data for ServiceNow
     set_stats:
       data:
         work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] Compliant"
-    when: patchresult.found_update_count | int <= 0
+    when: 
+      - patchresult.found_update_count | int <= 0
+      - ticket_number is defined
 
 - name: Build patching report
   hosts: report.shadowman.dev

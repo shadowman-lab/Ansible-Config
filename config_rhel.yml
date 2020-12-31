@@ -53,7 +53,11 @@
     src: templates/add_motd
     dest: /etc/motd
 
-
+- name: Install dnf utils RHEL 8
+  dnf:
+    name: dnf-utils
+    state: present
+  when: ansible_distribution_version is match("8.*")
 
 - name: Install IPA Client for RHEL 7
   yum:

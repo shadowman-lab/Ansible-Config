@@ -1,6 +1,7 @@
 ---
-- hosts: all
-  name: Windows patching playbook
+- name: Windows patching playbook
+  hosts: all
+  gather_facts: false
 
   collections:
     - ansible.windows
@@ -28,15 +29,3 @@
   - name: Display Patching Results
     debug:
       msg: "{{ patchresult.updates }}" 
-
-  - name: Set patching data for ServiceNow
-    set_stats:
-      data:
-        work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] {{ patchresult.updates | to_nice_json }}"
-    when: patchresult.found_update_count | int > 0
-
-  - name: Set patching data for ServiceNow
-    set_stats:
-      data:
-        work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] Compliant"
-    when: patchresult.found_update_count | int <= 0
