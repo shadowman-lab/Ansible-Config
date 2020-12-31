@@ -88,7 +88,7 @@
     - name: Find files in ssh_host
       find:
         paths: /etc/ssh/
-        patterns: "ssh_host_*"
+        patterns: 'ssh_host_*'
       register: ssh_host_delete
 
     - name: Delete files in ssh_host
@@ -102,7 +102,7 @@
     - name: Find files in rules.d
       find:
         paths: /etc/udev/rules.d/
-        patterns: "70-persistent-*"
+        patterns: '70-persistent-*'
       register: rules_delete
 
     - name: Delete files in rules.d
