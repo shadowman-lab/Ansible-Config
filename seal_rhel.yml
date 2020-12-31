@@ -26,7 +26,7 @@
     - name: Use Activation Key to Register RHEL8 Machine to Satellite
       redhat_subscription:
         state: present
-        activationkey: "RHEL8"
+        activationkey: "RHEL8_Latest"
         org_id: Shadow_Man
       when: ansible_distribution_version is match("8.*")
 
