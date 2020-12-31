@@ -1,0 +1,91 @@
+---
+- name: Patch RHEL Servers
+  hosts: all
+  vars:
+    exclude_packages: "{{ exclude.split(',') }}"
+
+  tasks:
+    - name: Install Katello CA from Satellite
+      yum:
+        name: http://sat6.shadowman.dev/pub/katello-ca-consumer-latest.noarch.rpm
+        state: present
+
+    - name: Use Activation Key to Register RHEL7 Machine to Satellite
+      redhat_subscription:
+        state: present
+        activationkey: "RHEL7 Everything"
+        org_id: Shadow_Man
+      when: ansible_distribution_version is match("7.*")
+
+    - name: Use Activation Key to Register RHEL8 Machine to Satellite
+      redhat_subscription:
+        state: present
+        activationkey: "RHEL8"
+        org_id: Shadow_Man
+      when: ansible_distribution_version is match("8.*")
+
+    - name: Enable Repositories for RHEL 7
+      rhsm_repository:
+        name:
+          - rhel-7-server-rpms
+          - rhel-7-server-extras-rpms
+          - rhel-7-server-optional-rpms
+        purge: True
+      when: ansible_distribution_version is match("7.*")
+
+    - name: Enable Repositories for RHEL 8
+      rhsm_repository:
+        name:
+          - rhel-8-for-x86_64-appstream-rpms
+          - rhel-8-for-x86_64-baseos-rpms
+        purge: True
+      when: ansible_distribution_version is match("8.*")
+
+    - name: upgrade all packages (yum)
+      yum:
+        name: '*'
+        state: latest
+        exclude: "{{ exclude_packages }}"
+      when: ansible_pkg_mgr == "yum"
+      register: patchingresult
+
+    - name: upgrade all packages (dnf)
+      dnf:
+        name: '*'
+        state: latest
+        exclude: "{{ exclude_packages }}"
+      when: ansible_pkg_mgr == "dnf"
+      register: patchingresultdnf
+
+    - name: Enable initial-setup service
+      systemd:
+        name: initial-setup.service
+        enabled: yes
+
+    - name: Set Machine ID file permissions
+      file:
+        path: /etc/machine-id
+        mode: 0777
+
+    - name: Unregister this machine from Satellite
+      redhat_subscription:
+        state: present
+
+    - name: Remove and Clean all Subscription Data
+      shell: subscription-manager remove --all && subscription-manager clean
+
+    - name: Delete All Machine Specific Files
+      file:
+        state: absent
+        path: "{{ item }}"
+      with_items:
+        - /var/lib/dbus/machine-id
+        - /etc/rhsm/facts/katello.facts
+        - /etc/ssh/ssh_host_*
+        - /etc/udev/rules.d/70-persistent-*
+
+
+
+
+
+
