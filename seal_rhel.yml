@@ -84,8 +84,34 @@
       with_items:
         - /var/lib/dbus/machine-id
         - /etc/rhsm/facts/katello.facts
-        - /etc/ssh/ssh_host_*
-        - /etc/udev/rules.d/70-persistent-*
+
+    - name: Find files in ssh_host
+      find:
+        paths: /etc/ssh/
+        patterns: "ssh_host_*"
+      register: ssh_host_delete
+
+    - name: Delete files in ssh_host
+      file:
+        path: "{{ item.path }}"
+        state: absent
+      loop: "{{ ssh_host_delete.files }}"
+      loop_control:
+        label: "{{ item.path }}"
+
+    - name: Find files in rules.d
+      find:
+        paths: /etc/udev/rules.d/
+        patterns: "70-persistent-*"
+      register: rules_delete
+
+    - name: Delete files in rules.d
+      file:
+        path: "{{ item.path }}"
+        state: absent
+      loop: "{{ rules_delete.files }}"
+      loop_control:
+        label: "{{ item.path }}"
 
 
 
