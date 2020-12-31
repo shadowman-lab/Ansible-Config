@@ -63,6 +63,7 @@
       systemd:
         name: initial-setup.service
         enabled: yes
+      when: ansible_distribution_version is match("7.*")
 
     - name: Set Machine ID file permissions
       file:
