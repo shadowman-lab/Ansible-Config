@@ -42,7 +42,7 @@
     - name: Set patching data for ServiceNow Yum if system already patched
       set_stats:
         data:
-          work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] {{ status }}"
+          work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] {{ patchingresult.results | flatten() }}"
       when: ansible_pkg_mgr == "yum" and patchingresult.changes.updated is not defined
 
     - name: Set patching data for ServiceNow DNF if patching happened
@@ -54,7 +54,7 @@
     - name: Set patching data for ServiceNow DNF if system already patched
       set_stats:
         data:
-          work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] {{ status }}"
+          work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] {{ patchingresultdnf.msg }}"
       when: ansible_pkg_mgr == "dnf" and patchingresultdnf.results is not defined
 
 - name: Build patching report
