@@ -36,7 +36,7 @@
       set_stats:
         data:
           work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] {{ patchingresult.changes.updated | flatten(levels=1) | to_nice_json }}"
-      when: ansible_pkg_mgr == "yum" and patchingresult.changed.updated is defined and ticket_number is defined
+      when: ansible_pkg_mgr == "yum" and patchingresult.changes.updated is defined and ticket_number is defined
 
     - name: Set patching data for ServiceNow Yum if system already patched
       set_stats:
