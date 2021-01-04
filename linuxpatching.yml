@@ -47,7 +47,7 @@
     - name: Set patching data for ServiceNow DNF if patching happened
       set_stats:
         data:
-          work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] {{ patchingresultdnf.changes.updated | flatten(levels=1)| to_nice_json }}"
+          work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] {{ patchingresultdnf.results | flatten(levels=1)| to_nice_json }}"
       when: ansible_pkg_mgr == "dnf" and patchingresultdnf.results is defined and ticket_number is defined
 
     - name: Set patching data for ServiceNow DNF if system already patched
