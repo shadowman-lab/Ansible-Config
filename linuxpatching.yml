@@ -3,7 +3,6 @@
   hosts: all
   vars:
     exclude_packages: "{{ exclude.split(',') }}"
-    status: "Compliant"
 
   tasks:
     - name: upgrade all packages (yum)
@@ -45,17 +44,11 @@
           work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] {{ patchingresult.results | to_nice_json }}"
       when: ansible_pkg_mgr == "yum" and patchingresult.changes.updated is not defined
 
-    - name: Set patching data for ServiceNow DNF if patching happened
+    - name: Set patching data for ServiceNow DNF
       set_stats:
         data:
           work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] {{ patchingresultdnf.results | flatten(levels=1)| to_nice_json }}"
       when: ansible_pkg_mgr == "dnf" and patchingresultdnf.results is defined
-
-    - name: Set patching data for ServiceNow DNF if system already patched
-      set_stats:
-        data:
-          work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] {{ patchingresultdnf.msg }}"
-      when: ansible_pkg_mgr == "dnf" and patchingresultdnf.results is not defined
 
 - name: Build patching report
   hosts: report.shadowman.dev
