@@ -59,6 +59,9 @@
         state: latest
       when: ansible_pkg_mgr == "dnf"
 
+    - name: Reboot server to apply all update
+      reboot:
+
     - name: Enable initial-setup service
       systemd:
         name: initial-setup.service
