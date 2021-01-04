@@ -29,8 +29,8 @@
         <li> {{ packagename[0] }} - {{ packagename[1] }} </li>
 {% endfor %}
 {% elif hostvars[linux_host].patchingresultdnf.changed == true %}
-{% for packagename in hostvars[linux_host].patchingresultdnf.changes.updated|sort %}
-        <li> {{ packagename[0] }} - {{ packagename[1] }} </li>
+{% for packagename in hostvars[linux_host].patchingresultdnf.results|sort %}
+        <li> {{ packagename }} </li>
 {% endfor %}
 {% else %}
         <li> Compliant </li>
