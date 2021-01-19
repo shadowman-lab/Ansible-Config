@@ -51,7 +51,7 @@ $("document").ready(function(){
     </thead>
     <tbody>
 {% if hostvars[windows_host]['packages'] is defined %}
-{% for package in hostvars[windows_host]['packages']|dictsort %}
+{% for package in hostvars[windows_host]['packages']|sort %}
         <tr>
             <td>{{package['name']}}</td>
             <td>{{package['version']}}</td>
@@ -79,7 +79,7 @@ $("document").ready(function(){
     </thead>
     <tbody>
 {% if hostvars[windows_host]['services'] is defined %}
-{% for service in hostvars[windows_host]['services']|dictsort %}
+{% for service in hostvars[windows_host]['services']|sort %}
         <tr>
             <td>{{service['name']}}</td>
             <td>{{service['win_svc_name']}}</td>
