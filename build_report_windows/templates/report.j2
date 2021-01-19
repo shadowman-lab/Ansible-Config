@@ -33,7 +33,7 @@ $("document").ready(function(){
         </tr>
     </thead>
     <tbody>
-{% for windows_host in groups['tag_Windows'] %}
+{% for windows_host in groups['tag_Windows']|sort %}
         <tr>
             <td><p class="hostname">{{hostvars[windows_host]['inventory_hostname']}}</p>
 <!–– INTERNAL TABLE FOR PACKAGES --!>
@@ -79,7 +79,7 @@ $("document").ready(function(){
     </thead>
     <tbody>
 {% if hostvars[windows_host]['services'] is defined %}
-{% for service in hostvars[windows_host]['services']|dictsort %}
+{% for service in hostvars[windows_host]['services'] %}
         <tr>
             <td>{{service['name']}}</td>
             <td>{{service['win_svc_name']}}</td>
