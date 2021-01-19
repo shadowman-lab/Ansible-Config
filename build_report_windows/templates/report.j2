@@ -33,7 +33,7 @@ $("document").ready(function(){
         </tr>
     </thead>
     <tbody>
-{% for windows_host in groups['tag_Windows']|dictsort %}
+{% for windows_host in groups['tag_Windows']|sort %}
         <tr>
             <td><p class="hostname">{{hostvars[windows_host]['inventory_hostname']}}</p>
 <!–– INTERNAL TABLE FOR PACKAGES --!>
