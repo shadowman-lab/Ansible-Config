@@ -51,7 +51,7 @@ $("document").ready(function(){
     </thead>
     <tbody>
 {% if hostvars[windows_host]['packages'] is defined %}
-{% for package in hostvars[windows_host]['packages']|dictsort(false,'name') %}
+{% for package in hostvars[windows_host]['packages']|dictsort('name') %}
         <tr>
             <td>{{package['name']}}</td>
             <td>{{package['version']}}</td>
