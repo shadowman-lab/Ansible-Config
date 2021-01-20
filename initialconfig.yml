@@ -7,7 +7,7 @@
 
   - name: Set ansible_host
     set_fact:
-      ansible_host: "{{ devices.values() | list)[0][0] }}"
+      ansible_host: "{{ devices[0][0] }}"
 
   - name: RHEL config
     include_tasks: config_rhel.yml
