@@ -1,9 +1,16 @@
 ---
 - name: Perform inital configs of lab VMs
   hosts: "{{ vm_name | default('all')}}"
-  gather_facts: true
+  gather_facts: false
 
   tasks:
+
+  - name: Set facts for ansible_host to work with IP addr
+    set_facts:
+      ansible_host: "{{ ip_addr }}"
+
+  - name: Gather facts to work with remainder of playbook
+    setup:
 
   - name: RHEL config
     include_tasks: config_rhel.yml
