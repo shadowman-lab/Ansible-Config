@@ -5,10 +5,6 @@
 
   tasks:
 
-  - name: Set ansible_host
-    set_fact:
-      ansible_host: "{{ ip_addr }}"
-
   - name: RHEL config
     include_tasks: config_rhel.yml
     when: ansible_os_family is match("RedHat")
