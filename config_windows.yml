@@ -1,14 +1,14 @@
 ---
 
-- name: Add to DNS
-  ipa_host:
-    name: "{{ fqdn }}"
-    ip_address: "{{ ansible_host }}"
-    ipa_pass: "{{ IPA_PASS }}"
-    ipa_host: "{{ IPA_HOST }}"
-    ipa_user: "{{ IPA_USER }}"
-    state: present
-    force: yes
-  delegate_to: localhost
-  no_log: true
-  become: no
+- name: Add Windows host to AD
+  win_domain_membership:
+    dns_domain_name: ad.shadowman.dev
+    hostname: "{{ fqdn }}"
+    domain_admin_user: "{{ domainuser }}"
+    domain_admin_password: "{{ domainpassword }}"  
+    state: domain
+  register: domain_state
+
+- name: Reboot server if needed
+  ansible.windows.win_reboot:
+  when: domain_state.reboot_required
