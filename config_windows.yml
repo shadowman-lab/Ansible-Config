@@ -3,7 +3,7 @@
 - name: Add Windows host to AD
   win_domain_membership:
     dns_domain_name: ad.shadowman.dev
-    hostname: "{{ fqdn }}"
+    hostname: "{{ fqdn.split('.')[0] }}"
     domain_admin_user: "{{ domainuser }}"
     domain_admin_password: "{{ domainpassword }}"  
     state: domain
