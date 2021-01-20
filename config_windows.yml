@@ -5,7 +5,8 @@
     dns_domain_name: ad.shadowman.dev
     hostname: "{{ fqdn.split('.')[0] }}"
     domain_admin_user: "{{ domainuser }}"
-    domain_admin_password: "{{ domainpassword }}"  
+    domain_admin_password: "{{ domainpassword }}" 
+    domain_ou_path: "OU=Windows,OU=Servers,DC=ad,DC=shadowman" 
     state: domain
   register: domain_state
 
