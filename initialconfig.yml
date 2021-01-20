@@ -5,6 +5,10 @@
 
   tasks:
 
+  - name: Set ansible_host
+    set_fact:
+      ansible_host: (devices.values() | list)[0][0] if devices else None
+
   - name: RHEL config
     include_tasks: config_rhel.yml
     when: ansible_os_family is match("RedHat")
