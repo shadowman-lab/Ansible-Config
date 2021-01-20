@@ -8,6 +8,7 @@
   - name: Set facts for ansible_host to work with IP addr
     set_fact:
       ansible_host: "{{ ip_addr }}"
+    delegate_to: localhost
 
   - name: Gather facts to work with remainder of playbook
     setup:
