@@ -34,4 +34,5 @@
     to: "alex@shadowman.dev"
     subtype: html
   delegate_to: localhost  
+  become: false
   check_mode: no
