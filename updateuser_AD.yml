@@ -12,5 +12,4 @@
         update_password: on_create
         domain_username: "{{ domainuser }}"
         domain_password: "{{ domainpassword }}" 
-      no_log: true
    
