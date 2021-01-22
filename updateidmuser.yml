@@ -2,7 +2,7 @@
   hosts: localhost
   gather_facts: false
   tasks: 
-    - name: Change User password
+    - name: Update/Create IDM user
       ipa_user:
         name: "{{ user_name }}"  
         state: present
