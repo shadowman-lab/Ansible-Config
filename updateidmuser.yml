@@ -1,0 +1,17 @@
+- name: Update/Create IDM user
+  hosts: all
+  gather_facts: false
+  tasks: 
+    - name: Change User password
+      ipa_user:
+        name: "{{ user_name }}"  
+        state: present
+        givenname: "{{ first_name }}"
+        sn: "{{ last_name }}"
+        password: "{{ password }}"
+        ipa_pass: "{{ IPA_PASS }}"
+        ipa_host: "{{ IPA_HOST }}"
+        ipa_user: "{{ IPA_USER }}"
+        update_password: on_create
+      no_log: true
+   
