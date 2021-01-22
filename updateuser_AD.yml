@@ -2,26 +2,27 @@
   hosts: all
   gather_facts: false
   tasks: 
-    block:
-      - name: Create/Update/Remove User in AD
-        win_user:
-          firstname: "{{ first_name }}"  
-          surname: "{{ last_name }}"
-          name: "{{ username }}"
-          password: "{{ password }}"
-          state: "{{ state }}"
-          update_password: on_create
-          domain_username: "{{ domainuser }}"
-          domain_password: "{{ domainpassword }}" 
-    rescue:
-      - name: Create/Update/Remove User in AD due to WINRM
-        win_user:
-          firstname: "{{ first_name }}"  
-          surname: "{{ last_name }}"
-          name: "{{ username }}"
-          password: "{{ password }}"
-          state: "{{ state }}"
-          update_password: on_create
-          domain_username: "{{ domainuser }}"
-          domain_password: "{{ domainpassword }}" 
+    - name: Create/Update/Remove User in AD
+      block:
+        - name: Create/Update/Remove User in AD
+          win_user:
+            firstname: "{{ first_name }}"  
+            surname: "{{ last_name }}"
+            name: "{{ username }}"
+            password: "{{ password }}"
+            state: "{{ state }}"
+            update_password: on_create
+            domain_username: "{{ domainuser }}"
+            domain_password: "{{ domainpassword }}" 
+      rescue:
+        - name: Create/Update/Remove User in AD due to WINRM
+          win_user:
+            firstname: "{{ first_name }}"  
+            surname: "{{ last_name }}"
+            name: "{{ username }}"
+            password: "{{ password }}"
+            state: "{{ state }}"
+            update_password: on_create
+            domain_username: "{{ domainuser }}"
+            domain_password: "{{ domainpassword }}" 
    
