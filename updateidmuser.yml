@@ -1,5 +1,5 @@
 - name: Update/Create IDM user
-  hosts: all
+  hosts: localhost
   gather_facts: false
   tasks: 
     - name: Change User password
