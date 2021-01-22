@@ -1,11 +1,11 @@
-- name: Update/Create IDM user
+- name: Update/Create/Remove IDM user
   hosts: localhost
   gather_facts: false
   tasks: 
-    - name: Update/Create IDM user
+    - name: Update/Create/Remove IDM user
       ipa_user:
         name: "{{ user_name }}"  
-        state: present
+        state: "{{ state }}"
         givenname: "{{ first_name }}"
         sn: "{{ last_name }}"
         password: "{{ password }}"
