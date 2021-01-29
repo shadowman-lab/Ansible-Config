@@ -15,5 +15,5 @@
       state: latest
   
   - name: Register Insights Client
-    insights_register:
+    redhat.insights.insights_register:
       state: present

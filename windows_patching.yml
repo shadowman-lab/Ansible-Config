@@ -18,7 +18,7 @@
     when: blacklist != ''
 
   - name: Install Windows Updates
-    win_updates:
+    ansible.windows.win_updates:
       category_names: "{{ categories | default(omit) }}"
       reboot: '{{ reboot_server | default(yes) }}'
       whitelist: "{{ whitelist_packages | default(omit) }}"

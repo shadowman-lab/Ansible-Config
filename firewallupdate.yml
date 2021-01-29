@@ -8,14 +8,14 @@
 
   tasks:  
   - name: Open Firewalld for apache
-    firewalld:
+    ansible.posix.firewalld:
       service: http
       permanent: yes
       state: enabled 
     notify: restart_firewalld
 
   - name: Open Firewalld for SSL
-    firewalld:
+    ansible.posix.firewalld:
       service: https
       permanent: yes
       state: enabled

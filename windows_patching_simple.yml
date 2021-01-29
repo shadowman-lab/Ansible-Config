@@ -8,7 +8,7 @@
   tasks:
 
   - name: Install Windows Updates
-    win_updates:
+    ansible.windows.win_updates:
       category_names: "{{ categories }}"
       reboot: '{{ reboot_server }}'
       whitelist: "{{ whitelist_packages }}"
