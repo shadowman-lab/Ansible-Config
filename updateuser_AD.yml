@@ -10,6 +10,8 @@
             surname: "{{ last_name }}"
             name: "{{ username }}"
             password: "{{ password }}"
+            groups:
+              - Domain Admins
             state: "{{ state }}"
             update_password: on_create
             domain_username: "{{ domainuser }}"
@@ -21,6 +23,8 @@
             surname: "{{ last_name }}"
             name: "{{ username }}"
             password: "{{ password }}"
+            groups:
+              - Domain Admins
             state: "{{ state }}"
             update_password: on_create
             domain_username: "{{ domainuser }}"
