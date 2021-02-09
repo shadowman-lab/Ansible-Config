@@ -2,9 +2,6 @@
 - name: Add VM to AD
   hosts: "{{ vm_name }}"
   gather_facts: false
-  collections:
-    - redhat.satellite
-    - community.general
 
   tasks:
 
