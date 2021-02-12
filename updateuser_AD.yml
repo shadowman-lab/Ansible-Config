@@ -2,6 +2,7 @@
 - name: Create/Update/Remove User in AD
   hosts: all
   gather_facts: false
+  
   tasks: 
     - name: Create/Update/Remove User in AD
       win_user:
