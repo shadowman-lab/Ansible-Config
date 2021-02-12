@@ -4,9 +4,9 @@
 
   collections:
     - ansible.windows
-    
+ 
   tasks:
-
+ 
   - name: Install Windows Updates
     ansible.windows.win_updates:
       category_names: "{{ categories }}"
