@@ -5,7 +5,7 @@
   
   tasks: 
     - name: Create/Update/Remove User in AD
-      win_user:
+      win_domain_user:
         firstname: "{{ first_name }}"  
         surname: "{{ last_name }}"
         name: "{{ username }}"
