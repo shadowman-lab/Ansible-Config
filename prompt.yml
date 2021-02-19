@@ -1,0 +1,12 @@
+- name: Prompt
+  hosts: all
+  gather_facts: false
+  vars_prompt:
+    - name: answer_user
+      prompt: Enter an answer
+
+  tasks:
+    - name: Check OS version
+      debug:  
+        msg: "{{ answer_user }}" 
+   
