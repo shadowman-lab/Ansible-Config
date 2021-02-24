@@ -26,6 +26,7 @@
       zone: drop
       state: enabled
       permanent: yes
+      source: 192.168.200.3/24
     notify: restart_firewalld
 
     
