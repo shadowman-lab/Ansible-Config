@@ -20,6 +20,14 @@
       permanent: yes
       state: enabled
     notify: restart_firewalld
+
+  - name: Block all other ICMP
+    ansible.posix.firewalld:
+      zone: drop
+      state: enabled
+      permanent: yes
+    notify: restart_firewalld
+
     
   handlers:
     - name: restart_firewalld
