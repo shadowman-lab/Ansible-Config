@@ -1,5 +1,5 @@
 ---
-- name: Update firewall ports
+- name: Restore firewall for IP
   hosts: all
   gather_facts: false
    
@@ -8,7 +8,7 @@
 
   tasks:  
 
-  - name: Unblock all ICMP
+  - name: Unblock all ICMP for source addr
     ansible.posix.firewalld:
       zone: drop
       state: disabled

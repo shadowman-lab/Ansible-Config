@@ -1,5 +1,5 @@
 ---
-- name: Update firewall ports
+- name: Block IP on firewall 
   hosts: all
   gather_facts: false
    
@@ -7,21 +7,8 @@
     - ansible.posix
 
   tasks:  
-  - name: Open Firewalld for apache
-    ansible.posix.firewalld:
-      service: http
-      permanent: yes
-      state: enabled 
-    notify: restart_firewalld
 
-  - name: Open Firewalld for SSL
-    ansible.posix.firewalld:
-      service: https
-      permanent: yes
-      state: enabled
-    notify: restart_firewalld
-
-  - name: Block all other ICMP
+  - name: Block all ICMP from source address
     ansible.posix.firewalld:
       zone: drop
       state: enabled
