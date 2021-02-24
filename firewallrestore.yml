@@ -13,7 +13,7 @@
       zone: drop
       state: disabled
       permanent: yes
-      source: 192.168.200.3/24
+      source: "{{ ip_addr }}/24"
     notify: restart_firewalld
     
   handlers:
