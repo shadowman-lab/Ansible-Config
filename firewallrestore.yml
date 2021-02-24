@@ -1,0 +1,23 @@
+---
+- name: Update firewall ports
+  hosts: all
+  gather_facts: false
+   
+  collections:
+    - ansible.posix
+
+  tasks:  
+
+  - name: Unblock all ICMP
+    ansible.posix.firewalld:
+      zone: drop
+      state: disabled
+      permanent: yes
+      source: 192.168.200.3/24
+    notify: restart_firewalld
+    
+  handlers:
+    - name: restart_firewalld
+      service:
+        name: firewalld
+        state: restarted
