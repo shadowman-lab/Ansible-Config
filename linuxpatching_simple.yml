@@ -11,4 +11,5 @@
         name: '*'
         state: latest
       delegate_to: localhost
+      ansible_user: ansible
       run_once: true
