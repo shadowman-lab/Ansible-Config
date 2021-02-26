@@ -6,6 +6,8 @@
   tasks:
 
     - name: upgrade all packages (dnf)
+      become: yes
+      ansible_become_user: root
       dnf:
         name: '*'
         state: latest
