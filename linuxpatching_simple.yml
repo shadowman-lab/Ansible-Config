@@ -1,18 +1,14 @@
 ---
 - name: Patch RHEL Servers
-  hosts: localhost
+  hosts: all
+  gather_facts: false
 
   tasks:
-    - name: upgrade all packages (yum)
-      become: yes
-      yum:
-        name: '*'
-        state: latest
-      when: ansible_pkg_mgr == "yum"
 
     - name: upgrade all packages (dnf)
       become: yes
       dnf:
         name: '*'
         state: latest
-      when: ansible_pkg_mgr == "dnf"
+      delegate_to: localhost
+      run_once: true
