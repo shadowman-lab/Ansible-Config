@@ -6,7 +6,6 @@
   tasks:
 
     - name: upgrade all packages (dnf)
-      become: yes
       dnf:
         name: '*'
         state: latest
