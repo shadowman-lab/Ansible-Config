@@ -1,6 +1,6 @@
 ---
 - name: Patch RHEL Servers
-  hosts: all
+  hosts: localhost
 
   tasks:
     - name: upgrade all packages (yum)
