@@ -11,5 +11,5 @@
       dnf:
         name: '*'
         state: latest
-      connection: local
+      delegate_to: localhost
       run_once: true
