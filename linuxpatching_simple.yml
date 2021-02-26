@@ -1,14 +1,18 @@
 ---
 - name: Patch RHEL Servers
   hosts: all
-  gather_facts: false
 
   tasks:
+    - name: upgrade all packages (yum)
+      yum:
+        name: '*'
+        state: latest
+        exclude: "{{ exclude_packages }}"
+      when: ansible_pkg_mgr == "yum"
 
     - name: upgrade all packages (dnf)
-      become: yes
       dnf:
         name: '*'
         state: latest
-      delegate_to: localhost
-      run_once: true
+        exclude: "{{ exclude_packages }}"
+      when: ansible_pkg_mgr == "dnf"
