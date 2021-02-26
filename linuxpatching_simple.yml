@@ -7,10 +7,8 @@
 
     - name: upgrade all packages (dnf)
       become: yes
-      become_method: su
       dnf:
         name: '*'
         state: latest
       delegate_to: localhost
-      ansible_user: ansible
       run_once: true
