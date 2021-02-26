@@ -10,6 +10,5 @@
       dnf:
         name: '*'
         state: latest
-      delegate_to: localhost
-      ansible_user: ansible
+      connection: local
       run_once: true
