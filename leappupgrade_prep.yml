@@ -33,3 +33,7 @@
         
     - name: Run pre-upgrade
       command: "leapp preupgrade"
+
+    - name: View Upgrade Report
+      debug:
+        msg: "{{lookup('file', '/var/log/leapp/answerfile') }}"
