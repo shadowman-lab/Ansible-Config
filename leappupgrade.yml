@@ -1,0 +1,38 @@
+---
+- name: Leapp Upgrade
+  hosts: all
+  gather_facts: false
+
+  tasks:
+
+    - name: Enable Extra Repository for RHEL 7
+      rhsm_repository:
+        name: rhel-7-server-extras-rpms
+        state: enabled
+
+    - name: Unset RHSM release
+      rhsm_release:
+          release: null
+    
+    - name: Clear yum versionlock
+      command: "yum versionlock clear"
+      ignore_errors: true
+
+    - name: Install Leapp
+      yum:
+        name: 
+          - leapp
+          - leapp-repository
+        state: latest
+
+    - name: Download Leapp Data
+      get_url:
+        url: https://access.redhat.com/articles/3664871/leapp-data13.tar.gz
+        dest: /etc/leapp/files
+        mode: '0440'
+
+    - name: Unarchive
+      unarchive:
+        src: /etc/leapp/files/leapp-data13.tar.gz
+        dest: /etc/leapp/files
+        remote_src: yes
