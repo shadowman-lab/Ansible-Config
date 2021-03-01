@@ -27,7 +27,7 @@
 
     - name: Download Leapp Data
       get_url:
-        url: https://access.redhat.com/articles/3664871/leapp-data13.tar.gz
+        url: https://access.redhat.com/node/3664871/5121/0/19333901/leapp-data13.tar.gz
         dest: /etc/leapp/files
         mode: '0440'
 
