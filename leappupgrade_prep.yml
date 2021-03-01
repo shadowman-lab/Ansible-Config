@@ -30,6 +30,12 @@
         src: /home/leapp-data13.tar.gz
         dest: /etc/leapp/files
         mode: 0440
+
+    - name: Ensure root login password authorized
+      lineinfile:
+        path: /etc/ssh/sshd_config
+        regexp: '#PermitRootLogin yes'
+        line: "PermitRootLogin yes"
         
     - name: Run pre-upgrade
       command: "leapp preupgrade"
