@@ -1,5 +1,5 @@
 ---
-- name: Leapp Upgrade
+- name: Leapp Upgrade Prep
   hosts: all
   gather_facts: false
 
@@ -34,6 +34,3 @@
     - name: Run pre-upgrade
       command: "leapp preupgrade"
       ignore_errors: true
-
-    - name: View Upgrade Report
-      debug: msg="{{lookup('file', '/var/log/leapp/answerfile') }}"
