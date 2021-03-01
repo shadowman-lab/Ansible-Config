@@ -36,3 +36,6 @@
         src: /etc/leapp/files/leapp-data13.tar.gz
         dest: /etc/leapp/files
         remote_src: yes
+
+    - name: Run pre-upgrade
+      command: "leapp preupgrade"
