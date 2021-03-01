@@ -36,6 +36,11 @@
         path: /etc/ssh/sshd_config
         regexp: '#PermitRootLogin yes'
         line: "PermitRootLogin yes"
+
+    - name: Restart ssh
+      service:
+        name: sshd
+        state: restarted
         
     - name: Run pre-upgrade
       command: "leapp preupgrade"
