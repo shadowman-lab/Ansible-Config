@@ -25,14 +25,16 @@
           - leapp-repository
         state: latest
 
-    - name: Download and Unarchive
-      unarchive:
-        src: https://access.redhat.com/node/3664871/5121/0/19333901/leapp-data13.tar.gz
+    - name: Download Leapp Data
+      get_url:
+        url: https://access.redhat.com/node/3664871/5121/0/19333901/leapp-data13.tar.gz
         dest: /etc/leapp/files
-        mode: 0440
-        remote_src: yes
-        extra_opts:
-        - --strip-components=1
+        mode: '0440'
+
+    - name: Unarchive and delete
+      command: "tar -xzf leapp-data13.tar.gz -C /etc/leapp/files && rm leapp-data13.tar.gz"
+      args:
+        chdir: /etc/leapp/files
 
     - name: Run pre-upgrade
       command: "leapp preupgrade"
