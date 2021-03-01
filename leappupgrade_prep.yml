@@ -33,6 +33,7 @@
         
     - name: Run pre-upgrade
       command: "leapp preupgrade"
+      ignore_errors: true
 
     - name: View Upgrade Report
       debug:
