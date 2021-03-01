@@ -36,5 +36,4 @@
       ignore_errors: true
 
     - name: View Upgrade Report
-      debug:
-        msg: "{{lookup('file', '/var/log/leapp/answerfile') }}"
+      debug: msg="{{lookup('file', '/var/log/leapp/answerfile') }}"
