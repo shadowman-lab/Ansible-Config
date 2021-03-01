@@ -31,6 +31,8 @@
         dest: /etc/leapp/files
         mode: 0440
         remote_src: yes
+        extra_opts:
+        - --strip-components=1
 
     - name: Run pre-upgrade
       command: "leapp preupgrade"
