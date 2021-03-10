@@ -396,7 +396,7 @@ Congratulations! You can now have Tower reach out to SNOW to query and update re
         caller_id: "System Administrator"
         urgency: "{{ sn_urgency }}"
         impact: "{{ sn_impact }}"
-        u_operating_system: "{{ os_type | default(omit) }}"
+        u_operating_system: "{{ os | default(omit) }}"
         u_ip_address: "{{ ansible_host | default(omit) }}"
         u_vm_name: "{{ inventory_hostname | default(omit) }}"
         description: "{{ sn_description | default(omit) }}"
