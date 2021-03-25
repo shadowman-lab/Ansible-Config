@@ -9,12 +9,12 @@
   tasks:
 
     - name: Scan packages (Unix/Linux)
-      scan_packages:
+      shadowman.reports.scan_packages:
         os_family: '{{ ansible_os_family }}'
       when: ansible_os_family != "Windows"
 
     - name: Scan services (Unix/Linux)
-      scan_services:
+      shadowman.reports.scan_services:
       when: ansible_os_family != "Windows"
 
 - name: Build report with facts
@@ -24,4 +24,4 @@
 
     - name: build a report
       include_role:
-        name: build_report_linux
+        name: shadowman.reports.build_report_linux

@@ -56,4 +56,4 @@
 
     - name: build a report
       include_role:
-        name: build_report_linux_patch
+        name: shadowman.reports.build_report_linux_patch

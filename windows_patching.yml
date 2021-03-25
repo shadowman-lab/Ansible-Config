@@ -51,4 +51,4 @@
 
     - name: build a report
       include_role:
-        name: build_report_windows_patch
+        name: shadowman.reports.build_report_windows_patch

@@ -9,11 +9,11 @@
   tasks:
 
     - name: "Scan packages (Windows)"
-      win_scan_packages:
+      shadowman.reports.win_scan_packages:
       when: ansible_os_family == "Windows"
 
     - name: "Scan services (Windows)"
-      win_scan_services:
+      shadowman.reports.win_scan_services:
       when: ansible_os_family == "Windows"
 
 - name: Build report with facts
@@ -23,4 +23,4 @@
 
     - name: build a report
       include_role:
-        name: build_report_windows
+        name: shadowman.reports.build_report_windows
