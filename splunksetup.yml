@@ -1,0 +1,13 @@
+---
+- name: Splunk Data Input
+  hosts: all
+  gather_facts: false
+  tasks: 
+
+    - name: create splunk_data_input_network 
+      splunk.es.data_input_network:
+        name: "9199"
+        protocol: "tcp"
+        source: "http:tower_logging_collections"
+        sourcetype: "httpevent"
+        state: "present"

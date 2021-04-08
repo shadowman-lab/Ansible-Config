@@ -11,6 +11,8 @@ collections:
 
   - name: ansible.posix
 
+  - name: splunk.es
+
   - name: shadowman.reports
     source: https://towerhub.shadowman.dev/api/galaxy/content/published/
 
