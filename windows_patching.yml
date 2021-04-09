@@ -4,6 +4,9 @@
 
   collections:
     - ansible.windows
+
+  vars:
+    patching: []
     
   tasks:
 
@@ -24,6 +27,11 @@
       whitelist: "{{ whitelist_packages | default(omit) }}"
       blacklist: "{{ blacklist_packages | default(omit) }}"
     register: patchresult
+
+  - name: Loop through titles
+    set_fact:
+      patching: patching + item
+    loop: "{{ patchresult.updates.*.title }}"
 
   - name: Display Patching Results
     debug:
