@@ -27,12 +27,12 @@
     
   - name: Display Patching Results
     debug:
-      msg: "{{ patchresult | json_query('updates.*.title') }}"
+      var: "{{ patchresult | json_query('updates.*.title') }}"
 
   - name: Set patching data for ServiceNow
     set_stats:
       data:
-        work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] {{ patchresult.updates | to_nice_json }}"
+        work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] {{ patchresult | json_query('updates.*.title') }}"
     when: 
       - patchresult.found_update_count | int > 0
       - ticket_number is defined
