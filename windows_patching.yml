@@ -7,7 +7,7 @@
 
   vars:
     patching: []
-    json_query: [?installed =='false'].title'
+    json_query: "[?installed =='false'].title'"
     
   tasks:
 
