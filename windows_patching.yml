@@ -7,6 +7,7 @@
 
   vars:
     patching: []
+    json_query: [?installed =='false'].title'
     
   tasks:
 
@@ -31,7 +32,7 @@
   - name: Loop through titles
     set_fact:
       patching: patching + item
-    loop: "{{ patchresult | json_query('updates.85604fae-a5c5-4f6d-9012-3d86be1bccce.title') }}"
+    loop: "{{ patchresult | json_query(json_query) }}"
 
   - name: Display Patching Results
     debug:
