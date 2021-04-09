@@ -4,10 +4,6 @@
 
   collections:
     - ansible.windows
-
-  vars:
-    patching: []
-    json_query: "$.updates[*].title"
     
   tasks:
 
@@ -31,12 +27,12 @@
 
   - name: Set patching results
     set_fact:
-      patching: "{{ patchresult | json_query(json_query) }}"
+      patching: "{{ patchresult | json_query('updates[*].title') }}"
     
 
   - name: Display Patching Results
     debug:
-      msg: "{{ patching }}" 
+      msg: "{{ patchresult.updates }}" 
 
   - name: Set patching data for ServiceNow
     set_stats:
