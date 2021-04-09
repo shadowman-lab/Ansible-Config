@@ -24,15 +24,10 @@
       whitelist: "{{ whitelist_packages | default(omit) }}"
       blacklist: "{{ blacklist_packages | default(omit) }}"
     register: patchresult
-
-  - name: Set patching results
-    set_fact:
-      patching: "{{ patchresult | json_query('updates[*].title') }}"
     
-
   - name: Display Patching Results
     debug:
-      msg: "{{ patchresult }}" 
+      msg: "{{ patchresult | json_query('updates[*].title') }}"
 
   - name: Set patching data for ServiceNow
     set_stats:
