@@ -31,8 +31,8 @@
 
   - name: Loop through titles
     set_fact:
-      patching: patching + item
-    loop: "{{ patchresult.updates | json_query(json_query) }}"
+      patching: "{{ patchresult.updates | json_query(json_query) }}"
+    
 
   - name: Display Patching Results
     debug:
