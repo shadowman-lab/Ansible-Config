@@ -32,7 +32,7 @@
 
   - name: Display Patching Results
     debug:
-      msg: "{{ patchresult.updates }}" 
+      msg: "{{ patchresult }}" 
 
   - name: Set patching data for ServiceNow
     set_stats:
