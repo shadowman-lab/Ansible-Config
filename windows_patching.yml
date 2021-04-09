@@ -27,7 +27,7 @@
     
   - name: Display Patching Results
     debug:
-      var: "{{ patchresult | json_query('updates.*.title') }}"
+      msg: "{{ patchresult | json_query('updates.*.title') }}"
 
   - name: Set patching data for ServiceNow
     set_stats:
