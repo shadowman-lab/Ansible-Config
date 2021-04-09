@@ -7,7 +7,7 @@
 
   vars:
     patching: []
-    json_query: "[*].{Title: title}"
+    json_query: "updates[*].title"
     
   tasks:
 
@@ -31,7 +31,7 @@
 
   - name: Loop through titles
     set_fact:
-      patching: "{{ patchresult.updates | json_query(json_query) }}"
+      patching: "{{ patchresult | json_query(json_query) }}"
     
 
   - name: Display Patching Results
