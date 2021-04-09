@@ -29,14 +29,14 @@
       blacklist: "{{ blacklist_packages | default(omit) }}"
     register: patchresult
 
-  - name: Loop through titles
+  - name: Set patching results
     set_fact:
       patching: "{{ patchresult | json_query(json_query) }}"
     
 
   - name: Display Patching Results
     debug:
-      msg: "{{ patchresult.updates }}" 
+      msg: "{{ patching }}" 
 
   - name: Set patching data for ServiceNow
     set_stats:
