@@ -7,7 +7,7 @@
 
   vars:
     patching: []
-    json_query: "[*].title"
+    json_query: "[*].{Title: title}"
     
   tasks:
 
