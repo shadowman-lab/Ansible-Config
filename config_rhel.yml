@@ -1,4 +1,8 @@
 ---
+- name: Ensure hostname is set
+  hostname:
+    name: "{{ inventory_hostname }}"
+    
 - name: copy SSH key
   authorized_key:
     user: root
