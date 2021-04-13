@@ -1,6 +1,7 @@
 ---
 - name: Windows reboot
   hosts: all
+  gather_facts: false
 
   collections:
     - ansible.windows
