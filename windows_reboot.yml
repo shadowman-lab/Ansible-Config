@@ -1,0 +1,11 @@
+---
+- name: Windows reboot
+  hosts: all
+
+  collections:
+    - ansible.windows
+ 
+  tasks:
+ 
+  - name: Reboot Windows Server
+    ansible.windows.win_reboot:
