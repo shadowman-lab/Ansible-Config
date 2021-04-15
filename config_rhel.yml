@@ -9,12 +9,14 @@
   yum:
     name: https://sat6.shadowman.dev/pub/katello-ca-consumer-latest.noarch.rpm
     state: present
+    disable_gpg_check: true
   when: ansible_distribution_version is match("7.*")
 
 - name: Install Katello RPM for Satellite Server for RHEL 8
   dnf:
     name: https://sat6.shadowman.dev/pub/katello-ca-consumer-latest.noarch.rpm
     state: present
+    disable_gpg_check: true
   when: ansible_distribution_version is match("8.*")
 
 - name: Use Activation Key to Register RHEL7 Machine to Satellite
