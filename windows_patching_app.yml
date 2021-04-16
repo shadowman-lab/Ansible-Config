@@ -28,4 +28,4 @@
 
   - name: Display Patching Results
     debug:
-      msg: "{{ patchresult.updates }}" 
+      msg: "{{ patchresult | json_query('updates.*.title') }}"
