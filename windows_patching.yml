@@ -33,6 +33,7 @@
     set_stats:
       data:
         work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] {{ patchresult | json_query('updates.*.title') | to_nice_json }}"
+        expose_to_cloud_redhat_com_results: "{{ inventory_hostname }}:{{ patchresult | json_query('updates.*.title') | to_nice_json }}"
     when: 
       - patchresult.found_update_count | int > 0
       - ticket_number is defined
@@ -41,6 +42,7 @@
     set_stats:
       data:
         work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] Compliant"
+        expose_to_cloud_redhat_com_results: "{{ inventory_hostname }}: Compliant"
     when: 
       - patchresult.found_update_count | int <= 0
       - ticket_number is defined
