@@ -5,7 +5,7 @@
   
   tasks: 
     - name: Create/Update/Remove User in AD
-      win_domain_user:
+      ansible.windows.win_domain_user:
         firstname: "{{ first_name }}"  
         surname: "{{ last_name }}"
         name: "{{ username }}"
