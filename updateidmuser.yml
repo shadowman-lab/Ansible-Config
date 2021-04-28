@@ -38,10 +38,11 @@
         name: "{{ user_name }}"  
         state: "{{ state }}"
         givenname: "{{ first_name }}"
-        gid: "{{ group_id|default(omit) }}"
+        gidnumber: "{{ group_id|default(omit) }}"
         sn: "{{ last_name }}"
         password: "{{ password }}"
         ipa_pass: "{{ IPA_PASS }}"
         ipa_host: "{{ IPA_HOST }}"
         ipa_user: "{{ IPA_USER }}"
+      no_log: true
    
