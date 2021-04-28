@@ -7,7 +7,6 @@
         name: "{{ group_name }}"  
         state: "{{ state }}"
         user: "{{ users }}"
-        password: "{{ password }}"
         ipa_pass: "{{ IPA_PASS }}"
         ipa_host: "{{ IPA_HOST }}"
         ipa_user: "{{ IPA_USER }}"
