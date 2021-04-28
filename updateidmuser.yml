@@ -2,11 +2,43 @@
   hosts: localhost
   gather_facts: false
   tasks: 
+
+    - name: Set Group ID for application
+      set_fact:
+        group_id: "948600032"
+      when: group|default("False") == "application"
+
+    - name: Set Group ID for cloud
+      set_fact:
+        group_id: "948600033"
+      when: group|default("False") == "cloud"
+
+    - name: Set Group ID for network
+      set_fact:
+        group_id: "948600034"
+      when: group|default("False") == "network"
+    
+    - name: Set Group ID for security
+      set_fact:
+        group_id: "948600035"
+      when: group|default("False") == "security"
+
+    - name: Set Group ID for linux
+      set_fact:
+        group_id: "948600036"
+      when: group|default("False") == "linux"
+
+    - name: Set Group ID for windows
+      set_fact:
+        group_id: "948600037"
+      when: group|default("False") == "windows"
+
     - name: Update/Create/Remove IDM user
       ipa_user:
         name: "{{ user_name }}"  
         state: "{{ state }}"
         givenname: "{{ first_name }}"
+        gid: "{{ group_id|default(omit) }}"
         sn: "{{ last_name }}"
         password: "{{ password }}"
         ipa_pass: "{{ IPA_PASS }}"
