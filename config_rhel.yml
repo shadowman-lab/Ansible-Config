@@ -77,3 +77,4 @@
   command: "ipa-client-install --principal '{{IPA_USER}}' --password '{{ IPA_PASS }}' --hostname '{{ fqdn }}' --enable-dns-updates --mkhomedir --unattended"
   register: output
   failed_when: output.rc == 2 or output.rc >= 4
+  changed_when: output.rc == 0
