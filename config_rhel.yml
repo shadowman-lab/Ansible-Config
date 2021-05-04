@@ -50,7 +50,7 @@
     purge: True
   when: ansible_distribution_version is match("8.*")
 
-- name: Add Fancy Legal Disclaimer
+- name: Add Fancy Legal Disclaimer (MOTD)
   copy:
     src: templates/add_motd
     dest: /etc/motd
@@ -73,7 +73,7 @@
     state: present
   when: ansible_distribution_version is match("8.*")
 
-- name: run ipa client script
+- name: Run IPA Client Script to add to IDM
   command: "ipa-client-install --principal '{{IPA_USER}}' --password '{{ IPA_PASS }}' --hostname '{{ fqdn }}' --enable-dns-updates --mkhomedir --unattended"
   register: output
   failed_when: output.rc == 2 or output.rc >= 4
