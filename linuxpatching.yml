@@ -15,7 +15,7 @@
 
     - name: Display RHEL7 patching Results
       debug:
-        msg: "{{ patchingresult.changes.updated|default("Nothing to do here, all packages are up to date") | flatten(levels=1) | to_nice_json }}"
+        msg: "{{ patchingresult.changes.updated|default('Nothing to do here, all packages are up to date') | flatten(levels=1) | to_nice_json }}"
 
     - name: upgrade all packages (dnf)
       dnf:
