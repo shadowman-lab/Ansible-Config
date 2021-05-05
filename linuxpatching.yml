@@ -15,8 +15,8 @@
 
     - name: Display RHEL7 patching Results
       debug:
-        msg: "{{ patchingresult.changes.updated|default('Nothing to do here, all packages are up to date') }}"
-      when: ansible_pkg_mgr == "yum"
+        msg: "{{ patchingresult.changes.updated|flatten }}"
+      when: ansible_pkg_mgr == "yum" AND patchingresult.changes.updated is defined
 
     - name: upgrade all packages (dnf)
       dnf:
