@@ -15,7 +15,7 @@
 
     - name: Display RHEL7 patching Results
       debug:
-        msg: "{{ patchingresult.changes.updated |flatten(levels=2) }}"
+        msg: "{{ patchingresult.changes.updated |flatten(levels=3) }}"
       when: 
         - ansible_pkg_mgr == "yum"
         - patchingresult.changes.updated is defined
