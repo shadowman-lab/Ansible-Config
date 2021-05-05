@@ -37,7 +37,7 @@
         data:
           work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] {{ patchingresult.changes.updated | flatten(levels=1) | to_nice_json }}"
           expose_to_cloud_redhat_com_results: "{{ inventory_hostname }}:{{ patchingresult.changes.updated | flatten(levels=1) | to_nice_json }}"
-          patchingresults: "{{ patchingresult.changes.updated | flatten(levels=1) | to_nice_json }}"
+          results: "{{ patchingresult.changes.updated | flatten(levels=0) | to_nice_json }}"
       when: ansible_pkg_mgr == "yum" and patchingresult.changes.updated is defined
 
     - name: Set patching data for ServiceNow Yum if system already patched
@@ -45,7 +45,7 @@
         data:
           work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] {{ patchingresult.results | to_nice_json }}"
           expose_to_cloud_redhat_com_results: "{{ inventory_hostname }}:{{ patchingresult.results| to_nice_json }}"
-          patchingresults: "{{ patchingresult.changes.results| to_nice_json }}"
+          results: "{{ patchingresult.results| to_nice_json }}"
       when: ansible_pkg_mgr == "yum" and patchingresult.changes.updated is not defined
 
     - name: Set patching data for ServiceNow DNF
@@ -53,12 +53,10 @@
         data:
           work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] {{ patchingresultdnf.results | flatten(levels=1)| to_nice_json }}"
           expose_to_cloud_redhat_com_results: "{{ inventory_hostname }}:{{ patchingresultdnf.results | flatten(levels=1) | to_nice_json }}"
-          patchingresults: "{{ patchingresultdnf.results | flatten(levels=1) | to_nice_json }}"
+          results: "{{ patchingresultdnf.results | flatten(levels=0) | to_nice_json }}"
       when: ansible_pkg_mgr == "dnf" and patchingresultdnf.results is defined
 
-    - name: Display Patching Results
-      debug:
-        msg: "{{ patchingresults }}"
+    
 
 - name: Build patching report
   hosts: report.shadowman.dev
