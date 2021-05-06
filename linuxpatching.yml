@@ -25,7 +25,7 @@
 
     - name: Display RHEL 7 Patching Results
       debug:
-        msg: "{{ myresults|default("System is up to date") }}"
+        msg: "{{ myresults | default('System is up to date') }}"
       when: 
         - ansible_pkg_mgr == "yum"
 
