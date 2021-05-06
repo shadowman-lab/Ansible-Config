@@ -19,7 +19,7 @@
       loop: "{{ patchingresult.changes.updated }}"
       when: 
         - ansible_pkg_mgr == "yum"
-        - patchingresult.changes.updated is define
+        - patchingresult.changes.updated is defined
 
     - name: Display RHEL7 Packages Updated
       debug:
