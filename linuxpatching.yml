@@ -15,7 +15,7 @@
 
     - name: Combine results into single line
       set_fact:
-        myresults: "{{ myresults | default([]) | combine({item[0]: item[1]}) }}"
+        myresults: "{{ myresults | default([]) + combine({item[0]: item[1]}) }}"
       loop: "{{ patchingresult.changes.updated }}"
       loop_control:
         label: "{{ item[0] }}"
