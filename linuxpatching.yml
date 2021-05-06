@@ -23,7 +23,7 @@
         - ansible_pkg_mgr == "yum"
         - patchingresult.changes.updated is defined
 
-    - name: Display RHEL7 Packages Updated
+    - name: Display RHEL7 Patching Results
       debug:
         msg: "{{ myresults }}"
       when: 
@@ -38,7 +38,7 @@
       when: ansible_pkg_mgr == "dnf"
       register: patchingresultdnf
 
-    - name: Display RHEL8 patching Results
+    - name: Display RHEL8 Patching Results
       debug:
         msg: "{{ patchingresultdnf.results }}"
       when: ansible_pkg_mgr == "dnf"
