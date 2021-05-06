@@ -13,9 +13,17 @@
       when: ansible_pkg_mgr == "yum"
       register: patchingresult
 
+    - name: Combine results into single line
+      set_fact:
+        myresults: "{{ myresults | default({}) | combine({item[0]: item[1]}) }}"
+      loop: "{{ patchingresult.changes.updated }}"
+      when: 
+        - ansible_pkg_mgr == "yum"
+        - patchingresult.changes.updated is define
+
     - name: Display RHEL7 Packages Updated
       debug:
-        msg: "{{ patchingresult | json_query('changes.updated.*[0]') }}"
+        msg: "{{ myresults }}"
       when: 
         - ansible_pkg_mgr == "yum"
         - patchingresult.changes.updated is defined
