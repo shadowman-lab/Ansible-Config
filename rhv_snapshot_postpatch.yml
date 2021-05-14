@@ -24,14 +24,21 @@
     vm_names: "{{ vm_name.split(',') }}"
 
   tasks:
-    - name: Remmove Snapshot on VM(s)
+
+    - name: Pull snapshot ID for a VM
+      redhat.rhv.ovirt_snapshot_info:
+        auth: "{{ ovirt_auth }}"
+        vm: "{{ inventory_hostname }}"
+        description: "pre_patch"
+      register: snapshot
+      delegate_to: localhost
+
+    - name: Remove Snapshot on VM(s)
       redhat.rhv.ovirt_snapshot:
         auth: "{{ ovirt_auth }}"
         vm_name: "{{ inventory_hostname }}"
-        description: "pre_patch"
-        use_memory: false
+        snapshot_id: "{{ snapshot.ovirt_snapshots[0].id }}"
         state: absent
-        wait: yes
       register: snapshot
       delegate_to: localhost
 
