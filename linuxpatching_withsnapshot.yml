@@ -31,14 +31,14 @@
 
       rescue:
         - name: Login to RHV
-        redhat.rhv.ovirt_auth:
-          hostname: "{{ rhvm_fqdn }}"
-          username: "{{ rhvm_user }}"
-          password: "{{ rhvm_password }}"
-          ca_file: "{{ rhvm_cafile | default(omit) }}"
-          insecure: "{{ rhvm_insecure | default(true) }}"
-        delegate_to: localhost
-        run_once: true
+          redhat.rhv.ovirt_auth:
+            hostname: "{{ rhvm_fqdn }}"
+            username: "{{ rhvm_user }}"
+            password: "{{ rhvm_password }}"
+            ca_file: "{{ rhvm_cafile | default(omit) }}"
+            insecure: "{{ rhvm_insecure | default(true) }}"
+          delegate_to: localhost
+          run_once: true
   
         - name: Pull snapshot ID for a VM
           redhat.rhv.ovirt_snapshot_info:
