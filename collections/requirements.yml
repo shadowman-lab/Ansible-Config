@@ -16,5 +16,7 @@ collections:
   - name: shadowman.reports
     source: https://towerhub.shadowman.dev/api/galaxy/content/published/
 
+  - name: redhat.rhv
+
 
   
