@@ -45,6 +45,7 @@
             auth: "{{ ovirt_auth }}"
             vm: "{{ inventory_hostname }}"
             description: "pre_patch"
+          delegate_to: localhost
           register: snapshot
 
         - name: Stop VM
@@ -53,6 +54,7 @@
             name: "{{ inventory_hostname }}"
             state: stopped
             wait: yes
+          delegate_to: localhost
 
         - name: Restore from Snapshot
           redhat.rhv.ovirt_snapshot:
