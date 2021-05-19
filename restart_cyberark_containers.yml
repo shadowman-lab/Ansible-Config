@@ -1,0 +1,18 @@
+- name: Restart Podman service and container for CyberArk
+  hosts: all
+  gather_facts: false
+
+  tasks:
+
+  - name: Start Podman service
+    command:
+      cmd: systemctl start podman
+
+  - name: Start podman containers
+    command:
+      argv: 
+        - podman start conjur_client
+        - podman start nginx_proxy
+        - podman start conjur_server
+        - podman start postgres_database
+        - podman start e11c30ae0c9c-infra
