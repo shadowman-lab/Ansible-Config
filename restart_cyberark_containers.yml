@@ -10,9 +10,4 @@
 
   - name: Start podman containers
     command:
-      argv: 
-        - podman start conjur_client
-        - podman start nginx_proxy
-        - podman start conjur_server
-        - podman start postgres_database
-        - podman start e11c30ae0c9c-infra
+      cmd: podman start conjur_client nginx_proxy conjur_server postgres_database e11c30ae0c9c-infra
