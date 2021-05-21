@@ -19,4 +19,7 @@
         path: "/home/network/test.conf"
         insertafter: "{{ inventory_hostname }}"
         firstmatch: "yes"
-        line: "test"
+        line: "     {{ item }}"
+      with_items:
+        - "ip_address: {{ ip_address }}"
+        - "api_key: {{ api_key }}"
