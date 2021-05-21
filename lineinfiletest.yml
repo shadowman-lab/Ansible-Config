@@ -11,3 +11,4 @@
       template:
         src: templates/test.conf.j2
         dest: "/home/network/test.conf" 
+      run_once: true
