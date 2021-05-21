@@ -1,0 +1,21 @@
+---
+- name: Line in file test
+  hosts: all
+  connection: local
+  vars:
+    ip_address: 10.1.1.1
+    api_key: aaaaaa
+
+  tasks:
+    - name: insert hostname
+      lineinfile:
+        path: "test.conf"
+        insertafter: "EOF"
+        line: "{{ inventory_hostname }}"
+
+    - name: insert hostname
+      lineinfile:
+        path: "test.conf"
+        insertafter: "{{ inventory_hostname }}"
+        firstmatch: "yes"
+        line: "test"
