@@ -1,7 +1,9 @@
 ---
-- name: Line in file test
+- name: Jinja Template
   hosts: all
   connection: local
+  gather_facts: false
+  
   vars:
     ip_address: 10.1.1.1
     api_key: aaaaaa
