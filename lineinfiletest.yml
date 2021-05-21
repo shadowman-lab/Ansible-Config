@@ -9,14 +9,14 @@
   tasks:
     - name: insert hostname
       lineinfile:
-        path: "/home/test.conf"
+        path: "/home/network/test.conf"
         insertafter: "EOF"
         line: "{{ inventory_hostname }}"
         create: yes
 
     - name: insert hostname
       lineinfile:
-        path: "/home/test.conf"
+        path: "/home/network/test.conf"
         insertafter: "{{ inventory_hostname }}"
         firstmatch: "yes"
         line: "test"
