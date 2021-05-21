@@ -9,5 +9,5 @@
   tasks:
     - name: insert conf
       template:
-        src: /templates/test.conf.j2
+        src: templates/test.conf.j2
         dest: "/home/network/test.conf" 
