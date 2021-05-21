@@ -2,24 +2,12 @@
 - name: Line in file test
   hosts: all
   connection: local
-  order: sorted
   vars:
     ip_address: 10.1.1.1
     api_key: aaaaaa
 
   tasks:
-    - name: insert hostname
-      lineinfile:
-        path: "/home/network/test.conf"
-        insertafter: "EOF"
-        line: "{{ inventory_hostname }}"
-        create: yes
-
-    - name: insert hostname
-      lineinfile:
-        path: "/home/network/test.conf"
-        insertafter: "{{ inventory_hostname }}"
-        line: "     {{ item }}"
-      with_items:
-        - "ip_address: {{ ip_address }}"
-        - "api_key: {{ api_key }}"
+    - name: insert conf
+      template:
+        src: /templates/test.conf.j2
+        dest: "/home/network/test.conf" 
