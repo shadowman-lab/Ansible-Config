@@ -12,6 +12,7 @@
         path: "/home/test.conf"
         insertafter: "EOF"
         line: "{{ inventory_hostname }}"
+        create: yes
 
     - name: insert hostname
       lineinfile:
