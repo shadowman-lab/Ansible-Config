@@ -1,5 +1,5 @@
-{% for host in inventory_hostname %}
-{{ host }}
-     {{ ip_address }}
-     {{ api_key }}
+{% for host in groups['tag_Insights']|sort %}
+{{ hostvars[host]['inventory_hostname'] }}
+  api_key: {{ api_key }}
+  ip_address: {{ ip_address }}
 {% endfor %}
