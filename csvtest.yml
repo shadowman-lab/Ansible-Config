@@ -6,7 +6,8 @@
     - name: Write Headers to .csv File
       shell: echo 'Host name, OSType, OSversion' >> /home/network/test.csv
       delegate_to: localhost
+      run_once: true
     
     - name: Write Version information to .csv
-      shell: echo ', {{ inventory_hostname_short | upper }}, {{ ansible_distribution }}, {{ ansible_distribution_version }}' >> /home/network/test.csv
+      shell: echo '{{ inventory_hostname_short | upper }}, {{ ansible_distribution }}, {{ ansible_distribution_version }}' >> /home/network/test.csv
       delegate_to: localhost
