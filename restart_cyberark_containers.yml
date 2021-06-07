@@ -4,6 +4,10 @@
 
   tasks:
 
+  - name: SELinux permissive
+    command:
+      cmd: setenforce permissive
+  
   - name: Start Podman service
     command:
       cmd: systemctl start podman
