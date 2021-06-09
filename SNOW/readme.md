@@ -295,6 +295,7 @@ These python packages must be installed in the Ansible Tower Python virtual envi
 
 ```bash
 ansible-galaxy collection install servicenow.servicenow
+ansible-galaxy collection install servicenow.itsm
 ```
 
 Or if using Ansible Tower and want to attach it to a project, create a file at **collections/requirements.yml** and add
@@ -351,6 +352,41 @@ env:
 
 <img src="images/credtype.png" alt="Tower Credential Type" title="Tower Credential Type" width="1000" />
 
+| Parameter | Value |
+|-----|-----|
+| Name  |  `ServiceNow ITSM Credential`  |
+| Description | Description of your credential type |
+
+Input Configuration
+
+```
+fields:
+  - id: host
+    type: string
+    label: Instance
+  - id: username
+    type: string
+    label: Username
+  - id: password
+    type: string
+    label: Password
+    secret: true
+required:
+  - host
+  - username
+  - password
+```
+
+Injector Configuration
+
+
+```
+env:
+  SN_HOST: '{{host}}'
+  SN_PASSWORD: '{{password}}'
+  SN_USERNAME: '{{username}}'
+```
+
 #### 2) Create your ServiceNow Credential
 
 In Ansible Tower, navigate to **Credentials** on the left side of the screen. Click the **green plus button** on the right, which will present you with a New Credential dialog screen. Fill in the following fields:
@@ -367,6 +403,16 @@ In Ansible Tower, navigate to **Credentials** on the left side of the screen. Cl
 | Password | `SNOW Password` |
 
 <img src="images/cred.png" alt="Tower Credential" title="Tower Credential" width="1000" />
+
+| Parameter | Value |
+|-----|-----|
+| Name | `ServiceNow ITSM Credential` |
+| Description | Description of your credential |
+| Organization |  `Default` |
+| Credential Type | `ServiceNow ITSM Credential` |
+| Instance | `<snow_instance_id> including .service-now.com` |
+| Username | `SNOW Username` |
+| Password | `SNOW Password` |
 
 #### 3) Create a Job Template
 
