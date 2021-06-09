@@ -1,0 +1,17 @@
+---
+- name: Set facts
+  hosts: all
+  gather_facts: false
+
+  tasks:
+
+  - name: Set facts for ansible_host to work with IP addr
+    set_fact:
+      failedhosts: "{{ failedhosts | default([]) }} + [ '{{ inventory_hostname }}' ]"
+    delegate_to: localhost
+
+  - name: print
+    debug:
+      var: failedhosts
+    delegate_to: localhost
+    run_once: true
