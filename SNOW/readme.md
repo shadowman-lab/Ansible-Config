@@ -372,7 +372,7 @@ fields:
     label: Password
     secret: true
 required:
-  - host
+  - instance
   - username
   - password
 ```
