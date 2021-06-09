@@ -9,6 +9,7 @@
     set_fact:
       failedhosts: "{{ failedhosts | default([]) }} + [ '{{ inventory_hostname }}' ]"
     delegate_to: localhost
+    serial: 1
 
   - name: print
     debug:
