@@ -361,7 +361,7 @@ Input Configuration
 
 ```
 fields:
-  - id: host
+  - id: instance
     type: string
     label: Instance
   - id: username
@@ -382,10 +382,12 @@ Injector Configuration
 
 ```
 env:
-  SN_HOST: '{{host}}'
+  SN_HOST: '{{instance}}'
   SN_PASSWORD: '{{password}}'
   SN_USERNAME: '{{username}}'
 ```
+
+<img src="images/itsmcredtype.png" alt="Tower Credential Type ITSM" title="Tower Credential Type ITSM" width="1000" />
 
 #### 2) Create your ServiceNow Credential
 
@@ -413,6 +415,8 @@ In Ansible Tower, navigate to **Credentials** on the left side of the screen. Cl
 | Instance | `<snow_instance_id> including .service-now.com` |
 | Username | `SNOW Username` |
 | Password | `SNOW Password` |
+
+<img src="images/itsmcred.png" alt="Tower Credential ITSM" title="Tower Credential ITSM" width="1000" />
 
 #### 3) Create a Job Template
 
