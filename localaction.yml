@@ -1,0 +1,11 @@
+---
+- name: Local Action
+  hosts: all
+  connection: local
+  gather_facts: false
+
+  tasks:
+    - name: whoamI
+      local_action:
+        module: command
+        cmd: "whoami"
