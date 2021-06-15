@@ -434,23 +434,24 @@ Congratulations! You can now have Tower reach out to SNOW to query and update re
   connection: local
 
   collections:
-    - servicenow.servicenow
+    - servicenow.itsm
   
   tasks: 
   
   - name: Create an incident in ServiceNow
-    snow_record:
-      state: present
-      data:
-        short_description: "{{ incident_description }}"
-        caller_id: "System Administrator"
-        urgency: "{{ sn_urgency }}"
-        impact: "{{ sn_impact }}"
+    servicenow.itsm.incident:
+      state: new
+      description: "{{ sn_description | default(omit) }}"
+      short_description: "{{ incident_description }}"
+      caller: admin
+      urgency: "{{ sn_urgency }}"
+      impact: "{{ sn_impact }}"
+      other:
         u_operating_system: "{{ os | default(omit) }}"
-        u_ip_address: "{{ ansible_host | default(omit) }}"
-        u_vm_name: "{{ inventory_hostname | default(omit) }}"
-        description: "{{ sn_description | default(omit) }}"
+        u_ip_address: "{{ ip_addr | default(omit) }}"
+        u_vm_name: "{{ inventory_hostname | default(omit) }}"       
     register: new_incident
+    delegate_to: localhost
 
   - debug: 
       var: new_incident.record.number
@@ -468,14 +469,14 @@ Congratulations! You can now have Tower reach out to SNOW to query and update re
   
   tasks: 
   - name: Update a catalog work notes and state in ServiceNow
-    snow_record:
+    servicenow.servicenow.snow_record:
       state: present
       number: "{{ ticket_number }}"
       table: sc_request
       data:
         request_state: "{{ request_state | default(omit) }}"
         work_notes: "{{ work_notes }}"
-    when: ticket_number != ''
+    delegate_to: localhost
     
 ```
 
