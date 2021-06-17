@@ -4,7 +4,7 @@
   gather_facts: false
 
   vars:
-    file_path: "/var/www/html/openscap/"
+    file_path: "/var/www/html/openscap"
 
   tasks:
     - name: make sure openscap-scanner and scap-security guide are installed
@@ -35,9 +35,9 @@
     - name: Copy folders to reports host
       ansible.builtin.copy:        
         src: "/tmp/{{ inventory_hostname }}"
-        dest: "{{ file_path }}/ {{ inventory_hostname }}"
+        dest: "{{ file_path }}/{{ inventory_hostname }}"
       delegate_to: report.shadowman.dev
 
     - name: DISPLAY LINK TO INVENTORY REPORT
       ansible.builtin.debug:
-        msg: "Please go to http://reports.shadowman.dev/openscap/{{ inventory_hostname }}"
+        msg: "Please go to http://report.shadowman.dev/openscap/{{ inventory_hostname }}"
