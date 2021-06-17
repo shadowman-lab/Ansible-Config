@@ -16,16 +16,16 @@
 
     - name: Check if  SCAP Security Guide (SSG) profile is available
       ansible.builtin.stat:
-        path: "{{ ssg_schema }}"
+        path: "/usr/share/xml/scap/ssg/content/{{ ssg_schema }}"
 
     - name: create HTML report
-      ansible.builtin.command: "oscap xccdf eval --profile xccdf_org.ssgproject.content_profile_standard --results report.xml --report index.html {{ ssg_schema }}"
+      ansible.builtin.command: "oscap xccdf eval --profile xccdf_org.ssgproject.content_profile_standard --results report.xml --report index.html /usr/share/xml/scap/ssg/content/{{ ssg_schema }}"
       register: command_result
       failed_when: "'Error' in command_result.stderr"
 
     - name: Copy files to Tower host
       ansible.builtin.fetch:
-        src: ./{{item}}
+        src: ./{{ item }}
         dest: "/tmp/{{ inventory_hostname }}/{{ item }}"
         flat: yes
       loop:
