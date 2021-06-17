@@ -5,13 +5,13 @@
   tasks:
 
     - name: Install Katello RPM for Satellite Server for RHEL 7
-      yum:
+      ansible.builtin.yum:
         name: https://sat6.shadowman.dev/pub/katello-ca-consumer-latest.noarch.rpm
         state: present
       when: ansible_distribution_version is match("7.*")
 
     - name: Install Katello RPM for Satellite Server for RHEL 8
-      dnf:
+      ansible.builtin.dnf:
         name: https://sat6.shadowman.dev/pub/katello-ca-consumer-latest.noarch.rpm
         state: present
       when: ansible_distribution_version is match("8.*")
@@ -48,28 +48,28 @@
       when: ansible_distribution_version is match("8.*")
 
     - name: upgrade all packages (yum)
-      yum:
+      ansible.builtin.yum:
         name: '*'
         state: latest
       when: ansible_pkg_mgr == "yum"
 
     - name: upgrade all packages (dnf)
-      dnf:
+      ansible.builtin.dnf:
         name: '*'
         state: latest
       when: ansible_pkg_mgr == "dnf"
 
     - name: Reboot server to apply all update
-      reboot:
+      ansible.builtin.reboot:
 
     - name: Enable initial-setup service
-      systemd:
+      ansible.builtin.systemd:
         name: initial-setup.service
         enabled: yes
       when: ansible_distribution_version is match("7.*")
 
     - name: Set Machine ID file permissions
-      file:
+      ansible.builtin.file:
         path: /etc/machine-id
         mode: 0777
 
@@ -79,10 +79,10 @@
         org_id: Shadow_Man
 
     - name: Remove and Clean all Subscription Data
-      shell: subscription-manager remove --all && subscription-manager clean
+      ansible.builtin.shell: subscription-manager remove --all && subscription-manager clean
 
     - name: Delete All Machine Specific Files
-      file:
+      ansible.builtin.file:
         state: absent
         path: "{{ item }}"
       with_items:
@@ -90,13 +90,13 @@
         - /etc/rhsm/facts/katello.facts
 
     - name: Find files in ssh_host
-      find:
+      ansible.builtin.find:
         paths: /etc/ssh/
         patterns: 'ssh_host_*'
       register: ssh_host_delete
 
     - name: Delete files in ssh_host
-      file:
+      ansible.builtin.file:
         path: "{{ item.path }}"
         state: absent
       loop: "{{ ssh_host_delete.files }}"
@@ -104,13 +104,13 @@
         label: "{{ item.path }}"
 
     - name: Find files in rules.d
-      find:
+      ansible.builtin.find:
         paths: /etc/udev/rules.d/
         patterns: '70-persistent-*'
       register: rules_delete
 
     - name: Delete files in rules.d
-      file:
+      ansible.builtin.file:
         path: "{{ item.path }}"
         state: absent
       loop: "{{ rules_delete.files }}"

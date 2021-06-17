@@ -8,12 +8,12 @@
   tasks:
 
   - name: Check for packages to include
-    set_fact:
+    ansible.builtin.set_fact:
       whitelist_packages: "{{ whitelist.split(',') }}"
     when: whitelist != ''
 
   - name: Check for packages to exclude
-    set_fact:
+    ansible.builtin.set_fact:
       blacklist_packages: "{{ blacklist.split(',') }}"
     when: blacklist != ''
 
@@ -26,11 +26,11 @@
     register: patchresult
     
   - name: Display Patching Results
-    debug:
+    ansible.builtin.debug:
       msg: "{{ patchresult | json_query('updates.*.title') }}"
 
   - name: Set patching data for ServiceNow
-    set_stats:
+    ansible.builtin.set_stats:
       data:
         work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] {{ patchresult | json_query('updates.*.title') | to_nice_json }}"
         expose_to_cloud_redhat_com_results: "{{ inventory_hostname }}:{{ patchresult | json_query('updates.*.title') | to_nice_json }}"
@@ -39,7 +39,7 @@
       - ticket_number is defined
 
   - name: Set patching data for ServiceNow
-    set_stats:
+    ansible.builtin.set_stats:
       data:
         work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] Compliant"
         expose_to_cloud_redhat_com_results: "{{ inventory_hostname }}: Compliant"
@@ -52,5 +52,5 @@
   tasks:
 
     - name: build a report
-      include_role:
+      ansible.builtin.include_role:
         name: shadowman.reports.build_report_windows_patch

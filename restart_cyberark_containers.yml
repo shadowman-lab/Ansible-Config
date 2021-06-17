@@ -5,13 +5,13 @@
   tasks:
 
   - name: SELinux permissive
-    command:
+    ansible.builtin.command:
       cmd: setenforce permissive
   
   - name: Start Podman service
-    command:
+    ansible.builtin.command:
       cmd: systemctl start podman
 
   - name: Start podman containers
-    command:
+    ansible.builtin.command:
       cmd: podman start conjur_client nginx_proxy conjur_server postgres_database e11c30ae0c9c-infra

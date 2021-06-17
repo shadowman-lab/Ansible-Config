@@ -9,12 +9,12 @@
   tasks:
 
   - name: Check for packages to include
-    set_fact:
+    ansible.builtin.set_fact:
       whitelist_packages: "{{ whitelist.split(',') }}"
     when: whitelist != ''
 
   - name: Check for packages to exclude
-    set_fact:
+    ansible.builtin.set_fact:
       blacklist_packages: "{{ blacklist.split(',') }}"
     when: blacklist != ''
 
@@ -27,5 +27,5 @@
     register: patchresult
 
   - name: Display Patching Results
-    debug:
+    ansible.builtin.debug:
       msg: "{{ patchresult | json_query('updates.*.title') }}"

@@ -2,7 +2,7 @@
   hosts: all
   tasks: 
     - name: Install a new package
-      yum:  
+      ansible.builtin.yum:  
         name: "{{ package }}"
         state: "{{ state }}"
 

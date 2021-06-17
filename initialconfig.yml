@@ -6,17 +6,17 @@
   tasks:
 
   - name: Set facts for ansible_host to work with IP addr
-    set_fact:
+    ansible.builtin.set_fact:
       ansible_host: "{{ ip_addr }}"
     delegate_to: localhost
 
   - name: Gather facts to work with remainder of playbook
-    setup:
+    ansible.builtin.setup:
 
   - name: RHEL config
-    include_tasks: config_rhel.yml
+    ansible.builtin.include_tasks: config_rhel.yml
     when: ansible_os_family is match("RedHat")
 
   - name: Windows Config
-    include_tasks: config_windows.yml
+    ansible.builtin.include_tasks: config_windows.yml
     when: ansible_os_family is match("Windows")

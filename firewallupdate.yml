@@ -19,6 +19,6 @@
     
   handlers:
     - name: restart_firewalld
-      service:
+      ansible.builtin.service:
         name: firewalld
         state: restarted

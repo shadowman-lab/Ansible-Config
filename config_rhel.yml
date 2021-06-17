@@ -1,19 +1,19 @@
 ---
 - name: copy SSH key
-  authorized_key:
+  ansible.posix.authorized_key:
     user: root
     state: present
     key: https://github.com/lynndixon.keys
 
 - name: Install Katello RPM for Satellite Server for RHEL 7
-  yum:
+  ansible.builtin.yum:
     name: https://sat6.shadowman.dev/pub/katello-ca-consumer-latest.noarch.rpm
     state: present
     disable_gpg_check: true
   when: ansible_distribution_version is match("7.*")
 
 - name: Install Katello RPM for Satellite Server for RHEL 8
-  dnf:
+  ansible.builtin.dnf:
     name: https://sat6.shadowman.dev/pub/katello-ca-consumer-latest.noarch.rpm
     state: present
     disable_gpg_check: true
@@ -51,30 +51,30 @@
   when: ansible_distribution_version is match("8.*")
 
 - name: Add Fancy Legal Disclaimer (MOTD)
-  copy:
+  ansible.builtin.copy:
     src: templates/add_motd
     dest: /etc/motd
 
 - name: Install dnf utils RHEL 8
-  dnf:
+  ansible.builtin.dnf:
     name: dnf-utils
     state: present
   when: ansible_distribution_version is match("8.*")
 
 - name: Install IPA Client for RHEL 7
-  yum:
+  ansible.builtin.yum:
     name: ipa-client
     state: present
   when: ansible_distribution_version is match("7.*")
 
 - name: Install IPA Client for RHEL 8
-  dnf:
+  ansible.builtin.dnf:
     name: ipa-client
     state: present
   when: ansible_distribution_version is match("8.*")
 
 - name: Run IPA Client Script to add to IDM
-  command: "ipa-client-install --principal '{{IPA_USER}}' --password '{{ IPA_PASS }}' --hostname '{{ fqdn }}' --enable-dns-updates --mkhomedir --unattended"
+  ansible.builtin.command: "ipa-client-install --principal '{{IPA_USER}}' --password '{{ IPA_PASS }}' --hostname '{{ fqdn }}' --enable-dns-updates --mkhomedir --unattended"
   register: output
   failed_when: output.rc == 2 or output.rc >= 4
   changed_when: output.rc == 0

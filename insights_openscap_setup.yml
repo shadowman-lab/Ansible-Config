@@ -7,7 +7,7 @@
     
   tasks:
   - name: Install Insights and OpenSCAP
-    yum:
+    ansible.builtin.yum:
       name:
         - openscap-scanner
         - scap-security-guide

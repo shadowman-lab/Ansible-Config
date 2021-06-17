@@ -4,19 +4,19 @@
   tasks:
 
   - name: Install IPA Client for RHEL 7
-    yum:
+    ansible.builtin.yum:
       name: ipa-client
       state: present
     when: ansible_distribution_version is match("7.*")
 
   - name: Install IPA Client for RHEL 8
-    dnf:
+    ansible.builtin.dnf:
       name: ipa-client
       state: present
     when: ansible_distribution_version is match("8.*")
 
   - name: run ipa client script
-    command: "ipa-client-install --principal '{{IPA_USER}}' --password '{{ IPA_PASS }}' --hostname '{{ fqdn }}' --enable-dns-updates --mkhomedir --unattended"
+    ansible.builtin.command: "ipa-client-install --principal '{{IPA_USER}}' --password '{{ IPA_PASS }}' --hostname '{{ fqdn }}' --enable-dns-updates --mkhomedir --unattended"
     register: output
     failed_when: output.rc == 2
 

@@ -14,7 +14,7 @@
       register: patchingresult
 
     - name: Combine results into single line
-      set_fact:
+      ansible.builtin.set_fact:
         myresults: "{{ myresults | default([]) }} + [ '{{ item[0] }}' + ': ' + '{{ item[1] }}' ]"
       loop: "{{ patchingresult.changes.updated }}"
       loop_control:
@@ -24,13 +24,13 @@
         - patchingresult.changes.updated is defined
 
     - name: Display RHEL 7 Patching Results
-      debug:
+      ansible.builtin.debug:
         msg: "{{ myresults | default('System is up to date') }}"
       when: 
         - ansible_pkg_mgr == "yum"
 
     - name: upgrade all packages (dnf)
-      dnf:
+      ansible.builtin.dnf:
         name: '*'
         state: latest
         exclude: "{{ exclude_packages }}"
@@ -38,38 +38,38 @@
       register: patchingresultdnf
 
     - name: Display RHEL 8 Patching Results
-      debug:
+      ansible.builtin.debug:
         msg: "{{ patchingresultdnf.results }}"
       when: ansible_pkg_mgr == "dnf"
 
 
     - name: Check to see if we need a reboot
-      command: needs-restarting -r
+      ansible.builtin.command: needs-restarting -r
       register: result
       changed_when: result.rc == 1
       failed_when: result.rc > 1
       check_mode: no
 
     - name: Reboot Server if Necessary
-      reboot:
+      ansible.builtin.reboot:
       when: result.rc == 1
 
     - name: Set patching data for ServiceNow Yum if patching happened
-      set_stats:
+      ansible.builtin.set_stats:
         data:
           work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] {{ patchingresult.changes.updated | flatten(levels=1) | to_nice_json }}"
           expose_to_cloud_redhat_com_results: "{{ inventory_hostname }}:{{ patchingresult.changes.updated | flatten(levels=1) | to_nice_json }}"
       when: ansible_pkg_mgr == "yum" and patchingresult.changes.updated is defined
 
     - name: Set patching data for ServiceNow Yum if system already patched
-      set_stats:
+      ansible.builtin.set_stats:
         data:
           work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] {{ patchingresult.results | to_nice_json }}"
           expose_to_cloud_redhat_com_results: "{{ inventory_hostname }}:{{ patchingresult.results| to_nice_json }}"
       when: ansible_pkg_mgr == "yum" and patchingresult.changes.updated is not defined
 
     - name: Set patching data for ServiceNow DNF
-      set_stats:
+      ansible.builtin.set_stats:
         data:
           work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] {{ patchingresultdnf.results | flatten(levels=1)| to_nice_json }}"
           expose_to_cloud_redhat_com_results: "{{ inventory_hostname }}:{{ patchingresultdnf.results | flatten(levels=1) | to_nice_json }}"
@@ -80,5 +80,5 @@
   tasks:
 
     - name: build a report
-      include_role:
+      ansible.builtin.include_role:
         name: shadowman.reports.build_report_linux_patch
