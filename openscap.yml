@@ -40,4 +40,4 @@
 
     - name: DISPLAY LINK TO INVENTORY REPORT
       ansible.builtin.debug:
-        msg: "Please go to http://report.shadowman.dev/openscap/{{ inventory_hostname }}"
+        msg: "http://report.shadowman.dev/openscap/{{ inventory_hostname }}"
