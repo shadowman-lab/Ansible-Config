@@ -1,0 +1,43 @@
+---
+- name: Build openscap report
+  hosts: all
+  gather_facts: false
+
+  vars:
+    file_path: "/var/www/html/openscap/"
+
+  tasks:
+    - name: make sure openscap-scanner and scap-security guide are installed
+      ansible.builtin.yum:
+        name:
+          - openscap-scanner
+          - scap-security-guide
+        state: present
+
+    - name: Check if  SCAP Security Guide (SSG) profile is available
+      ansible.builtin.stat:
+        path: "{{ ssg_schema }}"
+
+    - name: create HTML report
+      ansible.builtin.command: "oscap xccdf eval --profile xccdf_org.ssgproject.content_profile_standard --results report.xml --report index.html {{ ssg_schema }}"
+      register: command_result
+      failed_when: "'Error' in command_result.stderr"
+
+    - name: Copy files to Tower host
+      ansible.builtin.fetch:
+        src: ./{{item}}
+        dest: "/tmp/{{ inventory_hostname }}/{{ item }}"
+        flat: yes
+      loop:
+        - report.xml
+        - index.html
+    
+    - name: Copy folders to reports host
+      ansible.builtin.copy:        
+        src: "/tmp/{{ inventory_hostname }}"
+        dest: "{{ file_path }}/ {{ inventory_hostname }}"
+      delegate_to: report.shadowman.dev
+
+    - name: DISPLAY LINK TO INVENTORY REPORT
+      ansible.builtin.debug:
+        msg: "Please go to http://reports.shadowman.dev/openscap/{{ inventory_hostname }}"
