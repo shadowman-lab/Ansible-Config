@@ -6,7 +6,7 @@
 
   tasks:
     - name: upgrade all packages (yum)
-      yum:
+      ansible.builtin.yum:
         name: '*'
         state: latest
         exclude: "{{ exclude_packages }}"
