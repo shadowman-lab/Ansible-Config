@@ -5,7 +5,7 @@
     - users: "{{ survey_users.split('\n') }}"
   tasks: 
     - name: Update/Create/Remove IDM group
-      ipa_group:
+      community.general.ipa_group:
         name: "{{ group_name }}"  
         state: "{{ state }}"
         user: "{{ users|default(omit) }}"

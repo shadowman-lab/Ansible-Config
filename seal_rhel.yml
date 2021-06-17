@@ -17,21 +17,21 @@
       when: ansible_distribution_version is match("8.*")
 
     - name: Use Activation Key to Register RHEL7 Machine to Satellite
-      redhat_subscription:
+      community.general.redhat_subscription:
         state: present
         activationkey: "RHEL7_Latest"
         org_id: Shadow_Man
       when: ansible_distribution_version is match("7.*")
 
     - name: Use Activation Key to Register RHEL8 Machine to Satellite
-      redhat_subscription:
+      community.general.redhat_subscription:
         state: present
         activationkey: "RHEL8_Latest"
         org_id: Shadow_Man
       when: ansible_distribution_version is match("8.*")
 
     - name: Enable Repositories for RHEL 7
-      rhsm_repository:
+      community.general.rhsm_repository:
         name:
           - rhel-7-server-rpms
           - rhel-7-server-extras-rpms
@@ -40,7 +40,7 @@
       when: ansible_distribution_version is match("7.*")
 
     - name: Enable Repositories for RHEL 8
-      rhsm_repository:
+      community.general.rhsm_repository:
         name:
           - rhel-8-for-x86_64-appstream-rpms
           - rhel-8-for-x86_64-baseos-rpms
@@ -74,7 +74,7 @@
         mode: 0777
 
     - name: Unregister this machine from Satellite
-      redhat_subscription:
+      community.general.redhat_subscription:
         state: absent
         org_id: Shadow_Man
 

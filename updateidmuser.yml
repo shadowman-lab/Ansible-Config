@@ -3,7 +3,7 @@
   gather_facts: false
   tasks: 
     - name: Update/Create/Remove IDM user
-      ipa_user:
+      community.general.ipa_user:
         name: "{{ user_name }}"  
         state: "{{ state }}"
         givenname: "{{ first_name }}"
