@@ -1,0 +1,10 @@
+---
+- name: Get URL Test
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: Get URL
+      ansible.builtin.get_url:
+        url: https://raw.githubusercontent.com/shadowman-lab/Ansible-Inventory/master/inventories/eos.ini
+        dest: /home/url
