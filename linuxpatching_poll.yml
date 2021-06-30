@@ -1,0 +1,11 @@
+---
+- name: Patch RHEL Servers
+  hosts: all
+
+  tasks:
+
+    - name: check list
+      ansible.builtin.yum:
+        list: updates
+      verbosity: 1
+
