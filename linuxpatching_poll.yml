@@ -13,12 +13,17 @@
       poll: 0
       register: yum_sleeper
 
-    - name: Check on Patch Status {{ inventory_hostname }}
+    - name: Check Remaining Packages {{ inventory_hostname }}
+      ansible.builtin.yum:
+        list: updates
+      register: result
+      until:  result.results == []
+      retries: 50
+      delay: 5
+
+    - name: Clear Async Job Status
       async_status:
         jid: "{{ yum_sleeper.ansible_job_id }}"
-      register: job_result
-      until: job_result.finished
-      retries: 100
-      delay: 1
-
+        mode: cleanup
+      
 
