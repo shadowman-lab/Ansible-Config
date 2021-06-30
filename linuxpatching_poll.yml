@@ -5,11 +5,11 @@
 
   tasks:
 
-    - name: check list
+    - name: Check Remaining Packages {{ inventory_hostname }}
       ansible.builtin.yum:
         list: updates
       register: result
       until:  result.results == []
-      retries: 4
+      retries: 2
       delay: 5
 
