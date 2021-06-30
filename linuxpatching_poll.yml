@@ -7,5 +7,4 @@
     - name: check list
       ansible.builtin.yum:
         list: updates
-      verbosity: 1
 
