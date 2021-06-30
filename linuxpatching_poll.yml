@@ -17,7 +17,7 @@
       ansible.builtin.yum:
         list: updates
       register: result
-      until:  result.results == []
+      until:  result.results|default("False") == []
       retries: 50
       delay: 5
 
