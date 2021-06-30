@@ -10,6 +10,6 @@
         list: updates
       register: result
       until:  result.results == []
-      retries: 60
+      retries: 4
       delay: 5
 
