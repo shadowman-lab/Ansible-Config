@@ -11,6 +11,6 @@
       
     - name: Debug
       debug:
-        msg: "{{ result.results[0][version] }}"
+        msg: "{{ result.results[0] }}"
       
 
