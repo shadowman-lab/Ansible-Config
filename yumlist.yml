@@ -1,6 +1,7 @@
 ---
 - name: Install when version not accurate
   hosts: all
+  gather_facts: false
 
   tasks:
 
@@ -11,6 +12,6 @@
       
     - name: Debug
       debug:
-        msg: "{{ result.results[0] }}"
+        msg: "{{ result.results[0].version }}"
       
 
