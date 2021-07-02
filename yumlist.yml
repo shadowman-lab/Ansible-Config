@@ -1,0 +1,16 @@
+---
+- name: Install when version not accurate
+  hosts: all
+
+  tasks:
+
+    - name: Check package version
+      ansible.builtin.yum:
+        list: ansible
+      register: result
+      
+    - name: Debug
+      debug:
+        msg: "{{ result }}"
+      
+
