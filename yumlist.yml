@@ -13,5 +13,6 @@
     - name: Debug
       debug:
         msg: "{{ result.results[0].version }}"
+      when: result.results[0].version != version_test
       
 
