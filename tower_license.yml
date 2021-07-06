@@ -1,0 +1,13 @@
+---
+- name: Import Tower license
+  hosts: all
+  gather_facts: false
+
+  tasks:
+
+  - name: Import License
+    ansible.tower.tower_license:
+      manifest: "/home/manifest_Shadowman-full-lab_20210706T134451Z.zip"
+    
+      
+
