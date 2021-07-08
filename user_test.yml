@@ -1,0 +1,8 @@
+---
+- hosts: all
+  gather_facts: false
+  
+  tasks:
+  - name: User Name
+    debug:
+       msg: '{{ ansible_user }}'
