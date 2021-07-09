@@ -28,4 +28,4 @@
 
   - name: Display Patching Results
     ansible.builtin.debug:
-      msg: "{{ patchresult | json_query('updates.*.title') }}"
+      msg: "{{ patchresult | json_query('updates[*].title') }}"
