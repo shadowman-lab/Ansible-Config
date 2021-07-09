@@ -24,7 +24,11 @@
       accept_list: "{{ accept_packages | default(omit) }}"
       reject_list: "{{ reject_packages | default(omit) }}"
     register: patchresult
-    
+  
+  - name: Display Patching Results
+    ansible.builtin.debug:
+      msg: "{{ patchresult.updates }}"  
+
   - name: Display Patching Results
     ansible.builtin.debug:
       msg: "{{ patchresult | json_query('updates[*].title') }}"
