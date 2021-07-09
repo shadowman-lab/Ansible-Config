@@ -4,7 +4,7 @@
     
   - name: Open Firewalld for apache
     ansible.posix.firewalld:
-      port: "{{ port }}"/tcp
+      port: "{{ port }}/tcp"
       permanent: yes
       state: "{{ state }}"
     notify: restart_firewalld
