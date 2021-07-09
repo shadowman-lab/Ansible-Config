@@ -11,5 +11,5 @@
     ansible.windows.win_updates:
       category_names: "{{ categories }}"
       reboot: '{{ reboot_server }}'
-      whitelist: "{{ whitelist_packages }}"
-      blacklist: "{{ blacklist_packages }}"
+      accept_list: "{{ accept_packages }}"
+      reject_list: "{{ reject_packages }}"
