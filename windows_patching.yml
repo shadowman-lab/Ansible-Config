@@ -27,7 +27,7 @@
   
   - name: Display Patching Results
     ansible.builtin.debug:
-      msg: "{{ patchresult.updates }}"  
+      msg: "{{ patchresult.updates[0] }}"  
 
   - name: Display Patching Results
     ansible.builtin.debug:
