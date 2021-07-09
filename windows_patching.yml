@@ -27,10 +27,6 @@
   
   - name: Display Patching Results
     ansible.builtin.debug:
-      msg: "{{ patchresult.updates[0] }}"  
-
-  - name: Display Patching Results
-    ansible.builtin.debug:
       msg: "{{ patchresult | json_query('updates[*].title') }}"
 
   - name: Set patching data for ServiceNow
