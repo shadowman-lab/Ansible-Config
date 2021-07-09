@@ -10,13 +10,13 @@
 
   - name: Check for packages to include
     ansible.builtin.set_fact:
-      reject_packages: "{{ rejectlist.split(',') }}"
-    when: whitelist != ''
+      accept_packages: "{{ acceptlist.split(',') }}"
+    when: acceptlist != ''
 
   - name: Check for packages to exclude
     ansible.builtin.set_fact:
-      accept_packages: "{{ acceptlist.split(',') }}"
-    when: blacklist != ''
+      reject_packages: "{{ rejectlist.split(',') }}"
+    when: rejectlist != ''
 
   - name: Install Windows Updates
     ansible.windows.win_updates:
