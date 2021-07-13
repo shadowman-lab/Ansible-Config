@@ -1,8 +1,0 @@
-- name: Install or uninstall a package
-  hosts: all
-  tasks: 
-    - name: Install a new package
-      ansible.builtin.yum:  
-        name: "{{ package }}"
-        state: "{{ state }}"
-
