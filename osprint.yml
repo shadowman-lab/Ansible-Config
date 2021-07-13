@@ -1,7 +1,0 @@
-- name: Check OS version
-  hosts: all
-  tasks: 
-    - name: Check OS version
-      ansible.builtin.debug:  
-        msg: "Host: {{ inventory_hostname }}, is running {{ ansible_distribution }} {{ ansible_distribution_version }}" 
-   
