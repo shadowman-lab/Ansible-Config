@@ -1,7 +1,6 @@
 ---
 - name: Perform Drift check
   hosts: all
-  gather_facts: false
 
   tasks:
 
