@@ -2,22 +2,9 @@
 - name: Restore firewall for IP
   hosts: all
   gather_facts: false
-   
-  collections:
-    - ansible.posix
 
-  tasks:  
-
-  - name: Unblock all ICMP for source addr
-    ansible.posix.firewalld:
-      zone: drop
-      state: disabled
-      permanent: yes
-      source: "{{ ip_addr }}/24"
-    notify: restart_firewalld
-    
-  handlers:
-    - name: restart_firewalld
-      ansible.builtin.service:
-        name: firewalld
-        state: restarted
+  vars:
+    state: disabled 
+  
+  roles:
+    - shadowman_firewall_security

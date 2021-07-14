@@ -1,0 +1,11 @@
+---
+- name: copy SSH key
+  ansible.posix.authorized_key:
+    user: root
+    state: present
+    key: https://github.com/lynndixon.keys
+
+- name: Add Fancy Legal Disclaimer (MOTD)
+  ansible.builtin.copy:
+    src: templates/add_motd
+    dest: /etc/motd

@@ -5,18 +5,22 @@
 
   tasks:
 
-  - name: Set facts for ansible_host to work with IP addr
-    ansible.builtin.set_fact:
-      ansible_host: "{{ ip_addr }}"
-    delegate_to: localhost
+    - name: Linux Setup
+      ansible.builtin.include_role: 
+        name: shadowman_linux_setup
+      when: ansible_os_family is match("RedHat")
 
-  - name: Gather facts to work with remainder of playbook
-    ansible.builtin.setup:
+    - name: RHEL register
+      ansible.builtin.include_role: 
+        name: shadowman_rhel_register
+      when: ansible_os_family is match("RedHat")
 
-  - name: RHEL config for drift check
-    ansible.builtin.include_tasks: config_rhel.yml
-    when: ansible_os_family is match("RedHat")
+    - name: IDM register
+      ansible.builtin.include_role: 
+        name: shadowman_add_to_ad
+      when: ansible_os_family is match("RedHat")
 
-  - name: Windows Config for drift check
-    ansible.builtin.include_tasks: config_windows.yml
-    when: ansible_os_family is match("Windows")
+    - name: Windows Config
+      ansible.builtin.include_role:
+        name: shadowman_add_to_ad
+      when: ansible_os_family is match("Windows")

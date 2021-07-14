@@ -1,5 +1,4 @@
 ---
-
 - name: Add Windows host to AD
   ansible.windows.win_domain_membership:
     dns_domain_name: ad.shadowman.dev

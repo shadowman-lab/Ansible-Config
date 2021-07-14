@@ -2,22 +2,9 @@
 - name: Block IP on firewall 
   hosts: all
   gather_facts: false
-   
-  collections:
-    - ansible.posix
 
-  tasks:  
-
-  - name: Block all ICMP from source address
-    ansible.posix.firewalld:
-      zone: drop
-      state: enabled
-      permanent: yes
-      source: "{{ ip_addr }}/24"
-    notify: restart_firewalld
-   
-  handlers:
-    - name: restart_firewalld
-      ansible.builtin.service:
-        name: firewalld
-        state: restarted
+  vars:
+    state: enabled 
+  
+  roles:
+    - shadowman_firewall_security

@@ -2,16 +2,5 @@
   hosts: all
   gather_facts: false
 
-  tasks:
-
-  - name: SELinux permissive
-    ansible.builtin.command:
-      cmd: setenforce permissive
-  
-  - name: Start Podman service
-    ansible.builtin.command:
-      cmd: systemctl start podman
-
-  - name: Start podman containers
-    ansible.builtin.command:
-      cmd: podman start conjur_client nginx_proxy conjur_server postgres_database e11c30ae0c9c-infra
+  roles:
+    - shadowman_cyberark_restart
