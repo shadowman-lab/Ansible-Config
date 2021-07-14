@@ -16,7 +16,7 @@
 
     - name: IDM register
       ansible.builtin.include_role: 
-        name: shadowman_add_to_ad
+        name: shadowman_add_to_idm
       when: ansible_os_family is match("RedHat")
 
     - name: Windows Config
