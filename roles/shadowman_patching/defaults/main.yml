@@ -1,0 +1,5 @@
+---
+acceptlist: ''
+rejectlist: ''
+categores: '*'
+exclude_packages: "{{ exclude.split(',') }}"

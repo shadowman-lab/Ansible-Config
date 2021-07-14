@@ -1,0 +1,6 @@
+---
+- include_tasks: patch_linux.yml
+  when: os is match("rhel.*")
+
+- include_tasks: patch_windows.yml
+  when: os is match("windows.*")

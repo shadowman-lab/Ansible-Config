@@ -1,0 +1,21 @@
+---
+- name: Patch Server
+  ansible.builtin.yum:
+    name: '*'
+    state: latest
+  async: 1000
+  poll: 0
+  register: yum_sleeper
+
+- name: Check Remaining Packages {{ inventory_hostname }}
+  ansible.builtin.yum:
+    list: updates
+  register: result
+  until:  result.results|default("False") == []
+  retries: 50
+  delay: 5
+
+- name: Clear Async Job Status
+  async_status:
+    jid: "{{ yum_sleeper.ansible_job_id }}"
+    mode: cleanup

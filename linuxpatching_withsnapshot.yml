@@ -4,84 +4,12 @@
 
   tasks:
 
-    - name: Patching with error handling
       block: 
-        - name: upgrade all packages (yum)
-          ansible.builtin.yum:
-            name: '*'
-            state: latest
-          when: ansible_pkg_mgr == "yum"
-
-        - name: upgrade all packages (dnf)
-          ansible.builtin.dnf:
-            name: '*'
-            state: latest
-          when: ansible_pkg_mgr == "dnf"
-
-        - name: Check to see if we need a reboot
-          ansible.builtin.command: needs-restarting -r
-          register: result
-          changed_when: result.rc == 1
-          failed_when: result.rc > 1
-          check_mode: no
-
-        - name: Reboot Server if Necessary
-          ansible.builtin.reboot:
-          when: result.rc == 1
+        - name: Patching role
+          include_role:
+            name: shadowman_patching
 
       rescue:
-        - name: Login to RHV
-          redhat.rhv.ovirt_auth:
-            hostname: "{{ rhvm_fqdn }}"
-            username: "{{ rhvm_user }}"
-            password: "{{ rhvm_password }}"
-            ca_file: "{{ rhvm_cafile | default(omit) }}"
-            insecure: "{{ rhvm_insecure | default(true) }}"
-          delegate_to: localhost
-          become: false
-          run_once: true
-  
-        - name: Pull snapshot ID for a VM
-          redhat.rhv.ovirt_snapshot_info:
-            auth: "{{ ovirt_auth }}"
-            vm: "{{ inventory_hostname }}"
-            description: "pre_patch"
-          delegate_to: localhost
-          become: false
-          register: snapshot
-
-        - name: Stop VM
-          redhat.rhv.ovirt_vm:
-            auth: "{{ ovirt_auth }}"
-            name: "{{ inventory_hostname }}"
-            state: stopped
-            wait: yes
-          delegate_to: localhost
-          become: false
-
-        - name: Restore from Snapshot
-          redhat.rhv.ovirt_snapshot:
-            auth: "{{ ovirt_auth }}"
-            vm_name: "{{ inventory_hostname }}"
-            snapshot_id: "{{ snapshot.ovirt_snapshots[0].id }}"
-            state: restore
-            wait: yes
-          delegate_to: localhost
-          become: false
-
-        - name: Start VM
-          redhat.rhv.ovirt_vm:
-            auth: "{{ ovirt_auth }}"
-            name: "{{ inventory_hostname }}"
-            state: running
-            wait: yes
-          delegate_to: localhost
-          become: false
-
-        - name: Logout from RHV
-          redhat.rhv.ovirt_auth:
-            state: absent
-            ovirt_auth: "{{ ovirt_auth }}"
-          delegate_to: localhost
-          run_once: true
-          become: false
+        - name: Patching role
+          include_role:
+            name: shadowman_snapshot_restore_rhv

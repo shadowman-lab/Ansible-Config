@@ -1,21 +1,9 @@
 ---
 - name: Gather Facts
   hosts: tag_Insights
-
-  vars:
-    scan_use_checksum: false
-    scan_use_recursive: false
-
-  tasks:
-
-    - name: Scan packages (Unix/Linux)
-      shadowman.reports.scan_packages:
-        os_family: '{{ ansible_os_family }}'
-      when: ansible_os_family != "Windows"
-
-    - name: Scan services (Unix/Linux)
-      shadowman.reports.scan_services:
-      when: ansible_os_family != "Windows"
+  
+  roles:
+    - shadowman_scan_systems
 
 - name: Build report with facts
   hosts: report.shadowman.dev

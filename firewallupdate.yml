@@ -15,8 +15,7 @@
       permanent: yes
       source: "{{ ip_addr }}/24"
     notify: restart_firewalld
-
-    
+   
   handlers:
     - name: restart_firewalld
       ansible.builtin.service:

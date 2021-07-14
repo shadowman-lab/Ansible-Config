@@ -1,0 +1,6 @@
+---
+- include_tasks: linux.yml
+  when: os is match("rhel.*")
+
+- include_tasks: windows.yml
+  when: os is match("windows.*")

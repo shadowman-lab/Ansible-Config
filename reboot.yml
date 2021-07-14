@@ -1,0 +1,7 @@
+---
+- name: Reboot System
+  hosts: all
+  gather_facts: false
+ 
+  roles:
+    - shadowman_reboot

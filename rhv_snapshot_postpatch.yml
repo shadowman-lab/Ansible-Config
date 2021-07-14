@@ -3,51 +3,5 @@
   hosts: all
   gather_facts: false
 
-  collections:
-    - redhat.rhv
-    
-  pre_tasks:
-    - name: Login to RHV
-      redhat.rhv.ovirt_auth:
-        hostname: "{{ rhvm_fqdn }}"
-        username: "{{ rhvm_user }}"
-        password: "{{ rhvm_password }}"
-        ca_file: "{{ rhvm_cafile | default(omit) }}"
-        insecure: "{{ rhvm_insecure | default(true) }}"
-      delegate_to: localhost
-      run_once: true
-      tags:
-        - always
-  vars:
-    datacenter: Default
-    cluster: Default
-    vm_names: "{{ vm_name.split(',') }}"
-
-  tasks:
-
-    - name: Pull snapshot ID for a VM
-      redhat.rhv.ovirt_snapshot_info:
-        auth: "{{ ovirt_auth }}"
-        vm: "{{ inventory_hostname }}"
-        description: "pre_patch"
-      register: snapshot
-      delegate_to: localhost
-
-    - name: Remove Snapshot on VM(s)
-      redhat.rhv.ovirt_snapshot:
-        auth: "{{ ovirt_auth }}"
-        vm_name: "{{ inventory_hostname }}"
-        snapshot_id: "{{ snapshot.ovirt_snapshots[0].id }}"
-        state: absent
-      register: snapshot
-      delegate_to: localhost
-
-  post_tasks:
-    - name: Logout from RHV
-      redhat.rhv.ovirt_auth:
-        state: absent
-        ovirt_auth: "{{ ovirt_auth }}"
-      delegate_to: localhost
-      run_once: true
-      tags:
-        - always
+  roles:
+    - shadowman_remove_snapshot

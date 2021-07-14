@@ -1,0 +1,8 @@
+---
+- name: "Scan packages (Windows)"
+  shadowman.reports.win_scan_packages:
+  when: ansible_os_family == "Windows"
+
+- name: "Scan services (Windows)"
+  shadowman.reports.win_scan_services:
+  when: ansible_os_family == "Windows"

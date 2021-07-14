@@ -1,0 +1,5 @@
+---
+datacenter: Default
+cluster: Default
+vm_names: "{{ vm_name.split(',') }}"
+description: "pre_patch"

@@ -2,19 +2,8 @@
 - name: Gather Facts
   hosts: tag_Windows
 
-  vars:
-    scan_use_checksum: false
-    scan_use_recursive: false
-
-  tasks:
-
-    - name: "Scan packages (Windows)"
-      shadowman.reports.win_scan_packages:
-      when: ansible_os_family == "Windows"
-
-    - name: "Scan services (Windows)"
-      shadowman.reports.win_scan_services:
-      when: ansible_os_family == "Windows"
+  roles:
+    - shadowman_scan_systems
 
 - name: Build report with facts
   hosts: report.shadowman.dev

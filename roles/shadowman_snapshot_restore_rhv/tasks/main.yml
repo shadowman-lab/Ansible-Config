@@ -1,0 +1,56 @@
+---
+- name: Login to RHV
+  redhat.rhv.ovirt_auth:
+    hostname: "{{ rhvm_fqdn }}"
+    username: "{{ rhvm_user }}"
+    password: "{{ rhvm_password }}"
+    ca_file: "{{ rhvm_cafile | default(omit) }}"
+    insecure: "{{ rhvm_insecure | default(true) }}"
+  delegate_to: localhost
+  become: false
+  run_once: true
+
+- name: Pull snapshot ID for a VM
+  redhat.rhv.ovirt_snapshot_info:
+    auth: "{{ ovirt_auth }}"
+    vm: "{{ inventory_hostname }}"
+    description: "{{ description }}"
+  delegate_to: localhost
+  become: false
+  register: snapshot
+
+- name: Stop VM
+  redhat.rhv.ovirt_vm:
+    auth: "{{ ovirt_auth }}"
+    name: "{{ inventory_hostname }}"
+    state: stopped
+    wait: yes
+  delegate_to: localhost
+  become: false
+
+- name: Restore from Snapshot
+  redhat.rhv.ovirt_snapshot:
+    auth: "{{ ovirt_auth }}"
+    vm_name: "{{ inventory_hostname }}"
+    snapshot_id: "{{ snapshot.ovirt_snapshots[0].id }}"
+    state: restore
+    wait: yes
+  delegate_to: localhost
+  become: false
+
+- name: Start VM
+  redhat.rhv.ovirt_vm:
+    auth: "{{ ovirt_auth }}"
+    name: "{{ inventory_hostname }}"
+    state: running
+    wait: yes
+  delegate_to: localhost
+  become: false
+
+- name: Logout from RHV
+  redhat.rhv.ovirt_auth:
+    state: absent
+    ovirt_auth: "{{ ovirt_auth }}"
+  delegate_to: localhost
+  run_once: true
+  become: false
