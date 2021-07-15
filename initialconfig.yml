@@ -33,4 +33,6 @@
     - name: Windows Config
       ansible.builtin.include_role:
         name: shadowman_add_to_ad
-      when: ansible_os_family is match("Windows")
+      when: 
+        - ansible_os_family is match("Windows")
+        - ansible_host != ip_addr
