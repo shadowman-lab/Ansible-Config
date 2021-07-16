@@ -11,8 +11,8 @@
 
 - name: Install Windows Updates
   ansible.windows.win_updates:
-    category_names: "{{ categories | default(omit) }}"
-    reboot: '{{ reboot_server | default(yes) }}'
+    category_names: "{{ categories | default('*') }}"
+    reboot: '{{ reboot_server | default('yes') }}'
     accept_list: "{{ accept_packages | default(omit) }}"
     reject_list: "{{ reject_packages | default(omit) }}"
   register: patchresult
