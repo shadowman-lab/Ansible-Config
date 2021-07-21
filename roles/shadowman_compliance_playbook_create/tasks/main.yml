@@ -1,0 +1,16 @@
+---
+- name: make sure openscap-scanner and scap-security guide are installed
+  ansible.builtin.yum:
+    name:
+      - openscap-scanner
+      - scap-security-guide
+    state: present
+
+- name: Check if  SCAP Security Guide (SSG) profile is available
+  ansible.builtin.stat:
+    path: "/usr/share/xml/scap/ssg/content/ssg-rhel{{ ansible_distribution_major_version }}-ds.xml"
+
+- name: Create enforcement playbook
+  ansible.builtin.command: "oscap xccdf generate fix --fix-type ansible --profile xccdf_org.ssgproject.content_profile_{{ content_profile }} --output role-rhel{{ ansible_distribution_major_version }}-{{ content_profile }}.yml /usr/share/xml/scap/ssg/content/ssg-rhel{{ ansible_distribution_major_version }}-ds.xml"
+  register: command_result
+  failed_when: "'Error' in command_result.stderr"
