@@ -1,0 +1,6 @@
+---
+- include_tasks: rhel7_nist.yml
+  when: os is match(".*7.*")
+
+- include_tasks: rhel8_nist.yml
+  when: os is match(".*8.*")

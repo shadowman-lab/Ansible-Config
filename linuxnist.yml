@@ -1,0 +1,6 @@
+---
+- name: RHEL NIST Compliance
+  hosts: all
+  
+  roles:
+    - shadowman_nist
