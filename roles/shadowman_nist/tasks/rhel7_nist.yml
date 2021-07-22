@@ -260,6 +260,7 @@
 
 - name: Verify that Interactive Boot is Disabled (runtime)
   command: /sbin/grubby --update-kernel=ALL --remove-args="systemd.confirm_spawn"
+  check_mode: false
   when: '"grub2" in ansible_facts.packages'
   tags:
     - CCE-27335-9
@@ -1366,6 +1367,7 @@
 - name: check audit_backlog_limit argument exists
   command: grep 'GRUB_CMDLINE_LINUX.*audit_backlog_limit=' /etc/default/grub
   failed_when: false
+  check_mode: false
   register: argcheck
   when:
     - ansible_virtualization_type not in ["docker", "lxc", "openvz"]
@@ -1455,6 +1457,7 @@
 
 - name: check audit argument exists
   command: grep 'GRUB_CMDLINE_LINUX.*audit=' /etc/default/grub
+  check_mode: false
   failed_when: false
   register: argcheck
   when:
@@ -2010,8 +2013,7 @@
     option: gpgcheck
     value: '1'
     no_extra_spaces: true
-  loop: '{{ repo_grep_results.stdout | regex_findall( '(.+\.repo):\[(.+)\]\n?' )
-    }}'
+  loop: '{{ repo_grep_results.stdout | regex_findall( '(.+\.repo):\[(.+)\]\n?' ) }}'
   tags:
     - CCE-26876-3
     - CJIS-5.10.4.1
@@ -3208,6 +3210,7 @@
   command: findmnt  '/dev/shm'
   register: device_name
   failed_when: device_name.rc > 1
+  check_mode: false
   changed_when: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
@@ -3306,6 +3309,7 @@
   command: findmnt --fstab '/tmp'
   register: device_name
   failed_when: device_name.rc > 1
+  check_mode: false
   changed_when: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
@@ -3400,6 +3404,7 @@
   command: findmnt --fstab '/tmp'
   register: device_name
   failed_when: device_name.rc > 1
+  check_mode: false
   changed_when: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
@@ -3494,6 +3499,7 @@
   command: findmnt --fstab '/home'
   register: device_name
   failed_when: device_name.rc > 1
+  check_mode: false
   changed_when: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
@@ -3564,6 +3570,7 @@
   command: findmnt --fstab '/var/tmp'
   register: device_name
   failed_when: device_name.rc > 1
+  check_mode: false
   changed_when: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
@@ -3634,6 +3641,7 @@
   command: findmnt  '/dev/shm'
   register: device_name
   failed_when: device_name.rc > 1
+  check_mode: false
   changed_when: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
@@ -3732,6 +3740,7 @@
   command: findmnt  '/dev/shm'
   register: device_name
   failed_when: device_name.rc > 1
+  check_mode: false
   changed_when: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
@@ -3830,6 +3839,7 @@
   command: findmnt --fstab '/tmp'
   register: device_name
   failed_when: device_name.rc > 1
+  check_mode: false
   changed_when: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
@@ -3924,6 +3934,7 @@
   command: findmnt --fstab '/home'
   register: device_name
   failed_when: device_name.rc > 1
+  check_mode: false
   changed_when: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
@@ -4022,6 +4033,7 @@
   command: findmnt --fstab '/var/tmp'
   register: device_name
   failed_when: device_name.rc > 1
+  check_mode: false
   changed_when: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
@@ -4092,6 +4104,7 @@
   command: findmnt --fstab '/var/tmp'
   register: device_name
   failed_when: device_name.rc > 1
+  check_mode: false
   changed_when: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
@@ -4177,6 +4190,7 @@
 - name: check vsyscall argument exists
   command: grep 'GRUB_CMDLINE_LINUX.*vsyscall=' /etc/default/grub
   failed_when: false
+  check_mode: false
   register: argcheck
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
@@ -4289,6 +4303,7 @@
 - name: check slub_debug argument exists
   command: grep 'GRUB_CMDLINE_LINUX.*slub_debug=' /etc/default/grub
   failed_when: false
+  check_mode: false
   register: argcheck
   when:
     - ansible_virtualization_type not in ["docker", "lxc", "openvz"]
@@ -4372,6 +4387,7 @@
 - name: check page_poison argument exists
   command: grep 'GRUB_CMDLINE_LINUX.*page_poison=' /etc/default/grub
   failed_when: false
+  check_mode: false
   register: argcheck
   when:
     - ansible_virtualization_type not in ["docker", "lxc", "openvz"]

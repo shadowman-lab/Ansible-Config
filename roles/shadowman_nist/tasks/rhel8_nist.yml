@@ -1397,6 +1397,7 @@
 - name: get current kernel parameters
   command: /usr/bin/grub2-editenv - list
   register: kernelopts
+  check_mode: false
   changed_when: false
   when:
     - '"grub2-common" in ansible_facts.packages'
@@ -1456,6 +1457,7 @@
 - name: get current kernel parameters
   command: /usr/bin/grub2-editenv - list
   register: kernelopts
+  check_mode: false
   changed_when: false
   when:
     - '"grub2-common" in ansible_facts.packages'
@@ -3200,6 +3202,7 @@
 - name: get current kernel parameters
   command: /usr/bin/grub2-editenv - list
   register: kernelopts
+  check_mode: false
   changed_when: false
   when:
     - '"grub2-common" in ansible_facts.packages'
@@ -3252,6 +3255,7 @@
 - name: get current kernel parameters
   command: /usr/bin/grub2-editenv - list
   register: kernelopts
+  check_mode: false
   changed_when: false
   when:
     - '"grub2-common" in ansible_facts.packages'
@@ -4896,6 +4900,7 @@
 - name: get current kernel parameters
   command: /usr/bin/grub2-editenv - list
   register: kernelopts
+  check_mode: false
   changed_when: false
   when:
     - '"grub2-common" in ansible_facts.packages'
@@ -4948,6 +4953,7 @@
 - name: get current kernel parameters
   command: /usr/bin/grub2-editenv - list
   register: kernelopts
+  check_mode: false
   changed_when: false
   when:
     - '"grub2-common" in ansible_facts.packages'
@@ -4988,6 +4994,7 @@
   command: findmnt --fstab '/tmp'
   register: device_name
   failed_when: device_name.rc > 1
+  check_mode: false
   changed_when: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
@@ -5083,6 +5090,7 @@
   command: findmnt --fstab '/var'
   register: device_name
   failed_when: device_name.rc > 1
+  check_mode: false
   changed_when: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
@@ -5178,6 +5186,7 @@
   command: findmnt --fstab '/var/log'
   register: device_name
   failed_when: device_name.rc > 1
+  check_mode: false
   changed_when: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
@@ -5273,6 +5282,7 @@
   command: findmnt --fstab '/var/log/audit'
   register: device_name
   failed_when: device_name.rc > 1
+  check_mode: false
   changed_when: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
@@ -5368,6 +5378,7 @@
   command: findmnt --fstab '/tmp'
   register: device_name
   failed_when: device_name.rc > 1
+  check_mode: false
   changed_when: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
@@ -5463,6 +5474,7 @@
   command: findmnt --fstab '/boot'
   register: device_name
   failed_when: device_name.rc > 1
+  check_mode: false
   changed_when: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
@@ -5558,6 +5570,7 @@
   command: findmnt --fstab '/var/log'
   register: device_name
   failed_when: device_name.rc > 1
+  check_mode: false
   changed_when: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
@@ -5653,6 +5666,7 @@
   command: findmnt --fstab '/var/tmp'
   register: device_name
   failed_when: device_name.rc > 1
+  check_mode: false
   changed_when: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
@@ -5724,6 +5738,7 @@
   command: findmnt --fstab '/tmp'
   register: device_name
   failed_when: device_name.rc > 1
+  check_mode: false
   changed_when: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
@@ -5819,6 +5834,7 @@
   command: findmnt  '/dev/shm'
   register: device_name
   failed_when: device_name.rc > 1
+  check_mode: false
   changed_when: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
@@ -5914,6 +5930,7 @@
   command: findmnt --fstab '/var/log/audit'
   register: device_name
   failed_when: device_name.rc > 1
+  check_mode: false
   changed_when: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
@@ -6009,6 +6026,7 @@
   command: findmnt --fstab '/home'
   register: device_name
   failed_when: device_name.rc > 1
+  check_mode: false
   changed_when: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
@@ -6104,6 +6122,7 @@
   command: findmnt --fstab '/var/log/audit'
   register: device_name
   failed_when: device_name.rc > 1
+  check_mode: false
   changed_when: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
@@ -6199,6 +6218,7 @@
   command: findmnt --fstab '/var/tmp'
   register: device_name
   failed_when: device_name.rc > 1
+  check_mode: false
   changed_when: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
@@ -6270,6 +6290,7 @@
   command: findmnt  '/dev/shm'
   register: device_name
   failed_when: device_name.rc > 1
+  check_mode: false
   changed_when: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
@@ -6365,6 +6386,7 @@
   command: findmnt  '/dev/shm'
   register: device_name
   failed_when: device_name.rc > 1
+  check_mode: false
   changed_when: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
@@ -6460,6 +6482,7 @@
   command: findmnt --fstab '/var/log'
   register: device_name
   failed_when: device_name.rc > 1
+  check_mode: false
   changed_when: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
@@ -6555,6 +6578,7 @@
   command: findmnt --fstab '/boot'
   register: device_name
   failed_when: device_name.rc > 1
+  check_mode: false
   changed_when: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
@@ -6650,6 +6674,7 @@
   command: findmnt --fstab '/var/tmp'
   register: device_name
   failed_when: device_name.rc > 1
+  check_mode: false
   changed_when: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
@@ -6721,6 +6746,7 @@
   command: findmnt --fstab '/home'
   register: device_name
   failed_when: device_name.rc > 1
+  check_mode: false
   changed_when: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
