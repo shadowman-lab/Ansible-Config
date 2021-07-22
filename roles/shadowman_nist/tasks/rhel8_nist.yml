@@ -2500,9 +2500,8 @@
     option: gpgcheck
     value: '1'
     no_extra_spaces: true
-  when: repo_grep_results is defined
-  loop: '{{ repo_grep_results.stdout | regex_findall( ''(.+\.repo):\[(.+)\]\n?'' )
-    }}'
+  loop: "{{ repo_grep_results.stdout | regex_findall( '(.+\.repo):\[(.+)\]\n?' )
+}}"
   tags:
     - ensure_gpgcheck_never_disabled
     - high_severity
