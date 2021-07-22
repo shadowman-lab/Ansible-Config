@@ -26,6 +26,10 @@
     - medium_disruption
     - no_reboot_needed
 
+- name: print
+  debug:
+    var: repo_grep_results
+
 - name: Set gpgcheck=1 for each yum repo
   ini_file:
     path: '{{ item[0] }}'
