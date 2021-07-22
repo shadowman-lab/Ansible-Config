@@ -1386,7 +1386,7 @@
     regexp: audit_backlog_limit=\w+
     replace: audit_backlog_limit=8192
   when:
-    - argcheck.rc == 0
+    - argcheck.rc|default(1) == 0
     - ansible_virtualization_type not in ["docker", "lxc", "openvz"]
     - '"grub2" in ansible_facts.packages'
   tags:
@@ -1405,7 +1405,7 @@
     regexp: (GRUB_CMDLINE_LINUX=.*)"
     replace: \1 audit_backlog_limit=8192"
   when:
-    - argcheck.rc != 0
+    - argcheck.rc|default(1) != 0
     - ansible_virtualization_type not in ["docker", "lxc", "openvz"]
     - '"grub2" in ansible_facts.packages'
   tags:
@@ -1483,7 +1483,7 @@
     regexp: audit=\w+
     replace: audit=1
   when:
-    - argcheck.rc == 0
+    - argcheck.rc|default(1) == 0
     - ansible_virtualization_type not in ["docker", "lxc", "openvz"]
     - '"grub2" in ansible_facts.packages'
   tags:
@@ -1509,7 +1509,7 @@
     regexp: (GRUB_CMDLINE_LINUX=.*)"
     replace: \1 audit=1"
   when:
-    - argcheck.rc != 0
+    - argcheck.rc|default(1) != 0
     - ansible_virtualization_type not in ["docker", "lxc", "openvz"]
     - '"grub2" in ansible_facts.packages'
   tags:
@@ -1703,7 +1703,7 @@
     name: dracut-fips-aesni
     state: present
   when:
-    - aesni_supported.rc == 0
+    - aesni_supported|default(1) == 0
     - ansible_distribution == 'RedHat'
     - ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
@@ -1802,7 +1802,7 @@
     regexp: fips=.
     replace: fips=1
   when:
-    - fipsargcheck.rc == 0
+    - fipsargcheck.rc|default(1) == 0
     - ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
     - CCE-80359-3
@@ -1829,7 +1829,7 @@
     regexp: (GRUB_CMDLINE_LINUX=.*)"
     replace: \1 fips=1"
   when:
-    - fipsargcheck.rc != 0
+    - fipsargcheck.rc|default(1) != 0
     - ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
     - CCE-80359-3
@@ -1905,7 +1905,7 @@
     regexp: boot=\w*-\w*-\w*-\w*-\w*
     replace: boot={{ bootuuid.stdout }}
   when:
-    - bootargcheck.rc == 0
+    - bootargcheck.rc|default(1) == 0
     - ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
     - CCE-80359-3
@@ -1932,7 +1932,7 @@
     regexp: (GRUB_CMDLINE_LINUX=.*)"
     replace: \1 boot=UUID={{ bootuuid.stdout }}"
   when:
-    - bootargcheck.rc != 0
+    - bootargcheck.rc|default(1) != 0
     - ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
     - CCE-80359-3
@@ -2009,6 +2009,7 @@
     option: gpgcheck
     value: '1'
     no_extra_spaces: true
+  when: repo_grep_results is defined
   loop: '{{ repo_grep_results.stdout | regex_findall( ''(.+\.repo):\[(.+)\]\n?'' )
     }}'
   tags:
@@ -4194,7 +4195,7 @@
     regexp: vsyscall=\w+
     replace: vsyscall=none
   when:
-    - argcheck.rc == 0
+    - argcheck.rc|default(1) == 0
     - ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
     - CCE-82159-5
@@ -4212,7 +4213,7 @@
     regexp: (GRUB_CMDLINE_LINUX=.*)"
     replace: \1 vsyscall=none"
   when:
-    - argcheck.rc != 0
+    - argcheck.rc|default(1) != 0
     - ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
     - CCE-82159-5
@@ -4308,7 +4309,7 @@
     regexp: slub_debug=\w+
     replace: slub_debug=P
   when:
-    - argcheck.rc == 0
+    - argcheck.rc|default(1) == 0
     - ansible_virtualization_type not in ["docker", "lxc", "openvz"]
     - '"grub2" in ansible_facts.packages'
   tags:
@@ -4327,7 +4328,7 @@
     regexp: (GRUB_CMDLINE_LINUX=.*)"
     replace: \1 slub_debug=P"
   when:
-    - argcheck.rc != 0
+    - argcheck.rc|default(1) != 0
     - ansible_virtualization_type not in ["docker", "lxc", "openvz"]
     - '"grub2" in ansible_facts.packages'
   tags:
@@ -4391,7 +4392,7 @@
     regexp: page_poison=\w+
     replace: page_poison=1
   when:
-    - argcheck.rc == 0
+    - argcheck.rc|default(1) == 0
     - ansible_virtualization_type not in ["docker", "lxc", "openvz"]
     - '"grub2" in ansible_facts.packages'
   tags:
@@ -4410,7 +4411,7 @@
     regexp: (GRUB_CMDLINE_LINUX=.*)"
     replace: \1 page_poison=1"
   when:
-    - argcheck.rc != 0
+    - argcheck.rc|default(1) != 0
     - ansible_virtualization_type not in ["docker", "lxc", "openvz"]
     - '"grub2" in ansible_facts.packages'
   tags:
