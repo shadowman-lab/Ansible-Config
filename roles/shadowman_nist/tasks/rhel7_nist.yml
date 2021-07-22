@@ -1,7 +1,7 @@
 ---
 
 - name: Grep for yum repo section names
-  shell: "grep -HEr '^\[.+\]' -r /etc/yum.repos.d/"
+  command: grep -HEr '^\[.+\]' -r /etc/yum.repos.d/
   register: repo_grep_results
   ignore_errors: true
   changed_when: false
