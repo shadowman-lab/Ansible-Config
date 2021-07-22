@@ -2471,6 +2471,7 @@
   shell: grep -HEr '^\[.+\]' -r /etc/yum.repos.d/
   register: repo_grep_results
   ignore_errors: true
+  check_mode: no
   changed_when: false
   tags:
     - ensure_gpgcheck_never_disabled
@@ -2500,7 +2501,8 @@
     option: gpgcheck
     value: '1'
     no_extra_spaces: true
-  loop: '{{ repo_grep_results.stdout | regex_findall( "(.+\.repo):\[(.+)\]\n?" )}}'
+  loop: '{{ repo_grep_results.stdout | regex_findall( '(.+\.repo):\[(.+)\]\n?' )
+    }}'
   tags:
     - ensure_gpgcheck_never_disabled
     - high_severity
