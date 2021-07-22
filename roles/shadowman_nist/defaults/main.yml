@@ -14,8 +14,6 @@ var_password_pam_lcredit: !!str -1
 var_password_pam_ucredit: !!str -1
 var_accounts_max_concurrent_login_sessions: !!str 10
 var_accounts_user_umask: !!str 027
-var_accounts_user_umask: !!str 027
-var_accounts_user_umask: !!str 027
 var_auditd_flush: !!str incremental_async
 sysctl_net_ipv6_conf_default_accept_source_route_value: !!str 0
 sysctl_net_ipv6_conf_all_accept_source_route_value: !!str 0
