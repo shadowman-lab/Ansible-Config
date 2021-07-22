@@ -2009,8 +2009,7 @@
     option: gpgcheck
     value: '1'
     no_extra_spaces: true
-  loop: "{{ repo_grep_results.stdout | regex_findall( '(.+\.repo):\[(.+)\]\n?' )
-    }}"
+  loop: "{{ repo_grep_results.stdout | regex_findall( '(.+\.repo):\[(.+)\]\n?' )}}"
   tags:
     - CCE-26876-3
     - CJIS-5.10.4.1
