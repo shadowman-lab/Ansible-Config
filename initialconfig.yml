@@ -1,6 +1,7 @@
 ---
 - name: Perform inital configs of lab VMs
   hosts: "{{ vm_name | default('all')}}"
+  strategy: free
   gather_facts: false
 
   pre_tasks:
