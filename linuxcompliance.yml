@@ -1,0 +1,20 @@
+---
+- name: Perform Compliance Scans
+  hosts: all
+
+  tasks:
+
+    - name: PCI Compliance
+      ansible.builtin.include_role: 
+        name: shadowman_pci
+      when: compliance == "PCI"
+
+    - name: NIST Compliance
+      ansible.builtin.include_role: 
+        name: shadowman_nist
+      when: compliance == "NIST"
+
+    - name: CIS Compliance
+      ansible.builtin.include_role: 
+        name: shadowman_cis
+      when: compliance == "CIS"

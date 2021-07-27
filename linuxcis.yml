@@ -1,0 +1,6 @@
+---
+- name: RHEL CIS Compliance
+  hosts: all
+  
+  roles:
+    - shadowman_cis

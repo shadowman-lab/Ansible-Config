@@ -1,0 +1,6 @@
+---
+- include_tasks: rhel7_pci.yml
+  when: os is match(".*7.*")
+
+- include_tasks: rhel8_pci.yml
+  when: os is match(".*8.*")
