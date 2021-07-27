@@ -1,6 +1,7 @@
 ---
 - name: RHEL CIS Compliance
   hosts: all
+  strategy: free
   
   roles:
     - shadowman_cis

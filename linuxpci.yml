@@ -1,6 +1,7 @@
 ---
 - name: RHEL PCI Compliance
   hosts: all
+  strategy: free
   
   roles:
     - shadowman_pci

@@ -1,6 +1,7 @@
 ---
 - name: RHEL NIST Compliance
   hosts: all
+  strategy: free
   
   roles:
     - shadowman_nist
