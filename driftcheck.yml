@@ -1,6 +1,7 @@
 ---
 - name: Perform Drift check
   hosts: all
+  strategy: free
 
   tasks:
 
