@@ -1,6 +1,7 @@
 ---
 - name: Perform Compliance Scans
   hosts: all
+  strategy: free
 
   tasks:
 
