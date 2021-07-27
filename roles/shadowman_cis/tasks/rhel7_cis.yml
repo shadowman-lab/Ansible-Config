@@ -476,7 +476,6 @@
 - name: Do not allow users to reuse recent passwords - system-auth (change)
   replace:
     dest: /etc/pam.d/system-auth
-    follow: true
     regexp: ^(password\s+sufficient\s+pam_unix\.so\s.*remember\s*=\s*)(\S+)(.*)$
     replace: \g<1>{{ var_password_pam_unix_remember }}\g<3>
   when: '"pam" in ansible_facts.packages'
@@ -498,7 +497,6 @@
 - name: Do not allow users to reuse recent passwords - system-auth (add)
   replace:
     dest: /etc/pam.d/system-auth
-    follow: true
     regexp: ^password\s+sufficient\s+pam_unix\.so\s(?!.*remember\s*=\s*).*$
     replace: \g<0> remember={{ var_password_pam_unix_remember }}
   when: '"pam" in ansible_facts.packages'
@@ -908,7 +906,6 @@
 - name: Set Password Retry Prompts Permitted Per-Session - system-auth (change)
   replace:
     dest: /etc/pam.d/system-auth
-    follow: true
     regexp: (^.*\spam_pwquality.so\s.*retry\s*=\s*)(\S+)(.*$)
     replace: \g<1>{{ var_password_pam_retry }}\g<3>
   when: '"pam" in ansible_facts.packages'
@@ -929,7 +926,6 @@
 - name: Set Password Retry Prompts Permitted Per-Session - system-auth (add)
   replace:
     dest: /etc/pam.d/system-auth
-    follow: true
     regexp: ^.*\spam_pwquality.so\s(?!.*retry\s*=\s*).*$
     replace: \g<0> retry={{ var_password_pam_retry }}
   when: '"pam" in ansible_facts.packages'
@@ -12194,7 +12190,6 @@
   find:
     paths:
       - /etc/grub.d/
-    follow: true
   register: grub
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz"]
   tags:
