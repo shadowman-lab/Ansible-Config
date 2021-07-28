@@ -36,4 +36,4 @@
         name: shadowman_add_to_ad
       when: 
         - ansible_os_family is match("Windows")
-        - shadowman_provision_hypervisor|Default('RHV') != "Azure"
+        - shadowman_provision_hypervisor|default('RHV') != "Azure"
