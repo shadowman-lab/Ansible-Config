@@ -1,5 +1,5 @@
 ---
-- name: Unblock all ICMP for source addr
+- name: Change State on all ICMP for source addr
   ansible.posix.firewalld:
     zone: drop
     state: "{{ state }}"
