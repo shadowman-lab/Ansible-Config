@@ -6,8 +6,8 @@
 ## Notes
 - These instructions assume that there is no MID-Server for ServiceNow, and that the ServiceNow instance and Ansible Tower can talk to each other directly over the public internet.
 - This has been tested with:
-  - Ansible Tower 3.6, 3.7
-  - ServiceNow Orlando Release
+  - Ansible Tower 3.6, 3.7, 3.8
+  - ServiceNow Orlando, Paris, Quebec
 
 - While the mid-server is an outbound connection from on-prem to the customer’s ServiceNow Instance, it subscribes to the “ECC Queue” allowing for bidirectional communication between an on-prem Tower and ServiceNow. Because it is polling, there can be a delay between the initiation of an action and the mid-server processing the request.
 
