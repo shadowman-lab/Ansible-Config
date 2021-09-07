@@ -18,7 +18,6 @@
     state: present
     activationkey: "RHEL7 Everything"
     org_id: Shadow_Man
-  ignore_errors: true
   when: ansible_distribution_version is match("7.*")
   
 - name: Use Activation Key to Register RHEL8 Machine to Satellite
@@ -26,7 +25,6 @@
     state: present
     activationkey: "RHEL8"
     org_id: Shadow_Man
-  ignore_errors: true
   when: ansible_distribution_version is match("8.*")
 
 - name: Enable Repositories for RHEL 7
