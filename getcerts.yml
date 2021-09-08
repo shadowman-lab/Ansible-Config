@@ -10,10 +10,6 @@
         port: 443
       register: cert
 
-    - name: set fact
-      set_fact:
-        certs: "{{ cert.extensions[5].asn1_data | string }}"
-
     - name: Display results
       debug:
-        msg: "{{ certs.split() | last }}"
+        msg: "{{ cert.extensions[5].asn1_data.split() | last }}"
