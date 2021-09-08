@@ -9,3 +9,7 @@
         host: aap.shadowman.dev
         port: 443
       register: cert
+
+    - name: Display results
+      debug:
+        var: cert.extensions[5].asn1_data
