@@ -6,7 +6,7 @@
   tasks:
     - name: Get cert from https
       get_certificate:
-        host: www.google.com
+        host: aap.shadowman.dev
         port: 443
       register: cert
 
