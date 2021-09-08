@@ -1,0 +1,11 @@
+---
+- name: Get certs
+  hosts: localhost
+  gather_facts: false
+  
+  tasks:
+    - name: Get cert from https
+      get_cerificate:
+        host: aap.shadowman.dev
+        port: 443
+      register: cert
