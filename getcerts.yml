@@ -12,4 +12,4 @@
 
     - name: Display results
       debug:
-        msg: "{{ cert.extensions[5].asn1_data | b64decode }}"
+        msg: "{{ cert.extensions[5].asn1_data | type_debug }}"
