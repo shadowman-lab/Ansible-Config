@@ -12,4 +12,4 @@
 
     - name: Display results
       debug:
-        msg: "{{ cert.extensions[5].asn1_data | to_nice_json }}"
+        msg: "{{ cert.extensions[5].asn1_data | to_json(ensure_ascii=False) }}"
