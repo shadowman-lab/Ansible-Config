@@ -16,4 +16,4 @@
 
     - name: Display results
       debug:
-        msg: "{{ certs.split() }}"
+        msg: "{{ certs.split() | last }}"
