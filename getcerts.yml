@@ -12,6 +12,6 @@
 
     - name: Fact set
       set_fact:
-        certs: "{{ cert.extensions[5].asn1_data | to_json }}"
+        certs: "{{ cert.extensions[5].asn1_data | to_json(ensure_ascii=False) }}"
 
   
