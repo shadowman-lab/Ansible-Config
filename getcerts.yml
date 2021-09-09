@@ -11,7 +11,7 @@
 
     - name: Cert modify
       set_fact:
-        certmodify: "{{ cert | regex_replace('\d*\\u\d+[?]*','\\1') }}"
+        certmodify: "{{ cert | regex_replace('\\d*\\u\\d+[?]*','\\1') }}"
 
     - name: Display
       debug:
