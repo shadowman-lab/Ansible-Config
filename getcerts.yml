@@ -11,6 +11,6 @@
 
     - name: Display
       debug:
-        msg: Cert Name: {{ cert | regex_replace('\d*\\u\d+[?]*','\\1') }}
+        var: cert | regex_replace('\d*\\u\d+[?]*','\\1')
 
   
