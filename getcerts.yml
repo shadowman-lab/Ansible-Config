@@ -10,6 +10,8 @@
         port: 443
       register: cert
 
-    - name: Display results
-      debug:
-        msg: "{{ cert.extensions[5].asn1_data | string | from_json }}"
+    - name: Fact set
+      set_fact:
+        certs: "{{ cert.extensions[5].asn1_data | from_json }}"
+
+  
