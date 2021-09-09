@@ -7,6 +7,6 @@
   
     - name: Display Filtered Results
       debug:
-        msg: This is the output {{ '0\u0017?\u0015ottomate.elis.abb.com' | regex_replace('\d*\\u\d+[?]*','\\1') }}
+        msg: This is the output {{ '0\u0017?\u0015ottomate.elis.abb.com' | regex_replace('\d*\\u\d+[?]*','') }}
 
   
