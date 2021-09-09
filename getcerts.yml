@@ -5,8 +5,12 @@
   
   tasks:
   
-    - name: Display Filtered Results
+    - name: Fact set
+      set_fact:
+        cert: '0\u0017?\u0015ottomate.elis.abb.com'
+
+    - name: Display
       debug:
-        msg: This is the output {{ '0\u0017?\u0015ottomate.elis.abb.com' | regex_replace('\d*\\u\d+[?]*','') }}
+        msg: "{{ cert | regex_replace('\d*\\u\d+[?]*','\\1') }}"
 
   
