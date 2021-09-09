@@ -12,6 +12,6 @@
 
     - name: Fact set
       set_fact:
-        certs: '{{ "0\u0017?\u0015ottomate.elis.abb.com" | regex_replace("\d*\\u\d+[?]*","\\1") }}'
+        certs: '{{ "0\u0017?\u0015ottomate.elis.abb.com" | regex_replace("\d*\\u\d+[?]*","") }}'
 
   
