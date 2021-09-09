@@ -9,8 +9,12 @@
       set_fact:
         cert: !unsafe '0\u0017?\u0015ottomate.elis.abb.com'
 
+    - name: Cert modify
+      set_fact:
+        certmodify: "{{ cert | regex_replace('\d*\\u\d+[?]*','\\1') }}"
+
     - name: Display
       debug:
-        var: cert | regex_replace('\d*\\u\d+[?]*','\\1')
+        var: certmodify
 
   
