@@ -4,14 +4,13 @@
   gather_facts: false
   
   tasks:
-    - name: Get cert from https
-      get_certificate:
-        host: aap.shadowman.dev
-        port: 443
-      register: cert
-
+  
     - name: Fact set
       set_fact:
-        certs: '{{ "0\u0017?\u0015ottomate.elis.abb.com" | regex_replace("\d*\\u\d+[?]*","") }}'
+        cert: "0\u0017?\u0015ottomate.elis.abb.com"
+
+    - name: Display
+      debug:
+        var: '{{ cert | regex_replace("\d*\\u\d+[?]*","") }}'
 
   
