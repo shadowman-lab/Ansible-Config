@@ -12,4 +12,4 @@
 
     - name: Display results
       debug:
-        msg: "{{ cert.extensions[5].asn1_data.split() | last }}"
+        msg: "{{ cert.extensions[1].asn1_data.split() | last }}"
