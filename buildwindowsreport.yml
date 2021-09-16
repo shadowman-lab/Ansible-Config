@@ -1,9 +1,12 @@
 ---
 - name: Gather Facts
   hosts: tag_Windows
+  tasks:
 
-  roles:
-    - shadowman_scan_systems
+    - name: Scan Systems for detailed report
+      ansible.builtin.include_role:
+        name: shadowman_scan_systems
+      when: detailedreport == True
 
 - name: Build report with facts
   hosts: report.shadowman.dev
