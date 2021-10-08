@@ -1,0 +1,13 @@
+---
+- name: Setup RHEL for Template
+  hosts: all
+
+  roles:
+    - shadowman_rhel_register
+    - shadowman_patching
+    - shadowman_rhel_template_seal
+
+
+
+
+
