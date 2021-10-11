@@ -4,10 +4,11 @@
     name: scap-compliance-checker
     state: latest
 
+
 - name: Copy files to Tower host
   ansible.builtin.fetch:
     src: "C:\\Program Files\\SCAP Compliance Checker 5.4.2\\options.xml"
-    dest: "/home/adworjan/{{ inventory_hostname }}/"
+    dest: "/home/{{ inventory_hostname }}/"
     flat: yes
 
 #will need to upgrade for Ansible 2.11
