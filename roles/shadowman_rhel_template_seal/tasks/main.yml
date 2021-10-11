@@ -29,9 +29,6 @@
     ipa_host: "{{ IPA_HOST }}"
     ipa_user: "{{ IPA_USER }}"
     update_dns: True
-  when: 
-    - ansible_host != ''
-    - ansible_host != ip_addr
 
 - name: Remove and Clean all Subscription Data
   ansible.builtin.shell: subscription-manager remove --all && subscription-manager clean
