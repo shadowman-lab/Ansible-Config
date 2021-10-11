@@ -63,9 +63,9 @@
       <suppress_warnings>0</suppress_warnings>
       <!-- *********** Output Options ***************** -->
       <sharedOptions>1</sharedOptions>
-      <userResultsDirectory>C:\Users\Administrator\SCC</userResultsDirectory>
+      <userResultsDirectory>C:\Users\ansible\SCC</userResultsDirectory>
       <userResultsDirectoryValue>0</userResultsDirectoryValue>
-      <userConfigDirectory>C:\Users\Administrator\SCC\Config</userConfigDirectory>
+      <userConfigDirectory>C:\Users\ansible\SCC\Config</userConfigDirectory>
       <userConfigDirectoryValue>0</userConfigDirectoryValue>
       <setRestrictedPermissions>1</setRestrictedPermissions>
       <!-- *********** Output Subdirectory Options ***************** -->
