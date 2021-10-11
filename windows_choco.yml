@@ -1,7 +1,6 @@
 ---
-- name: Windows patching playbook
+- name: Windows SCAP Scanner
   hosts: tag_Windows
-  gather_facts: false
 
   tasks:
 
