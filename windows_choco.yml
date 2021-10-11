@@ -1,0 +1,11 @@
+---
+- name: Windows patching playbook
+  hosts: tag_Windows
+  gather_facts: false
+
+  tasks:
+
+    - name: Install SCAP Scanner
+      win_chocolatey:
+        name: scap-compliance-checker
+        state: latest
