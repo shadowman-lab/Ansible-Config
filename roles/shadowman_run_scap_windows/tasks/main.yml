@@ -7,7 +7,7 @@
 - name: Copy files to Tower host
   ansible.builtin.fetch:
     src: "C:\\Program Files\\SCAP Compliance Checker 5.4.2\\options.xml"
-    dest: "/home/adworjan"
+    dest: "/home/adworjan/"
     flat: yes
 
 #will need to upgrade for Ansible 2.11
