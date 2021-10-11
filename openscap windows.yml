@@ -1,6 +1,7 @@
 ---
 - name: Build openscap report
   hosts: all
+  gather_facts: false
   strategy: free
 
   roles:
