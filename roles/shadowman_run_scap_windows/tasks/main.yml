@@ -6,7 +6,7 @@
 
 - name: Copy options file
   win_copy:
-    src: files\options.xml
+    src: options.xml
     dest: C:\Program Files\SCAP Compliance Checker 5.4.2\options.xml"
 
 #will need to upgrade for Ansible 2.11
