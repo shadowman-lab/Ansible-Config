@@ -4,6 +4,7 @@
 
   roles:
     - shadowman_rhel_register
+    - shadowman_add_to_idm
     - shadowman_patching
     - shadowman_rhel_template_seal
 
