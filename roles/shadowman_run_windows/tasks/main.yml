@@ -1,0 +1,26 @@
+---
+- name: Install SCAP Scanner
+  chocolatey.chocolatey.win_chocolatey:
+    name: scap-compliance-checker
+    state: latest
+
+#- name: create HTML report
+#  ansible.builtin.command: "oscap xccdf eval --profile xccdf_org.ssgproject.content_profile_{{ content_profile }} --results report.xml --report index.html /usr/share/xml/scap/ssg/content/ssg-rhel{{ ansible_distribution_major_version }}-ds.xml"
+#  register: command_result
+#  failed_when: "'Error' in command_result.stderr"
+
+- name: Copy files to Tower host
+  ansible.builtin.fetch:
+    src: "C:\\Users\\Administrator\\SCC\\Sessions\\SCAP\\WIN2016_All-Settings_Windows_Server_2016_STIG-002.001.html"
+    dest: "/tmp/{{ inventory_hostname }}/index.html"
+    flat: yes
+
+- name: Copy folders to reports host
+  ansible.builtin.copy:        
+    src: "/tmp/{{ inventory_hostname }}"
+    dest: "{{ file_path }}"
+  delegate_to: report.shadowman.dev
+
+- name: DISPLAY LINK TO INVENTORY REPORT
+  ansible.builtin.debug:
+    msg: "http://report.shadowman.dev/openscap/{{ inventory_hostname }}"
