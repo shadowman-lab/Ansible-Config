@@ -1,5 +1,5 @@
 ---
-- name: Build openscap report
+- name: Build SCAP report Windows
   hosts: all
   gather_facts: false
   strategy: free
