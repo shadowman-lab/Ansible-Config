@@ -4,8 +4,10 @@
     name: scap-compliance-checker
     state: latest
 
-#- name: create HTML report
-#  ansible.builtin.command: "oscap xccdf eval --profile xccdf_org.ssgproject.content_profile_{{ content_profile }} --results report.xml --report index.html /usr/share/xml/scap/ssg/content/ssg-rhel{{ ansible_distribution_major_version }}-ds.xml"
+- name: create HTML report
+  ansible.windows.win_command: cscc.exe -o options.xml
+  args:
+    chdir: C:\Program Files\SCAP Compliance Checker 5.4.2\
 #  register: command_result
 #  failed_when: "'Error' in command_result.stderr"
 
