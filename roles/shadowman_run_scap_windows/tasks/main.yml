@@ -5,7 +5,9 @@
     state: latest
 
 - name: create HTML report
-  ansible.windows.win_command: whoami
+  win_command: cscc.exe -o options.xml
+  args:
+    chdir: C:\Program Files\SCAP Compliance Checker 5.4.2\
 
 - name: Copy files to Tower host
   ansible.builtin.fetch:
