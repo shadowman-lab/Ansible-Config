@@ -1,6 +1,6 @@
 ---
 - name: Setup RHEL for Template
-  hosts: "{{ operating_system }}_updates.shadowman.dev"
+  hosts: "{{ operating_system }}updates.shadowman.dev"
   gather_facts: false
 
   pre_tasks:
