@@ -6,5 +6,5 @@
 
     - name: Install SCAP Scanner
       chocolatey.chocolatey.win_chocolatey:
-        name: notepad++
-        state: present
+        name: scap-compliance-checker
+        state: latest
