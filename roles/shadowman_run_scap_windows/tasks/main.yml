@@ -4,6 +4,12 @@
     name: scap-compliance-checker
     state: latest
 
+- name: Copy files to Tower host
+  ansible.builtin.fetch:
+    src: "C:\\Program Files\\SCAP Compliance Checker 5.4.2\\options.xml"
+    dest: "/home/adworjan"
+    flat: yes
+
 #will need to upgrade for Ansible 2.11
 - name: create HTML report
   win_command: cscc.exe -o options.xml
@@ -12,7 +18,7 @@
 
 - name: Copy files to Tower host
   ansible.builtin.fetch:
-    src: "C:\\Users\\Administrator\\SCC\\Sessions\\SCAP\\{{ inventory_hostname | split('.')[0] | upper }}_All-Settings_Windows_Server_2016_STIG-002.001.html"
+    src: "C:\\Users\\Administrator\\SCC\\Sessions\\SCAP\\All-Settings_Windows_Server_2016_STIG-002.001.html"
     dest: "/tmp/{{ inventory_hostname }}/index.html"
     flat: yes
 
