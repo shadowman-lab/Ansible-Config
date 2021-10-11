@@ -4,4 +4,4 @@
   strategy: free
 
   roles:
-    - shadowman_run_scap
+    - shadowman_run_scap_windows
