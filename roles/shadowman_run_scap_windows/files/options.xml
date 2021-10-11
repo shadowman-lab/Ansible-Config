@@ -82,7 +82,7 @@
       <fileTargetNameEnabled>0</fileTargetNameEnabled>
       <fileSCCVersionEnabled>0</fileSCCVersionEnabled>
       <fileTimestampEnabled>0</fileTimestampEnabled>
-      <fileContentVersionEnabled>1</fileContentVersionEnabled>
+      <fileContentVersionEnabled>0</fileContentVersionEnabled>
       <!-- *********** Content Options ***************** -->
       <newerContentInstall>1</newerContentInstall>
       <contentDevModeSkipValidation>0</contentDevModeSkipValidation>
