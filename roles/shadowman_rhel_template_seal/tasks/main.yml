@@ -15,24 +15,6 @@
     state: absent
     org_id: Shadow_Man
 
-- name: Remove from IDM
-  ansible.builtin.command: "ipa-client-install --uninstall --unattended"
-  when: ansible_host != ''
-  register: output
-  ignore_errors: true
-
-- name: Ensure host and its DNS record is absent for RHEL
-  community.general.ipa_host:
-    name: "{{ fqdn }}"
-    state: absent
-    ipa_pass: "{{ IPA_PASS }}"
-    ipa_host: "{{ IPA_HOST }}"
-    ipa_user: "{{ IPA_USER }}"
-    update_dns: True
-  when: 
-    - ansible_host != ''
-    - ansible_host != ip_addr
-
 - name: Remove and Clean all Subscription Data
   ansible.builtin.shell: subscription-manager remove --all && subscription-manager clean
 
