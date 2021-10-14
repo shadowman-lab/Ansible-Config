@@ -76,12 +76,12 @@ collapsible: true
         </tr>
     </thead>
     <tbody>
-{% for linux_server in groups['tag_Insights']|sort %}
+{% for linux_host in groups['tag_Insights']|sort %}
         <tr>
             <td class="summary_info">
               <div id="hostname">
                 <p class="hostname"> 
-                  <img class="router_image" src="server.png"> {{ hostvars[linux_server]['inventory_hostname'].split('.')[0] }}</p>
+                  <img class="router_image" src="server.png"> {{ hostvars[linux_host]['inventory_hostname'].split('.')[0] }}</p>
                 </div>
 {% if detailedreport == 'True' %}
 {% include 'packages.j2' %}
