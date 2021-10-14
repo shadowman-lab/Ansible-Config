@@ -79,7 +79,7 @@ collapsible: true
             <td class="summary_info">
               <div id="hostname">
                 <p class="hostname"> 
-                  <img class="router_image" src="server.png"> {{ hostvars[linux_host]['inventory_hostname'].split('.')[0] }}</p>
+                  <img class="router_image" src="server.png"> {{ hostvars[windows_host]['inventory_hostname'].split('.')[0] }}</p>
                 </div>
 {% if detailedreport == 'True' %}
 {% include 'packages.j2' %}
