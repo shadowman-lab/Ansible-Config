@@ -29,7 +29,7 @@
 
 - name: Copy files to Tower host
   ansible.builtin.fetch:
-    src: "C:\\Program Files (x86)\\OpenSCAP 1.3.0\\index.html"
+    src: "C:\\Users\\ansible\\index.html"
     dest: "/tmp/{{ inventory_hostname }}/index.html"
     flat: yes
 
