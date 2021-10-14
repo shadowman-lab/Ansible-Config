@@ -1,0 +1,37 @@
+---
+- name: Install OpenSCAP Scanner
+  win_package:
+    path: https://github.com/OpenSCAP/openscap/releases/download/1.3.0/OpenSCAP-1.3.0-win32.msi
+    arguments: /install /passive /norestart
+
+- name: Install Visual Studio Package
+  win_package:
+    path: https://aka.ms/vs/16/release/vc_redist.x86.exe
+    arguments: /install /passive /norestart
+
+- name: Copy options file needed for scan
+  win_copy:
+    src: Windows_Server_2016_STIG.xml
+    dest: C:\Program Files (x86)\OpenSCAP 1.3.0\Windows_Server_2016_STIG.xml
+
+#will need to upgrade for Ansible 2.11
+- name: create HTML report
+  win_command: oscap.exe xccdf eval --profile xccdf_mil.disa.stig_profile_Mac-3_Sensitive Windows_Server_2016_STIG.xml
+  args:
+    chdir: C:\Program Files (x86)\OpenSCAP 1.3.0\
+
+- name: Copy files to Tower host
+  ansible.builtin.fetch:
+    src: "C:\\Users\\ansible\\SCC\\Sessions\\SCAP\\All-Settings_Windows_Server_2016_STIG.html"
+    dest: "/tmp/{{ inventory_hostname }}/index.html"
+    flat: yes
+
+- name: Copy folders to reports host
+  ansible.builtin.copy:        
+    src: "/tmp/{{ inventory_hostname }}"
+    dest: "{{ file_path }}"
+  delegate_to: report.shadowman.dev
+
+- name: DISPLAY LINK TO SCAP REPORT
+  ansible.builtin.debug:
+    msg: "http://report.shadowman.dev/openscap/{{ inventory_hostname }}"
