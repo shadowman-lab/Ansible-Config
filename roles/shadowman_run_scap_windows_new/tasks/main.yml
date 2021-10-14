@@ -24,6 +24,8 @@
   win_command: oscap.exe xccdf eval --profile xccdf_mil.disa.stig_profile_MAC-3_Sensitive --results C:\Users\ansible\index.html Windows_Server_2016_STIG.xml
   args:
     chdir: C:\Program Files (x86)\OpenSCAP 1.3.0\
+  register: command_result
+  failed_when: result.rc != 2
 
 - name: Copy files to Tower host
   ansible.builtin.fetch:
