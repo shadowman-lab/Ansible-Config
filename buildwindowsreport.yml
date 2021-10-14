@@ -15,4 +15,4 @@
 
     - name: build a report
       ansible.builtin.include_role:
-        name: shadowman.reports.build_report_windows
+        name: new_report_windows
