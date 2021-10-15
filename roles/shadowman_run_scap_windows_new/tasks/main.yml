@@ -1,5 +1,0 @@
----
-- name: Install SCAP Scanner
-  chocolatey.chocolatey.win_chocolatey:
-    name: scap-compliance-checker
-    state: absent
