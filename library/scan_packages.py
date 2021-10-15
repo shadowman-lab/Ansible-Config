@@ -52,7 +52,7 @@ EXAMPLES = '''
 def rpm_package_list():
     import rpm
     trans_set = rpm.TransactionSet()
-    package_details = {}
+    package_details = []
     for package in trans_set.dbMatch():
         package_details = package_details + {
                                'name':package[rpm.RPMTAG_NAME],
