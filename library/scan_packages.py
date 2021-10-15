@@ -71,7 +71,7 @@ def rpm_package_list():
 def deb_package_list():
     import apt
     apt_cache = apt.Cache()
-    installed_packages = {}
+    installed_packages = []
     apt_installed_packages = [pk for pk in apt_cache.keys() if apt_cache[pk].is_installed]
     for package in apt_installed_packages:
         ac_pkg = apt_cache[package].installed
@@ -80,10 +80,10 @@ def deb_package_list():
                                'version':ac_pkg.version,
                                'arch':ac_pkg.architecture,
                                'source':'apt'}
-        if package_details['name'] not in installed_packages:
-            installed_packages[package_details['name']] = [package_details]
+        if installed_packages == []:
+            installed_packages = [package_details]
         else:
-            installed_packages[package_details['name']].append(package_details)
+            installed_packages.append(package_details)
     return installed_packages
 
 
