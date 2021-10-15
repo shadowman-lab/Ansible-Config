@@ -61,7 +61,7 @@ def rpm_package_list():
                                'epoch':package[rpm.RPMTAG_EPOCH],
                                'arch':package[rpm.RPMTAG_ARCH],
                                'source':'rpm' }
-        if package_details['name'] not in installed_packages:
+        if installed_packages == []:
             installed_packages = [package_details]
         else:
             installed_packages.append(package_details)
