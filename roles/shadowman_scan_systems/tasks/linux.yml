@@ -1,6 +1,6 @@
 ---
 - name: Scan packages (Unix/Linux)
-  scan_packages:
+  shadowman.reports.scan_packages:
     os_family: '{{ ansible_os_family }}'
   when: ansible_os_family != "Windows"
 
