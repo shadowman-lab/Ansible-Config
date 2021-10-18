@@ -77,7 +77,7 @@ collapsible: true
         </tr>
     </thead>
     <tbody>
-{% for linux_host in groups[''{{ vm_names }}'']|sort %}
+{% for linux_host in groups[ \' {{ vm_names }} \']|sort %}
         <tr>
             <td class="summary_info">
               <div id="hostname">
