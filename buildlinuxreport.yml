@@ -1,6 +1,6 @@
 ---
 - name: Gather Facts
-  hosts: "{{ vm_names }}"
+  hosts: tag_Insights
   tasks:
   
     - name: Scan Systems for detailed report
@@ -15,4 +15,4 @@
 
     - name: build a report
       ansible.builtin.include_role:
-        name: new_report_linux
+        name: shadowman.reports.build_report_linux
