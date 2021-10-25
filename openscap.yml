@@ -2,14 +2,6 @@
 - name: Build openscap report
   hosts: all
   strategy: free
-  vars:
-    ansible_remote_tmp: /logs
-    ansible_system_tmpdirs: ['/newtest']
 
-  pre_tasks:
-    - name: Simple test
-      command: whoami
-
-  
   roles:
     - shadowman_run_scap
