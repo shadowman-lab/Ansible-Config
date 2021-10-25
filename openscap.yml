@@ -2,6 +2,8 @@
 - name: Build openscap report
   hosts: all
   strategy: free
+  vars:
+    ansible_remote_tmp: /logs
 
   roles:
     - shadowman_run_scap
