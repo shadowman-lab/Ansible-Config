@@ -4,6 +4,7 @@
   strategy: free
   vars:
     ansible_remote_tmp: /logs
+    ansible_system_tmpdirs: ['/newtest']
 
   roles:
     - shadowman_run_scap
