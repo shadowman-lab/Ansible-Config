@@ -4,10 +4,10 @@ collections:
   - name: chocolatey.chocolatey
 
   - name: community.windows
-    source: https://towerhub.shadowman.dev/api/galaxy/content/community/
+    source: https://towerpah.shadowman.dev/api/galaxy/content/community/
 
   - name: community.general
-    source: https://towerhub.shadowman.dev/api/galaxy/content/community/
+    source: https://towerpah.shadowman.dev/api/galaxy/content/community/
 
   - name: ansible.windows
 
@@ -16,7 +16,7 @@ collections:
   - name: splunk.es
 
   - name: shadowman.reports
-    source: https://towerhub.shadowman.dev/api/galaxy/content/published/
+    source: https://towerpah.shadowman.dev/api/galaxy/content/published/
 
   - name: redhat.rhv
 
