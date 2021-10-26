@@ -1,0 +1,7 @@
+---
+- name: Windows STIG Compliance
+  hosts: all
+  strategy: free
+  
+  roles:
+    - shadowman_stig_windows_2016
