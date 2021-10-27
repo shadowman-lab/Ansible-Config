@@ -335,8 +335,8 @@ wn16_ac_000050_maximumpasswordage: 60
 wn16_ac_000060_minimumpasswordage: 1
 wn16_ac_000070_minimumpasswordlength: 14
 
-wn16_so_000030_newadministratorname: renamedadmin
-wn16_so_000040_newguestname: renamedguest
+wn16_so_000030_newadministratorname: ansibleadmin
+wn16_so_000040_newguestname: ansibleguest
 
 wn16_so_000150_legalnoticetext: |
     You are accessing a U.S. Government (USG) Information System (IS) that is provided for USG-authorized use only.

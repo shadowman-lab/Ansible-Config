@@ -447,11 +447,11 @@ is_hyperv_installed: false
 # Section 2 Variables
 # Control 2.3.1.5
 # win16cis_admin_username is the name the administrator account will be renamed to
-win16cis_admin_username: ChangeThis
+win16cis_admin_username: ansibleadmin
 
 # Control 2.3.1.6
 # win16cis_guest_username is the name the guest account will be renamed to
-win16cis_guest_username: GuestChangeThis
+win16cis_guest_username: ansibleguest
 
 # This SID is the same for standalone, member, domain controller for 'Administrators' group
 sedebugprivilege: "*S-1-5-32-544"
@@ -476,8 +476,8 @@ laps_passwordlength: 15
 # To conform to CIS standards please use a max value of 30
 laps_passwordagedays: 30
 
-newadministratorname: renamedadmin
-newguestname: renamedguest
+newadministratorname: ansibleadmin
+newguestname: ansibleguest
 
 legalnoticetext: |
     You are accessing a U.S. Government (USG) Information System (IS) that is provided for USG-authorized use only.

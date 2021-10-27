@@ -11,6 +11,7 @@
   register: win2016_tpm_enabled
   changed_when: no
   failed_when: no
+  check_mode: false
   tags:
       - always
 
