@@ -399,16 +399,7 @@
 # https://stackoverflow.com/questions/31049454/how-to-retrieve-recursively-any-files-with-a-specific-extensions-in-powershell/31049571
 - name: "MEDIUM | WN16-00-000270 | Software certificate installation files must be removed from Windows Server 2016."
   block:
-      - name: "MEDIUM | WN16-00-000270 | AUDIT | Software certificate installation files must be removed from Windows Server 2016."
-        win_find:
-            paths: C:\
-            patterns: ['*.p12', '*.pfx']
-            hidden: true
-            recurse: true
-            follow: true
-        register: wn16_00_000270_audit
-        check_mode: no
-        changed_when: no
+      
         # do we need async; its very long running to search filesystems
 
       - name: "MEDIUM | WN16-00-000270 | AUDIT | Software certificate installation files must be removed from Windows Server 2016."
