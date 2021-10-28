@@ -380,7 +380,7 @@
         register: wn16_00_000250_audit
         # failed_when: "'Get-SmbShare : No MSFT_SMBShare objects found with property 'Special' equal to 'False'' not in wn16_00_000250_audit.stdout"
         failed_when: "'No MSFT_SMBShare objects found' not in wn16_00_000250_audit.stderr"
-        # ignore_errors: yes
+        ignore_errors: yes
         check_mode: no
         changed_when: no
 
