@@ -414,7 +414,7 @@
       - name: "MEDIUM | WN16-00-000270 | AUDIT | Software certificate installation files must be removed from Windows Server 2016."
         debug:
             msg: "{{ wn16_00_000270_audit.stdout_lines }}"
-        when: wn16_00_000270_audit.stdout != ""
+        when: wn16_00_000270_audit.stdout|default("") != ""
   when:
       - wn16_00_000270
       - not winstig_skip_for_test
