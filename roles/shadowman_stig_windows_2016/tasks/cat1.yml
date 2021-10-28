@@ -49,7 +49,9 @@
       - name: "HIGH | WN16-MS-000010 | AUDIT | Only administrators responsible for the member server or standalone system must have Administrator rights on the system."
         win_shell: Get-LocalGroupMember -Name 'Administrators'
         register: wn16_ms_000010_audit
+        check_mode: false
         changed_when: no
+
       - name: "HIGH | WN16-MS-000010 | AUDIT | Only administrators responsible for the member server or standalone system must have Administrator rights on the system."
         debug:
             msg:
@@ -187,6 +189,7 @@
       - name: "HIGH | WN16-AC-000090 | AUDIT | Windows Server 2016 reversible password encryption must be disabled."
         win_shell: Get-LocalUser -Name * | Select-Object name,AllowReversiblePasswordEncryption
         register: wn16_ac_000090_audit
+        check_mode: false
         # failed_when: wn16_ac_000090_audit
         changed_when: no
       - debug:
