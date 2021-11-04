@@ -3,5 +3,14 @@
   hosts: all
   strategy: free
   
-  roles:
-    - shadowman_nist
+  tasks:
+
+    - name: NIST Compliance RHEL7
+      ansible.builtin.include_role: 
+        name: shadowman_nist_rhel7
+      when: os is match(".*7.*")
+
+    - name: NIST Compliance RHEL8
+      ansible.builtin.include_role: 
+        name: shadowman_nist_rhel8
+      when: os is match(".*8.*")

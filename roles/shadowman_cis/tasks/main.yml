@@ -1,6 +1,0 @@
----
-- include_tasks: rhel7_cis.yml
-  when: os is match(".*7.*")
-
-- include_tasks: rhel8_cis.yml
-  when: os is match(".*8.*")
