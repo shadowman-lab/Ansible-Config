@@ -2962,6 +2962,7 @@
   file:
     path: /etc/audit/rules.d/30-ospp-v42-3-access-failed.rules
     mode: o-rwx
+  check_mode: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
   tags:
     - CCE-82833-5
@@ -2998,6 +2999,7 @@
   file:
     path: /etc/audit/rules.d/30-ospp-v42-3-access-success.rules
     mode: o-rwx
+  check_mode: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
   tags:
     - CCE-82834-3
@@ -3041,6 +3043,7 @@
   file:
     path: /etc/audit/rules.d/10-base-config.rules
     mode: o-rwx
+  check_mode: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
   tags:
     - CCE-82827-7
@@ -3086,6 +3089,7 @@
   file:
     path: /etc/audit/rules.d/30-ospp-v42-1-create-failed.rules
     mode: o-rwx
+  check_mode: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
   tags:
     - CCE-82374-0
@@ -3125,6 +3129,7 @@
   file:
     path: /etc/audit/rules.d/30-ospp-v42-1-create-success.rules
     mode: o-rwx
+  check_mode: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
   tags:
     - CCE-82829-3
@@ -3162,6 +3167,7 @@
   file:
     path: /etc/audit/rules.d/30-ospp-v42-4-delete-failed.rules
     mode: o-rwx
+  check_mode: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
   tags:
     - CCE-82835-0
@@ -3197,6 +3203,7 @@
   file:
     path: /etc/audit/rules.d/30-ospp-v42-4-delete-success.rules
     mode: o-rwx
+  check_mode: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
   tags:
     - CCE-82836-8
@@ -3231,6 +3238,7 @@
   file:
     path: /etc/audit/rules.d/11-loginuid.rules
     mode: o-rwx
+  check_mode: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
   tags:
     - CCE-82828-5
@@ -3277,6 +3285,7 @@
   file:
     path: /etc/audit/rules.d/30-ospp-v42-2-modify-failed.rules
     mode: o-rwx
+  check_mode: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
   tags:
     - CCE-82830-1
@@ -3316,6 +3325,7 @@
   file:
     path: /etc/audit/rules.d/30-ospp-v42-2-modify-success.rules
     mode: o-rwx
+  check_mode: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
   tags:
     - CCE-82832-7
@@ -3353,6 +3363,7 @@
   file:
     path: /etc/audit/rules.d/43-module-load.rules
     mode: o-rwx
+  check_mode: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
   tags:
     - CCE-82838-4
@@ -3463,6 +3474,7 @@
   file:
     path: /etc/audit/rules.d/30-ospp-v42.rules
     mode: o-rwx
+  check_mode: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
   tags:
     - CCE-82373-2
@@ -3500,6 +3512,7 @@
   file:
     path: /etc/audit/rules.d/30-ospp-v42-6-owner-change-failed.rules
     mode: o-rwx
+  check_mode: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
   tags:
     - CCE-82384-9
@@ -3535,6 +3548,7 @@
   file:
     path: /etc/audit/rules.d/30-ospp-v42-6-owner-change-success.rules
     mode: o-rwx
+  check_mode: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
   tags:
     - CCE-82385-6
@@ -3572,6 +3586,7 @@
   file:
     path: /etc/audit/rules.d/30-ospp-v42-5-perm-change-failed.rules
     mode: o-rwx
+  check_mode: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
   tags:
     - CCE-82837-6
@@ -3607,6 +3622,7 @@
   file:
     path: /etc/audit/rules.d/30-ospp-v42-5-perm-change-success.rules
     mode: o-rwx
+  check_mode: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
   tags:
     - CCE-82383-1
