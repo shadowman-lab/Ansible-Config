@@ -31,7 +31,7 @@
         name: shadowman_add_to_idm
       when: 
         - ansible_os_family is match("RedHat")
-        - - shadowman_provision_hypervisor|default('RHV') != "Azure"
+        - shadowman_provision_hypervisor|default('RHV') != "Azure"
 
     - name: Windows Config
       ansible.builtin.include_role:
