@@ -19,6 +19,7 @@
     activationkey: "RHEL7 Everything"
     org_id: Shadow_Man
   when: ansible_distribution_version is match("7.*")
+  ignore_errors: true
   
 - name: Use Activation Key to Register RHEL8 Machine to Satellite
   community.general.redhat_subscription:
@@ -26,6 +27,7 @@
     activationkey: "RHEL8"
     org_id: Shadow_Man
   when: ansible_distribution_version is match("8.*")
+  ignore_errors: true
 
 - name: Enable Repositories for RHEL 7
   community.general.rhsm_repository:
