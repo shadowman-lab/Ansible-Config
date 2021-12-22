@@ -2,17 +2,9 @@
 - name: Perform inital configs of lab VMs
   hosts: "{{ vm_name | default('all')}}"
   strategy: free
-  gather_facts: false
+  gather_facts: true
 
-  pre_tasks:
-
-    - name: Set facts for ansible_host to work with IP addr
-      ansible.builtin.set_fact:
-        ansible_host: "{{ ip_addr }}"
-      delegate_to: localhost
-
-    - name: Gather facts to work with remainder of playbook
-      ansible.builtin.setup:
+  
 
   tasks:
 
