@@ -2,15 +2,15 @@
 - name: Show mesh status
   ansible.builtin.command: "receptorctl --socket /var/run/awx-receptor/receptor.sock status"
   register: mesh_status
-  delegate_to: "{{ mesh_target }}"
+  
 - name: Show path to mesh node
   ansible.builtin.command: "receptorctl --socket /var/run/awx-receptor/receptor.sock traceroute {{ mesh_target }}"
   register: mesh_traceroute
 
-- name: Print mesh node status
+- name: Print Full Mesh Status
   ansible.builtin.debug:
-    var: mesh_status.stdout_lines[:5]
+    var: mesh_status.stdout_lines
 
-- name: Print path to mesh node
+- name: Print Path to Mesh Node
   ansible.builtin.debug:
     var: mesh_traceroute.stdout_lines
