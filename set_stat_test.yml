@@ -8,5 +8,4 @@
       ansible.builtin.set_stats:
         data:
           uptime: "{{ ansible_uptime_seconds }}"
-        per_host: yes
     
