@@ -1,7 +1,6 @@
 ---
 - name: Set stat
   hosts: all
-  gather_facts: false
 
   tasks:
 
