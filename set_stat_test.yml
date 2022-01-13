@@ -7,6 +7,6 @@
     - name: Set stats test
       ansible.builtin.set_stats:
         data:
-          uptime: "{{ ansible_facts.ansible_uptime_seconds }}"
+          uptime: "{{ ansible_uptime_seconds }}"
         per_host: yes
     
