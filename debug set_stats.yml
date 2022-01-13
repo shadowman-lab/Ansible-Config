@@ -1,0 +1,10 @@
+---
+- name: Display stats
+  hosts: all
+
+  tasks:
+
+    - name: Display stats test
+      ansible.builtin.debug:
+        msg: "{{ uptime }}"
+    
