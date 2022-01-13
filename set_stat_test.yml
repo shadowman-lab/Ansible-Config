@@ -1,0 +1,13 @@
+---
+- name: Set stat
+  hosts: all
+  gather_facts: false
+
+  tasks:
+
+    - name: Set stats test
+      ansible.builtin.set_stats:
+        data:
+          uptime: "{{ ansible_facts.facter_system_uptime.uptime }}"
+        per_host: yes
+    
