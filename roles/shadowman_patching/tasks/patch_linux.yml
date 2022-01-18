@@ -61,8 +61,8 @@
 - name: Set patching data for ServiceNow Yum if system already patched
   ansible.builtin.set_stats:
     data:
-      work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] {{ patchingresult.results | to_nice_json }}"
-      expose_to_cloud_redhat_com_results: "{{ inventory_hostname }}:{{ patchingresult.results| to_nice_json }}"
+      work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] All packages are up to date"
+      expose_to_cloud_redhat_com_results: "{{ inventory_hostname }}:All packages are up to date"
   when: 
     - ansible_pkg_mgr == "yum"
     - patchingresult.changes.updated is not defined
@@ -75,5 +75,15 @@
       expose_to_cloud_redhat_com_results: "{{ inventory_hostname }}:{{ patchingresultdnf.results | flatten(levels=1) | to_nice_json }}"
   when: 
    - ansible_pkg_mgr == "dnf" 
-   - patchingresultdnf.results is defined
+   - patchingresultdnf.changed == true
+   - ticket_number is defined
+
+- name: Set patching data for ServiceNow DNF if system is already patched
+  ansible.builtin.set_stats:
+    data:
+      work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] All packages are up to date"
+      expose_to_cloud_redhat_com_results: "{{ inventory_hostname }}:All packages are up to date"
+  when: 
+   - ansible_pkg_mgr == "dnf" 
+   - patchingresultdnf.changed == false
    - ticket_number is defined
