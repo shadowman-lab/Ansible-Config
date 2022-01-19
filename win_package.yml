@@ -1,6 +1,7 @@
 ---
 - name: Install Windows Package
   hosts: all
+  gather_facts: false
 
   tasks:
     - name: Install Windows Package
