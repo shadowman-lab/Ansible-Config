@@ -7,4 +7,4 @@
     - name: Install Windows Package
       chocolatey.chocolatey.win_chocolatey:
         name: "{{ packagename }}"
-        state: latest
+        state: "{{ packagestate }}"
