@@ -1,0 +1,9 @@
+---
+- name: Install Windows Package
+  hosts: all
+
+  tasks:
+    - name: Install Windows Package
+      chocolatey.chocolatey.win_chocolatey:
+        name: "{{ packagename }}"
+        state: latest

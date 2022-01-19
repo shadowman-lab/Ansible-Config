@@ -1,0 +1,9 @@
+---
+- name: Install Linux Package
+  hosts: all
+
+  tasks:
+    - name: Install Linux Package
+      ansible.builtin.yum:
+        name: "{{ packagename }}"
+        state: latest
