@@ -19,7 +19,8 @@
 
 - name: Display Patching Results
   ansible.builtin.debug:
-    msg: "{{ patchresult  }}"
+    msg: "{{ item.value.title }}"
+  with_dict: "{{ patchresult.updates }}"
 
 - name: Set patching data for ServiceNow
   ansible.builtin.set_stats:
