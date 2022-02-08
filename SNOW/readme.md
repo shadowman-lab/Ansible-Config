@@ -526,7 +526,7 @@ env:
   SN_USERNAME: '{{username}}'
 ```
 
-<img src="images/credtype.png" alt="AAP Credential Type" title="AAP Credential Type" width="1000" />
+<img src="images/itsmcredtype.png" alt="AAP Credential Type" title="AAP Credential Type" width="1000" />
 
 #### 2) Create your ServiceNow Credential
 
@@ -543,7 +543,7 @@ In AAP, navigate to **Credentials** on the left side of the screen. Click the **
 | Username | `SNOW Username` |
 | Password | `SNOW Password` |
 
-<img src="images/cred.png" alt="AAP Credential" title="AAP Credential" width="1000" />
+<img src="images/itsmcred.png" alt="AAP Credential" title="AAP Credential" width="1000" />
 
 #### 3) Inventory yml file
 
