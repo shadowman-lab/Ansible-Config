@@ -164,9 +164,7 @@ Clicking the **Test** link will take you to a results screen, which should indic
 
 <img src="images/test_job_snow.png" alt="SNOW Test Job" title="SNOW Test Job" width="800" />
 
-You can confirm that this Job Template was in fact started by going back to AAP and clicking the **Jobs** section on the left side of the screen; a Job with the same ID should be in the list (and, depending on the playbook size, may still be in process). In the below picture, the job is still in progress, and we can confirm that ServiceNow is able to send the RESTful call to AAP:
-
-<img src="images/test_job_tower.png" alt="AAP Test Job" title="AAP Test Job" width="800" />
+You can confirm that this Job Template was in fact started by going back to AAP and clicking the **Jobs** section on the left side of the screen; a Job with the same ID should be in the list
 
 ### Creating a ServiceNow Catalog Item to Launch an AAP Job Template
 
@@ -420,7 +418,7 @@ In AAP, navigate to **Credentials** on the left side of the screen. Click the **
 
 #### 3) Create a Job Template
 
-Create a playbook in your repo utilzing your new Ansible collection referencing the apppropriate modules from https://galaxy.ansible.com/servicenow/servicenow. When creating your job template, ensure you select the ServiceNow credential that you created.
+Create a playbook in your repo utilzing your new Ansible collection referencing the apppropriate modules. When creating your job template, ensure you select the ServiceNow credential that you created.
 
 Congratulations! You can now have AAP reach out to SNOW to query and update records!
 
