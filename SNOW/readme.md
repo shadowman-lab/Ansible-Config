@@ -20,7 +20,7 @@
 ### Preparing AAP
 
 #### 1)
-In AAP, navigate to **Applications** on the left side of the screen. Click the **green plus button** on the right, which will present you with a Create Application dialog screen. Fill in the following fields:
+In AAP, navigate to **Applications** on the left side of the screen. Click the **Blue Add Button** on the right, which will present you with a Create Application dialog screen. Fill in the following fields:
 | Parameter | Value |
 |-----|-----|
 | Name  | Descriptive name of the application that will contact AAP  |
@@ -32,12 +32,12 @@ In AAP, navigate to **Applications** on the left side of the screen. Click the *
 <img src="images/create_application.png" alt="AAP Create Application" title="AAP Create Application" width="1000" />
 
 #### 2)
-Click the green **Save** button on the right, at which point a window will pop up, presenting you with the Client ID and Client Secret needed for ServiceNow to make API calls into AAP. This will only be presented **ONCE**, so capture these values for later use.
+Click the blue **Save** button, at which point a window will pop up, presenting you with the Client ID and Client Secret needed for ServiceNow to make API calls into AAP. This will only be presented **ONCE**, so capture these values for later use.
 
 <img src="images/application_secrets.png" alt="AAP Application Secrets" title="AAP Application Secrets" width="500" />
 
 #### 3)
-Next, navigate to **Settings-->System** on the left side of the screen. You’ll want to toggle the **Allow External Users to Create Oauth2 Tokens** option to ***on***. Click the green **Save** button to commit the change.
+Next, navigate to **Settings** on the left side of the screen and then **Miscellaneous Authentication settings**. After you click Edit at the buttom, you’ll want to toggle the **Allow External Users to Create Oauth2 Tokens** option to ***on***. Click the blue **Save** button to commit the change.
 
 <img src="images/tower_settings.png" alt="AAP Settings" title="AAP Settings" width="1000" />
 
@@ -314,7 +314,7 @@ This collection will be required when running >Ansible 2.10
 Creating a custom credential in AAP will allow you to pass in your ServiceNow instance, username, and password as environment variables. This means you won't need to include them in your playbook.
 
 #### 1)
-In AAP, navigate to **Credential Types** on the left side of the screen. Click the **green plus button** on the right, which will present you with a New Credential Type dialog screen. Fill in the following fields:
+In AAP, navigate to **Credential Types** on the left side of the screen. Click the **Blue Add Button** on the top, which will present you with a New Credential Type dialog screen. Fill in the following fields:
 | Parameter | Value |
 |-----|-----|
 | Name  |  `ServiceNow Credential`  |
@@ -391,7 +391,7 @@ env:
 
 #### 2) Create your ServiceNow Credential
 
-In AAP, navigate to **Credentials** on the left side of the screen. Click the **green plus button** on the right, which will present you with a New Credential dialog screen. Fill in the following fields:
+In AAP, navigate to **Credentials** on the left side of the screen. Click the **Blue Add Button** on the right, which will present you with a New Credential dialog screen. Fill in the following fields:
 
 
 | Parameter | Value |
@@ -492,7 +492,7 @@ servicenow.itsm
 Creating a custom credential in AAP will allow you to pass in your ServiceNow instance, username, and password as environment variables. This means you won't need to include them in your playbook.
 
 #### 1)
-In AAP, navigate to **Credential Types** on the left side of the screen. Click the **green plus button** on the right, which will present you with a New Credential Type dialog screen. Fill in the following fields:
+In AAP, navigate to **Credential Types** on the left side of the screen. Click the **Blue Add Button** on the right, which will present you with a New Credential Type dialog screen. Fill in the following fields:
 | Parameter | Value |
 |-----|-----|
 | Name  |  `ServiceNow ITSM Credential`  |
@@ -532,7 +532,7 @@ env:
 
 #### 2) Create your ServiceNow Credential
 
-In AAP, navigate to **Credentials** on the left side of the screen. Click the **green plus button** on the right, which will present you with a New Credential dialog screen. Fill in the following fields:
+In AAP, navigate to **Credentials** on the left side of the screen. Click the **Blue Add Button** on the right, which will present you with a New Credential dialog screen. Fill in the following fields:
 
 
 | Parameter | Value |
@@ -574,7 +574,7 @@ keyed_groups:
 
 #### 4) Create your ServiceNow Inventory
 
-In AAP, navigate to **Inventories** on the left side of the screen. Click the **green plus button** on the right, which will present you with a New Inventory dialog screen. Fill in the following fields:
+In AAP, navigate to **Inventories** on the left side of the screen. Click the **Blue Add Button** on the right, which will present you with a New Inventory dialog screen. Fill in the following fields:
 
 
 | Parameter | Value |
@@ -587,7 +587,7 @@ In AAP, navigate to **Inventories** on the left side of the screen. Click the **
 
 #### 5) Create your ServiceNow Source
 
-In AAP, after you've saved, click to **Sources** on the top of the screen. Click the **green plus button** on the right, which will present you with a New Inventory dialog screen. Fill in the following fields:
+In AAP, after you've saved, click to **Sources** on the top of the screen. Click the **Blue Add Button** on the right, which will present you with a New Inventory dialog screen. Fill in the following fields:
 
 
 | Parameter | Value |
