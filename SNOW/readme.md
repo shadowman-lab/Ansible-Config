@@ -285,8 +285,8 @@ Congratulations! After completing these steps, you can now use a ServiceNow Cata
 ### Python libraries in the execution environment
 
 ```bash
-pip3 install pysnow
-pip3 install netaddr
+pysnow
+netaddr
 
 ```
 These python packages must be installed in the AAP execution environment that is used to run playbooks that communicate with ServiceNow.
@@ -294,8 +294,8 @@ These python packages must be installed in the AAP execution environment that is
 ### Collections
 
 ```bash
-ansible-galaxy collection install servicenow.servicenow
-ansible-galaxy collection install servicenow.itsm
+servicenow.servicenow
+servicenow.itsm
 ```
 
 Or if using AAP and want to attach it to a project, create a file at **collections/requirements.yml** and add
@@ -432,9 +432,6 @@ Congratulations! You can now have AAP reach out to SNOW to query and update reco
   hosts: "{{ vm_name }}"
   gather_facts: yes
   connection: local
-
-  collections:
-    - servicenow.itsm
   
   tasks: 
   
@@ -463,9 +460,6 @@ Congratulations! You can now have AAP reach out to SNOW to query and update reco
   hosts: all
   gather_facts: no
   connection: local
-
-  collections:
-    - servicenow.servicenow
   
   tasks: 
   - name: Update a catalog work notes and state in ServiceNow
@@ -490,8 +484,8 @@ Congratulations! You can now have AAP reach out to SNOW to query and update reco
 ### Python libraries
 
 ```bash
-pip3 install requests
-pip3 install netaddr
+requests
+netaddr
 
 ```
 These python packages must be installed in the AAP exeuction environment that is used to run playbooks that communicate with ServiceNow.
@@ -499,7 +493,7 @@ These python packages must be installed in the AAP exeuction environment that is
 ### Collections
 
 ```bash
-ansible-galaxy collection install servicenow.servicenow
+servicenow.itsm
 ```
 
 Or if using AAP and want to attach it to a project, create a file at **collections/requirements.yml** and add
@@ -577,17 +571,25 @@ In AAP, navigate to **Credentials** on the left side of the screen. Click the **
 
 Create a playbook in your repo utilzing your new Ansible collection. Note, the instance field does require the full domain name at this time. Name the file now.yml or now.yaml. You can adjust the selection order, fields, compose, and keyed_groups per the documenation https://github.com/ServiceNowITOM/servicenow-ansible/blob/devel/docs/inventory.md
 ```
-# my.SNOW.yml
-plugin: servicenow.servicenow.now
-instance: <snow_instance_id>.service-now.com
-selection_order: [host_name,ip_address,name]
-fields: [ip_address,host_name,sys_class_name,name,os,os_version,ram,cpu_core_count]
+# now.yml
+plugin: servicenow.itsm.now
+inventory_hostname_source: host_name
+columns:
+  - host_name
+  - name
+  - fqdn
+  - ip_address
+  - os
+  - classification
+  - sys_id
 compose:
-  ansible_host: sn_ip_address
+  ip_addr: ip_address
+  ansible_host: host_name
 keyed_groups:
-  - key: sn_sys_class_name | lower
-    prefix: ''
-    separator: ''
+  - key: os
+    separator: ""
+  - key: classification
+    separator: ""
 ```
 
 #### 4) Create your ServiceNow Inventory
