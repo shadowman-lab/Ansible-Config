@@ -481,31 +481,11 @@ Congratulations! You can now have AAP reach out to SNOW to query and update reco
 ### Ansible Engine
 - ansible version >= 2.9
 
-### Python libraries
-
-```bash
-requests
-netaddr
-
-```
-These python packages must be installed in the AAP exeuction environment that is used to run playbooks that communicate with ServiceNow.
-
 ### Collections
 
 ```bash
 servicenow.itsm
 ```
-
-Or if using AAP and want to attach it to a project, create a file at **collections/requirements.yml** and add
-
-```bash
-collections:
-
-  - name: servicenow.servicenow
-    source: https://galaxy.ansible.com
-```
-
-This collection will be required when running >Ansible 2.10
 
 ### Create a custom credential if not already done
 
@@ -515,7 +495,7 @@ Creating a custom credential in AAP will allow you to pass in your ServiceNow in
 In AAP, navigate to **Credential Types** on the left side of the screen. Click the **green plus button** on the right, which will present you with a New Credential Type dialog screen. Fill in the following fields:
 | Parameter | Value |
 |-----|-----|
-| Name  |  `ServiceNow Credential`  |
+| Name  |  `ServiceNow ITSM Credential`  |
 | Description | Description of your credential type |
 
 Input Configuration
@@ -543,7 +523,7 @@ Injector Configuration
 
 ```
 env:
-  SN_INSTANCE: '{{instance}}'
+  SN_HOST: '{{instance}}'
   SN_PASSWORD: '{{password}}'
   SN_USERNAME: '{{username}}'
 ```
@@ -557,10 +537,10 @@ In AAP, navigate to **Credentials** on the left side of the screen. Click the **
 
 | Parameter | Value |
 |-----|-----|
-| Name | `ServiceNow Credential` |
+| Name | `ServiceNow ITSM Credential` |
 | Description | Description of your credential |
 | Organization |  `Default` |
-| Credential Type | `ServiceNow Credential` |
+| Credential Type | `ServiceNow ITSM Credential` |
 | Instance | `<snow_instance_id> from URL including .service-now.com` |
 | Username | `SNOW Username` |
 | Password | `SNOW Password` |
@@ -615,7 +595,7 @@ In AAP, after you've saved, click to **Sources** on the top of the screen. Click
 | Name | `ServiceNow Inventory` |
 | Description | Description of your Inventory |
 | Source |  `Sourced from a Project` |
-| Credential |  `ServiceNow Credential` |
+| Credential |  `ServiceNow ITSM Credential` |
 | Project |  `Project that contains your now.yml playbook` |
 | Inventory File |  `Type the exact location of the file in the repo i.e. inventories/now.yml` |
 
