@@ -81,8 +81,8 @@ On the new application screen, fill in these details:
 |  Client ID |  The Client ID you got from AAP |
 |  Client Secret |  The Client Secret you got from AAP |
 |  Default Grant Type |  `Authorization Code` |
-|  Authorization URL |  `https://<tower_url>/api/o/authorize/` |
-|  Token URL |  `https://<tower_url>/api/o/token/` |
+|  Authorization URL |  `https://<aap_url>/api/o/authorize/` |
+|  Token URL |  `https://<aap_url>/api/o/token/` |
 |  Redirect URL |  `https://<snow_instance_id>.service-now.com/oauth_redirect.do` |
 
 Click the **Submit** button at the bottom.
