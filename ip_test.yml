@@ -8,3 +8,7 @@
     - name: get IP
       ansible.builtin.command: "ip addr"
       delegate_to: localhost
+
+    - name: get IP
+      ansible.builtin.command: "ip addr"
+      delegate_to: tower1.shadowman.dev
