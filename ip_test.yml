@@ -6,8 +6,8 @@
   tasks:
 
     - name: get IP
-      ansible.builtin.command: "ip addr"
-
-    - name: get IP
-      ansible.builtin.command: "ip addr"
-      delegate_to: tower1.shadowman.dev
+      ansible.builtin.uri:
+        url: http://{{ ansible_host }}/index.html
+        validate_certs: no
+        return_content: yes
+      delegate_to: localhost
