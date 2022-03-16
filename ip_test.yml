@@ -1,0 +1,10 @@
+---
+- name: Test IP
+  hosts: all
+  gather_facts: false
+
+  tasks:
+
+    - name: get IP
+      ansible.builtin.command: "ip addr"
+      delegate_to: localhost
