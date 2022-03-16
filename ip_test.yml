@@ -7,7 +7,7 @@
 
     - name: get IP
       ansible.builtin.uri:
-        url: http://{{ ansible_host }}/index.html
+        url: http://rhel8.shadowman.dev/index.html
         validate_certs: no
         return_content: yes
       delegate_to: localhost
