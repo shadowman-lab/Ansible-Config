@@ -1,5 +1,5 @@
 ---
-- name: Gather Facts
+- name: Create Linux Report
   hosts: all
   tasks:
   
