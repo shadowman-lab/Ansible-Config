@@ -1,6 +1,6 @@
 ---
 - name: Gather Facts
-  hosts: tag_Insights
+  hosts: all
   tasks:
   
     - name: Scan Systems for detailed report
