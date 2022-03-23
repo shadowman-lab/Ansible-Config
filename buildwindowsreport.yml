@@ -8,11 +8,9 @@
         name: shadowman_scan_systems
       when: detailedreport == 'True'
 
-- name: Build report with facts
-  hosts: report.shadowman.dev
-  gather_facts: no
-  tasks:
-
-    - name: build a report
+    - name: Build the report
       ansible.builtin.include_role:
         name: shadowman.reports.build_report_windows
+        apply:
+          delegate_to: report.shadowman.dev
+          run_once: true
