@@ -48,4 +48,4 @@ jobs:
         #                         path to directories or files to skip. This option is
         #                         repeatable.
         #   -c C                  Specify configuration file to use. Defaults to ".ansible-lint"
-        args: "-w git-latest,ignore-errors,no-changed-when,command-instead-of-module"
+        args: "--exclude roles/shadowman_cis_rhel7/ --exclude roles/shadowman_cis_rhel8/ --exclude roles/shadowman_cis_windows2016/ --exclude roles/shadowman_nist_rhel7/ --exclude roles/shadowman_nist_rhel8/ --exclude roles/shadowman_stig_windows_2016/ --exclude roles/shadowman_pci_rhel7/ --exclude roles/shadowman_pci_rhel8/ -w git-latest,ignore-errors,no-changed-when,command-instead-of-module,package-latest,literal-compare,empty-string-compare"

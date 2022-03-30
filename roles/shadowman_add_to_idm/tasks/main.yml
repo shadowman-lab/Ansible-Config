@@ -18,7 +18,7 @@
   when: ansible_distribution_version is match("8.*")
 
 - name: Run IPA Client Script to add to IDM
-  ansible.builtin.command: "ipa-client-install --principal '{{IPA_USER}}' --password '{{ IPA_PASS }}' --hostname '{{ fqdn }}' --enable-dns-updates --mkhomedir --unattended"
+  ansible.builtin.command: "ipa-client-install --principal '{{ IPA_USER }}' --password '{{ IPA_PASS }}' --hostname '{{ fqdn }}' --enable-dns-updates --mkhomedir --unattended"
   register: output
   failed_when: output.rc == 2 or output.rc >= 4
   changed_when: output.rc == 0

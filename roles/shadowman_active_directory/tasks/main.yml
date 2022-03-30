@@ -1,7 +1,7 @@
 ---
 - name: Create/Update/Remove User in AD
   ansible.windows.win_domain_user:
-    firstname: "{{ first_name }}"  
+    firstname: "{{ first_name }}"
     surname: "{{ last_name }}"
     name: "{{ username }}"
     password: "{{ password }}"

@@ -28,6 +28,9 @@
   ansible.builtin.copy:        
     src: "/tmp/{{ inventory_hostname }}"
     dest: "{{ file_path }}"
+    owner: root
+    group: root
+    mode: '0644'
   delegate_to: report.shadowman.dev
 
 - name: DISPLAY LINK TO INVENTORY REPORT

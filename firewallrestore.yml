@@ -4,7 +4,7 @@
   gather_facts: false
 
   vars:
-    state: disabled 
+    state: disabled
 
   roles:
     - shadowman_firewall_security

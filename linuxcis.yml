@@ -6,11 +6,11 @@
   tasks:
 
     - name: CIS Compliance RHEL7
-      ansible.builtin.include_role: 
+      ansible.builtin.include_role:
         name: shadowman_cis_rhel7
       when: os is match(".*7.*")
 
     - name: CIS Compliance RHEL8
-      ansible.builtin.include_role: 
+      ansible.builtin.include_role:
         name: shadowman_cis_rhel8
       when: os is match(".*8.*")

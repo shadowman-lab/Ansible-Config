@@ -4,12 +4,12 @@
 
   tasks:
 
-      block: 
-        - name: Patching role
-          include_role:
-            name: shadowman_patching
+      block:
+          - name: Patching role
+            ansible.builtin.include_role:
+              name: shadowman_patching
 
       rescue:
-        - name: Patching role
-          include_role:
-            name: shadowman_snapshot_restore_rhv
+          - name: Patching role
+            ansible.builtin.include_role:
+              name: shadowman_snapshot_restore_rhv

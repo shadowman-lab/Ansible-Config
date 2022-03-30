@@ -1,20 +1,20 @@
 ---
-  - name: Network Infrastructure
-    inventory:  Network Inventory
-    source: rhv
-    variables:
-      plugin: redhat.rhv.ovirt
-      compose:
-        ansible_user: !unsafe "'{{ linuxuser }}' if name is match('report.shadowman.dev')"
-        ansible_password: !unsafe "'{{ linuxpassword }}' if name is match('report.shadowman.dev')"
-        ansible_become_method: !unsafe "'sudo' if name is match('report.shadowman.dev')"
-        ansible_become_user: !unsafe "'{{ linuxuser }}' if name is match('report.shadowman.dev')"
-        ansible_become_password: !unsafe "'{{ linuxpassword }}' if name is match('report.shadowman.dev')"
-      ovirt_query_filter:
-        search: 'name=report.shadowman.dev OR name={{ lookup("env", "TOWER_HOST") }}'
-      ovirt_hostname_preference:
-        - name
-        - fqdn
-    credential: RHV Dynamic Source Credential
-    overwrite: True
-    update: False
+- name: Network Infrastructure
+  inventory:  Network Inventory
+  source: rhv
+  variables:
+    plugin: redhat.rhv.ovirt
+    compose:
+      ansible_user: !unsafe "'{{ linuxuser }}' if name is match('report.shadowman.dev')"
+      ansible_password: !unsafe "'{{ linuxpassword }}' if name is match('report.shadowman.dev')"
+      ansible_become_method: !unsafe "'sudo' if name is match('report.shadowman.dev')"
+      ansible_become_user: !unsafe "'{{ linuxuser }}' if name is match('report.shadowman.dev')"
+      ansible_become_password: !unsafe "'{{ linuxpassword }}' if name is match('report.shadowman.dev')"
+    ovirt_query_filter:
+      search: 'name=report.shadowman.dev OR name={{ lookup("env", "TOWER_HOST") }}'
+    ovirt_hostname_preference:
+      - name
+      - fqdn
+  credential: RHV Dynamic Source Credential
+  overwrite: true
+  update: false
