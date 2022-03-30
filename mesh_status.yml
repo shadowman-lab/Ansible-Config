@@ -2,6 +2,6 @@
 - name: Mesh Traceroute to exec nodes
   hosts: all
   gather_facts: false
- 
+
   roles:
     - shadowman_mesh

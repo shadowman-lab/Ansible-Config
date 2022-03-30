@@ -35,7 +35,7 @@
       - rhel-7-server-rpms
       - rhel-7-server-extras-rpms
       - rhel-7-server-optional-rpms
-    purge: True
+    purge: true
   when: ansible_distribution_version is match("7.*")
 
 - name: Enable Repositories for RHEL 8
@@ -43,5 +43,5 @@
     name:
       - rhel-8-for-x86_64-appstream-rpms
       - rhel-8-for-x86_64-baseos-rpms
-    purge: True
+    purge: true
   when: ansible_distribution_version is match("8.*")

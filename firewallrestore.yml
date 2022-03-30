@@ -5,6 +5,6 @@
 
   vars:
     state: disabled 
-  
+
   roles:
     - shadowman_firewall_security

@@ -30,7 +30,7 @@
   ansible.builtin.fetch:
     src: "C:\\Users\\ansible\\{{ item }}"
     dest: "/tmp/{{ inventory_hostname }}/"
-    flat: yes
+    flat: true
   loop:
     - index.html
     - report.xml

@@ -2,7 +2,7 @@
 - name: RHEL PCI Compliance
   hosts: all
   strategy: free
-  
+
   tasks:
 
     - name: PCI Compliance RHEL7

@@ -3,6 +3,6 @@
   hosts: all
   gather_facts: false
   strategy: free
-  
+
   roles:
     - shadowman_compliance_scan

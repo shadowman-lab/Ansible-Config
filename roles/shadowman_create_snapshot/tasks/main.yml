@@ -16,7 +16,7 @@ block:
       vm_name: "{{ inventory_hostname }}"
       description: "{{ description }}"
       use_memory: false
-      wait: yes
+      wait: true
     register: snapshot
     delegate_to: localhost
 

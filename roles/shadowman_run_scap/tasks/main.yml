@@ -19,7 +19,7 @@
   ansible.builtin.fetch:
     src: ./{{ item }}
     dest: "/tmp/{{ inventory_hostname }}/{{ item }}"
-    flat: yes
+    flat: true
   loop:
     - report.xml
     - index.html

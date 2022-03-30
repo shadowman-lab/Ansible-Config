@@ -2,6 +2,6 @@
 - name: Install Insights/OpenSCAP and register Insights Client
   hosts: all
   gather_facts: false
-  
+
   roles:
     - shadowman_register_insights

@@ -3,6 +3,6 @@
   ansible.posix.firewalld:
     zone: drop
     state: "{{ state }}"
-    permanent: yes
+    permanent: true
     source: "{{ ip_addr }}/24"
   notify: restart_firewalld

@@ -2,6 +2,6 @@
 - name: Create/Update/Remove User in AD
   hosts: all
   gather_facts: false
-  
+
   roles:
     - shadowman_active_directory

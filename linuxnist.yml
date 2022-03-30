@@ -2,7 +2,7 @@
 - name: RHEL NIST Compliance
   hosts: all
   strategy: free
-  
+
   tasks:
 
     - name: NIST Compliance RHEL7

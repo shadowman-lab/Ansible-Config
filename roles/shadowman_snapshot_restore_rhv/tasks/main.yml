@@ -24,7 +24,7 @@
     auth: "{{ ovirt_auth }}"
     name: "{{ inventory_hostname }}"
     state: stopped
-    wait: yes
+    wait: true
   delegate_to: localhost
   become: false
 
@@ -34,7 +34,7 @@
     vm_name: "{{ inventory_hostname }}"
     snapshot_id: "{{ snapshot.ovirt_snapshots[0].id }}"
     state: restore
-    wait: yes
+    wait: true
   delegate_to: localhost
   become: false
 
@@ -43,7 +43,7 @@
     auth: "{{ ovirt_auth }}"
     name: "{{ inventory_hostname }}"
     state: running
-    wait: yes
+    wait: true
   delegate_to: localhost
   become: false
 
