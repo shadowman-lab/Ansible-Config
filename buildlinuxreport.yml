@@ -12,5 +12,5 @@
       ansible.builtin.include_role:
         name: shadowman.reports.build_report_linux
         apply:
-          delegate_to: rhel8.shadowman.dev
+          delegate_to: report.shadowman.dev
           run_once: true
