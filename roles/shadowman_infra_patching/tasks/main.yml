@@ -1,0 +1,39 @@
+---
+- name: ensure excluded config is copied
+  ansible.builtin.copy:
+    src: /etc/yum.conf.backup
+    dest: /etc/yum.conf
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: upgrade all packages (yum)
+  ansible.builtin.yum:
+    name: '*'
+    state: latest
+  when: ansible_pkg_mgr == "yum"
+
+- name: upgrade all packages (dnf)
+  ansible.builtin.dnf:
+    name: '*'
+    state: latest
+  when: ansible_pkg_mgr == "dnf"
+
+- name: Check to see if we need a reboot
+  ansible.builtin.command: needs-restarting -r
+  register: result
+  changed_when: result.rc == 1
+  failed_when: result.rc > 1
+  check_mode: false
+
+- name: Reboot Server if Necessary
+  ansible.builtin.reboot:
+  when: result.rc == 1
+
+- name: restore regular config for AAP updates
+  ansible.builtin.copy:
+    src: /etc/yum.conf.cleanbackup
+    dest: /etc/yum.conf
+    owner: root
+    group: root
+    mode: '0644'
