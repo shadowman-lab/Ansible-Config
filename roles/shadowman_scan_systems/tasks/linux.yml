@@ -3,6 +3,9 @@
   ansible.builtin.command:
     cmd: "ln -s /usr/bin/python3 /usr/bin/python"
   when: ansible_python_version != "2.7.5"
+  register: result
+  failed_when: "result.rc > '1'"
+  changed_when: "result.rc == '0'"
 
 - name: Scan packages (Unix/Linux)
   shadowman.reports.scan_packages:
