@@ -2,7 +2,7 @@
 - name: Ensure python simlink exists
   ansible.builtin.command:
     cmd: "ln -s /usr/bin/python3 /usr/bin/python"
-  when: ansible_python_version | int >= 3.0.0
+  when: ansible_python_version | float >= 3.0.0
 
 - name: Scan packages (Unix/Linux)
   shadowman.reports.scan_packages:
