@@ -4,4 +4,4 @@
     name: Run {{ job_template_name }} job at {{ date_time }} GMT
     state: present
     unified_job_template: "{{ job_template_name }}"
-    rrule: "{{ query('ansible.controller.schedule_rrule', 'none', start_date=date_time,timezone='GMT',every=5) }}"
+    rrule: "{{ query('ansible.controller.schedule_rrule', 'none', start_date=date_time,timezone='GMT',every=0) }}"
