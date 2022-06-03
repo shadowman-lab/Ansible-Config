@@ -1,7 +1,7 @@
 ---
-- name: Build the Schedule for {{ job_template_name }} job at {{ date_time }}
+- name: Build the Schedule for {{ job_template_name }} job at {{ date_time }} GMT
   ansible.controller.schedule:
-    name: Run {{ job_template_name }} job at {{ date_time }}
+    name: Run {{ job_template_name }} job at {{ date_time }} GMT
     state: present
     unified_job_template: "{{ job_template_name }}"
     rrule: "{{ query('ansible.controller.schedule_rrule', 'none', start_date=date_time,timezone='GMT') }}"
