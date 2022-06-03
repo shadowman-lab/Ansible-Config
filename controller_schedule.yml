@@ -1,0 +1,7 @@
+---
+- name: Add Ansible Job to Schedule
+  hosts: localhost
+  gather_facts: false
+
+  roles:
+    - shadowman_schedule
