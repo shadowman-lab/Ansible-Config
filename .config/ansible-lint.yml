@@ -24,7 +24,9 @@ warn_list:
   - ignore-errors
   - command-instead-of-module
   - package-latest
+  - yaml
   - no-changed-when
   - literal-compare
   - empty-string-compare
   - git-latest
+  - deprecated-command-syntax
