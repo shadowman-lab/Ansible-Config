@@ -11,11 +11,11 @@
   ansible.builtin.yum:
     list: updates
   register: result
-  until:  result.results|default("False") == []
+  until: result.results|default("False") == []
   retries: 50
   delay: 5
 
 - name: Clear Async Job Status
-  async_status:
+  ansible.builtin.async_status:
     jid: "{{ yum_sleeper.ansible_job_id }}"
     mode: cleanup

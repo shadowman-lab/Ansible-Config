@@ -8,7 +8,7 @@
       ansible.windows.win_package:
         path: "{{ package_path }}"
         product_id: "{{ package_id }}"
-        arguments: 
-        - /install
-        - /passive
-        - /norestart
+        arguments:
+          - /install
+          - /passive
+          - /norestart

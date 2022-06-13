@@ -10,9 +10,9 @@
     path: https://aka.ms/vs/15/release/VC_redist.x86.exe
     product_id: '{624ba875-fdfc-4efa-9c66-b170dfebc3ec}'
     arguments:
-    - /install
-    - /passive
-    - /norestart
+      - /install
+      - /passive
+      - /norestart
 
 - name: Copy options file needed for scan
   ansible.windows.win_copy:
@@ -36,7 +36,7 @@
     - report.xml
 
 - name: Copy folders to reports host
-  ansible.builtin.copy:        
+  ansible.builtin.copy:
     src: "/tmp/{{ inventory_hostname }}"
     dest: "{{ file_path }}"
     owner: root

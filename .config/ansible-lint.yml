@@ -10,7 +10,7 @@
 exclude_paths:
   - /github/workspace/roles/shadowman_cis_rhel7/
   - /github/workspace/roles/shadowman_cis_rhel8/
-  - /github/workspace/roles/shadowman_cis_windows2016/
+  - /github/workspace/roles/shadowman_cis_windows_2016/
   - /github/workspace/roles/shadowman_nist_rhel7/
   - /github/workspace/roles/shadowman_nist_rhel8/
   - /github/workspace/roles/shadowman_stig_windows_2016/

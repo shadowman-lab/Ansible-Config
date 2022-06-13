@@ -3,7 +3,7 @@
   ansible.builtin.command: "receptorctl --socket /var/run/awx-receptor/receptor.sock status"
   register: mesh_status
   delegate_to: "{{ mesh_target }}"
-  
+
 - name: Show path to mesh node
   ansible.builtin.command: "receptorctl --socket /var/run/awx-receptor/receptor.sock traceroute {{ mesh_target }}"
   register: mesh_traceroute

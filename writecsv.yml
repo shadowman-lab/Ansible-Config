@@ -7,7 +7,7 @@
       shell: echo 'Host name, OSType, OSversion' >> /home/network/hosts.csv
       delegate_to: tower1.shadowman.dev
       run_once: true
-    
+
     - name: Write Version information to .csv
       shell: echo '{{ inventory_hostname_short | upper }}, {{ ansible_distribution }}, {{ ansible_distribution_version }}' >> /home/network/hosts.csv
       delegate_to: tower1.shadowman.dev

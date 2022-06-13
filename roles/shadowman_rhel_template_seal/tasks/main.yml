@@ -2,7 +2,7 @@
 - name: Enable initial-setup service
   ansible.builtin.systemd:
     name: initial-setup.service
-    enabled: yes
+    enabled: true
   when: ansible_distribution_version is match("7.*")
 
 - name: Set Machine ID file permissions

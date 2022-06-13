@@ -11,7 +11,7 @@
       delegate_to: localhost
 
     - name: Gather Facts
-      ansible.builtin.setup:  
+      ansible.builtin.setup:
 
     - name: RHEL Hostname Set
       ansible.builtin.hostname:

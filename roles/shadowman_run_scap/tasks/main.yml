@@ -25,7 +25,7 @@
     - index.html
 
 - name: Copy folders to reports host
-  ansible.builtin.copy:        
+  ansible.builtin.copy:
     src: "/tmp/{{ inventory_hostname }}"
     dest: "{{ file_path }}"
     owner: root

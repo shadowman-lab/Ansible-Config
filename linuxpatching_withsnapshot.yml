@@ -3,7 +3,7 @@
   hosts: all
 
   tasks:
-
+    - name: Block for Patching
       block:
           - name: Patching role
             ansible.builtin.include_role:

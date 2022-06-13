@@ -1,5 +1,6 @@
 ---
-block:
+- name: RHV Block
+  block:
   - name: Login to RHV
     redhat.rhv.ovirt_auth:
       hostname: "{{ rhvm_fqdn }}"
@@ -9,7 +10,7 @@ block:
       insecure: "{{ rhvm_insecure | default(true) }}"
     delegate_to: localhost
     run_once: true
-     
+
   - name: Create Snapshot on VM(s)
     redhat.rhv.ovirt_snapshot:
       auth: "{{ ovirt_auth }}"
@@ -20,7 +21,7 @@ block:
     register: snapshot
     delegate_to: localhost
 
-always:
+  always:
   - name: Logout from RHV
     redhat.rhv.ovirt_auth:
       state: absent
