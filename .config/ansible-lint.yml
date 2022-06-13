@@ -1,0 +1,29 @@
+---
+# parseable: true
+# quiet: true
+# verbosity: 1
+
+# use_default_rules: true
+# Load custom rules from this specific folder
+# rulesdir:
+#   - ./rule/directory/
+exclude_paths:
+  - roles/shadowman_cis_rhel7/ 
+  - roles/shadowman_cis_rhel8/
+  - roles/shadowman_cis_windows2016/
+  - roles/shadowman_nist_rhel7/
+  - roles/shadowman_nist_rhel8/
+  - roles/shadowman_stig_windows_2016/
+  - roles/shadowman_pci_rhel7/
+  - roles/shadowman_pci_rhel8/
+# Any rule that has the 'opt-in' tag will not be loaded unless its 'id' is
+# mentioned in the enable_list:
+# This makes the linter display but not fail for rules/tags listed below:
+warn_list:
+  - ignore-errors
+  - command-instead-of-module
+  - package-latest
+  - no-changed-when
+  - literal-compare
+  - empty-string-compare
+  - git-latest
