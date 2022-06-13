@@ -6,7 +6,7 @@
     state: link
     owner: root
     group: root
-    mode: 0644
+    mode: 0755
   when: ansible_python_version != "2.7.5"
 
 - name: Scan packages (Unix/Linux)
