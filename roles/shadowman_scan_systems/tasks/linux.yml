@@ -1,11 +1,13 @@
 ---
 - name: Ensure python simlink exists
-  ansible.builtin.command:
-    cmd: "ln -s /usr/bin/python3 /usr/bin/python"
+  ansible.builtin.file:
+    src: /usr/bin/python3
+    dest: /usr/bin/python
+    state: link
+    owner: root
+    group: root
+    mode: 0644
   when: ansible_python_version != "2.7.5"
-  register: result
-  failed_when: result.rc > 1
-  changed_when: result.rc == 0
 
 - name: Scan packages (Unix/Linux)
   shadowman.reports.scan_packages:
