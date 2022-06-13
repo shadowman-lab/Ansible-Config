@@ -16,6 +16,7 @@ exclude_paths:
   - /github/workspace/roles/shadowman_stig_windows_2016/
   - /github/workspace/roles/shadowman_pci_rhel7/
   - /github/workspace/roles/shadowman_pci_rhel8/
+  - /github/workspace/.github/workflows/
 # Any rule that has the 'opt-in' tag will not be loaded unless its 'id' is
 # mentioned in the enable_list:
 # This makes the linter display but not fail for rules/tags listed below:
