@@ -19,6 +19,7 @@ exclude_paths:
 # Any rule that has the 'opt-in' tag will not be loaded unless its 'id' is
 # mentioned in the enable_list:
 # This makes the linter display but not fail for rules/tags listed below:
+offline: true
 warn_list:
   - ignore-errors
   - command-instead-of-module
