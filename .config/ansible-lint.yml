@@ -29,4 +29,3 @@ warn_list:
   - literal-compare
   - empty-string-compare
   - git-latest
-  - deprecated-command-syntax
