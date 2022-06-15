@@ -3,6 +3,7 @@
   ansible.builtin.fetch:
     src: /etc/yum.conf.backup
     dest: /tmp/yum.conf.backup
+  check_mode: false
 
 - name: ensure excluded config is copied
   ansible.builtin.copy:
@@ -39,9 +40,7 @@
   ansible.builtin.fetch:
     src: /etc/yum.conf.cleanbackup
     dest: /tmp/yum.conf.cleanbackup
-    owner: root
-    group: root
-    mode: '0644'
+  check_mode: false
 
 - name: restore regular config for AAP updates
   ansible.builtin.copy:
