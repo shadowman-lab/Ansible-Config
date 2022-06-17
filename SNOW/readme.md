@@ -446,6 +446,8 @@ Scroll down to the Resource Path section and change the url portion from "job_te
 
 <img src="images/launch_workflow.png" alt="Launch Workflow" title="Launch Workflow" width="800" />
 
+Click Save and then Publish
+
 ### Create Flow for a Catalog Item Request
 
 #### 12)
