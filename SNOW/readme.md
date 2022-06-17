@@ -341,7 +341,7 @@ In ServiceNow, Navigate to **System OAuth-->Application Registry**. This will ta
 #### 7)
 On the new application screen, fill in these details:
 
-<img src="images/snow_app_reg_deets.png" alt="SNOW Application Registry Details" title="SNOW Application Registry Details" width="800" />
+<img src="images/app_reg.png" alt="SNOW Application Registry Details" title="SNOW Application Registry Details" width="800" />
 
 | Parameter | Value |
 |-----|-----|
@@ -376,7 +376,7 @@ You will be taken to the Oauth Entity Profile Window. At the bottom, Type Writin
 <img src="images/oauth_entity_deets.png" alt="Oauth Entity" title="Oauth Entity" width="800" />
 
 #### 12)
-Navigate to **Connections & Credentials-->Connection & Credential Aliases**. Either click the exists "Ansible" alias or click the blue **New** button. In the resulting dialog window, ensure the following fields are filled in:
+Navigate to **Connections & Credentials-->Connection & Credential Aliases**. Either click the existing "Ansible" alias or click the blue **New** button. In the resulting dialog window, ensure the following fields are filled in:
 
 <img src="images/alias.png" alt="Connection & Credential Aliases" title="Connection & Credential Aliases" width="800" />
 
@@ -407,7 +407,7 @@ Right-click inside the grey area at the top; click **Save**.
 
 Click the **Get Oauth Token** button on the screen. This will generate a pop-up window asking to authorize ServiceNow against your AAP instance/cluster. Click Authorize. ServiceNow will now have an Oauth2 token to authenticate against your AAP server.
 
-<img src="images/credentials.png" alt="Credentials" title="Credentials" width="500" />
+<img src="images/credentials.png" alt="Credentials" title="Credentials" width="800" />
 
 #### 14)
 Navigate to **Connections & Credentials-->Connection**. Click the blue **New** button. In the resulting dialog window, ensure the following fields are filled in:
@@ -429,7 +429,7 @@ Right-click inside the grey area at the top; click **Save**.
 #### 15)
 Navigate to **Service Catalog-->Catalog Definitions->Maintain Items**. Click the blue **New** button on the resulting item list. In the resulting dialog box, fill in the following fields:
 
-<img src="images/catalog_item.png" alt="Catalog Item" title="Catalog Item" width="1000" />
+<img src="images/cat_item.png" alt="Catalog Item" title="Catalog Item" width="1000" />
 
 | Parameter | Value |
 |-----|-----|
@@ -485,7 +485,7 @@ Navigate to **Process Automation-->Flow Designer**
 
 <img src="images/flow_designer.png" alt="Flow Designer" title="Flow Designer" width="800" />
 
-This will open up a new tab. Click Actions and in the Name section type "	Launch Job Template" and hit enter. Select the Launch Job Template Action.
+This will open up a new tab. Click Actions and in the Name section type "Launch Job Template" and hit enter. Select the Launch Job Template Action.
 
 #### 18)
 Once it loads, click the 3 dots in the top right and select "Copy Action"
@@ -560,7 +560,7 @@ Click on the blue **Done** Button
 #### 21)
 Under Actions, Select "Add an Action, Flow Logic or Subflow" then select Action. Under the Ansible Spoke select "Launch Job Template" or "Launch Workflow Job Template" depending on which type you want to run.
 
-Enter in the template ID number and extra arguments. For the arguments, you can drag the variables from step one or from the trigger into the appropriate position.
+Enter in the template ID number from AAP and any extra arguments the job requires. For the arguments, you can drag the variables from step one or from the trigger into the appropriate position.
 
 {
 	"extra_vars":
@@ -587,7 +587,7 @@ Lastly, to run this catalog item, navigate to **Self-Service-->Homepage** and se
 
 <img src="images/catalog_order.png" alt="Catalog Item" title="Catalog Item" width="1000" />
 
-Congratulations! After completing these steps, you can now use a ServiceNow Catalog Item to launch a Templates in AAP using Ansible Spoke. This is ideal for allowing end users to use a front end they are familiar with in order to perform this, and other automated tasks of varying complexities. This goes a long way toward reducing the time to value for the enterprise as a whole, rather than just the teams responsible for writing the playbooks being used.
+Congratulations! After completing these steps, you can now use a ServiceNow Catalog Item to launch a Template in AAP using Ansible Spoke. This is ideal for allowing end users to use a front end they are familiar with in order to perform this, and other automated tasks of varying complexities. This goes a long way toward reducing the time to value for the enterprise as a whole, rather than just the teams responsible for writing the playbooks being used.
 
 ## Have AAP reach out to ServiceNow
 
