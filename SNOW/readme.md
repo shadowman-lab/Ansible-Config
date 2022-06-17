@@ -443,7 +443,7 @@ Navigate back to the Catalog Item settings, and at the bottom, click the **New**
 <img src="images/spoke_cat_vars.png" alt="Catalog Vars" title="Catalog Vars" width="1000" />
 
 Here are the fields required for each variable in this demo:
-##### cloud_provider
+##### exclude
 | Parameter | Value |
 |-----|-----|
 | Type | `Single Line Text` |
@@ -480,7 +480,7 @@ In the Input Variables section change "job_template_id" to "workflow_job_templat
 <img src="images/input_script.png" alt="Input Script" title="Input Scipt" width="800" />
 
 Update the script:
-
+```
 (function execute(inputs, outputs) {
     inputs = new AnsibleUtils().trimStringInputs(inputs);
     outputs.workflow_job_template_id = inputs.workflow_job_template_id;
@@ -488,7 +488,7 @@ Update the script:
         outputs.payload = new AnsibleUtils().validateJson(inputs.data);
     }
 })(inputs, outputs);
-
+```
 <img src="images/output_vars.png" alt="Output Vars" title="Output Vars" width="800" />
 
 In the Output Variables section update the Label and Name from "job_template_id" to "workflow_job_template_id"
@@ -521,7 +521,7 @@ Click on the blue **Done** Button
 #### 20)
 Under Actions, Select "Add an Action, Flow Logic or Subflow" then select Action. Select "Get Catalog Variables". Drag "Requested Item Record" from the right side into the "Submitted Request [Requested Item] box"
 
-In "Template Catalog Items and Variable Sets [Catalog Items and Variable Sets]" Select your Catalog Item from before "Provision Cloud Webservers with Users" Select the variables you want to pass to AAP and click the right arrow.
+In "Template Catalog Items and Variable Sets [Catalog Items and Variable Sets]" Select your Catalog Item from before "AAP Ansible Spoke Patch" Select the variables you want to pass to AAP "exclude" and click the right arrow.
 
 <img src="images/get_vars.png" alt="Get Vars" title="Get Vars" width="800" />
 
@@ -531,7 +531,7 @@ Click on the blue **Done** Button
 Under Actions, Select "Add an Action, Flow Logic or Subflow" then select Action. Under the Ansible Spoke select "Launch Job Template" or "Launch Workflow Job Template" depending on which type you want to run.
 
 Enter in the template ID number from AAP and any extra arguments the job requires. For the arguments, you can drag the variables from step one or from the trigger into the appropriate position.
-
+```
 {
 	"extra_vars":
 	{
@@ -539,6 +539,7 @@ Enter in the template ID number from AAP and any extra arguments the job require
 		"ticket_number": "DRAGGED FROM STEP1"
 	}
 }
+```
 Click on the blue **Done** Button
 
 <img src="images/launch_job.png" alt="Launch Job" title="Launch Job" width="800" />
