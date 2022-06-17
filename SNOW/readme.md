@@ -92,6 +92,7 @@ On the new application screen, fill in these details:
 |  Authorization URL |  `https://<aap_url>/api/o/authorize/` |
 |  Token URL |  `https://<aap_url>/api/o/token/` |
 |  Redirect URL |  `https://<snow_instance_id>.service-now.com/oauth_redirect.do` |
+|  Send Credentials |  `As Basic Authorization Header` |
 
 Click the **Submit** button at the bottom.
 
@@ -352,6 +353,7 @@ On the new application screen, fill in these details:
 |  Authorization URL |  `https://<aap_url>/api/o/authorize/` |
 |  Token URL |  `https://<aap_url>/api/o/token/` |
 |  Redirect URL |  `https://<snow_instance_id>.service-now.com/api/sn_ansible_spoke/ansible_oauth_redirect` |
+|  Send Credentials |  `As Basic Authorization Header` |
 
 Click the **Submit** button at the bottom.
 
