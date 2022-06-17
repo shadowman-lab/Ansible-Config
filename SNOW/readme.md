@@ -1,5 +1,13 @@
 # Connecting ServiceNow and Ansible Automation Platform (AAP)
 
+## Sections
+[ServiceNow/AAP Integration Instructions using Rest Messages](https://github.com/shadowman-lab/Ansible-Config/tree/master/SNOW#have-aap-reach-out-to-servicenow)
+
+[ServiceNow/AAP Integration Instructions using Ansible Spoke](https://github.com/shadowman-lab/Ansible-Config/tree/master/SNOW#have-aap-reach-out-to-servicenow)
+
+[Have AAP reach out to ServiceNow](https://github.com/shadowman-lab/Ansible-Config/tree/master/SNOW#have-aap-reach-out-to-servicenow)
+
+[Have AAP use ServiceNow as an inventory source](https://github.com/shadowman-lab/Ansible-Config/tree/master/SNOW#have-aap-use-servicenow-as-an-inventory-source)
 
 ## Connect ServiceNow to Ansible AAP
 
@@ -15,7 +23,7 @@
 
 - If you have a subscription to ServiceNow’s Standard IntegrationHub pack, there is a spoke for integrating with AAP so you don't have to write you own API requests.
 
-## ServiceNow/AAP Integration Instructions
+## ServiceNow/AAP Integration Instructions using Rest Messages
 
 ### Preparing AAP
 
