@@ -424,7 +424,7 @@ Select Pre Processing on the left-hand side
 
 <img src="images/input_vars.png" alt="Input Vars" title="Input Vars" width="800" />
 
-In the Input Variables section change "job_template_id" to "workflow_job_template_id" and for value drag in Workflow Job Template ID from the right side
+In the Input Variables section change "job_template_id" to "workflow_job_template_id" and for value drag in Workflow Job Template ID from the right side under input variables
 
 <img src="images/input_script.png" alt="Input Script" title="Input Scipt" width="800" />
 
