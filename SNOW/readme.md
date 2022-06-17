@@ -433,7 +433,7 @@ Navigate to **Service Catalog-->Catalog Definitions->Maintain Items**. Click the
 
 | Parameter | Value |
 |-----|-----|
-| Name | `Provision Cloud Webservers with Users` |
+| Name | `AAP Ansible Spoke Patch` |
 | Catalog | The catalog that this item should be a part of |
 | Category | Required if you wish users to be able to search for this item |
 
@@ -446,39 +446,9 @@ Here are the fields required for each variable in this demo:
 ##### cloud_provider
 | Parameter | Value |
 |-----|-----|
-| Type | `Multiple Choice` |
-| Question | `Which Cloud provider to provision into?` |
-| Name | `cloud_provider` |
-| Default value | `aws` |
-
-###### variable options
-| Text | Value | Order |
-|-----|-----|-----|
-| `Amazon Web Services` | `aws` | `100` |
-| Google Cloud Platform | `gcp` | `200` |
-
-##### num_instances
-| Parameter | Value |
-|-----|-----|
 | Type | `Single Line Text` |
-| Question | `How many instances should be spun up? (Any value from 1 through 10)` |
-| Name | `num_instances` |
-| Default value | `3` |
-
-##### instance_size
-| Parameter | Value |
-|-----|-----|
-| Type | `Multiple Choice` |
-| Question | `What size instance should be selected?` |
-| Name | `instance_size` |
-| Default value | `small` |
-
-###### variable options
-| Text | Value | Order |
-|-----|-----|-----|
-| `small` | `small` | `100` |
-| `medium` | `medium` |  `200` |
-| `large` | `large` |  `300` |
+| Question | `What packages would you like to exclude?` |
+| Name | `exclude` |
 
 #### 17)
 Navigate to **Process Automation-->Flow Designer**
@@ -534,7 +504,7 @@ Go back to the Flow Designer home, click home in the top left. Click on the blue
 
 | Parameter | Value |
 |-----|-----|
-| Flow Name  | Provision Cloud Webservers with Users |
+| Flow Name  | AAP Patching |
 |  Application |  Global |
 
 Click on the blue **Submit** Button
@@ -585,7 +555,7 @@ Right-click inside the grey area at the top; click **Save**.
 #### 23)
 Lastly, to run this catalog item, navigate to **Self-Service-->Homepage** and search for the catalog item you just created. Once found, click the **order now** button. You can see the results page pop up in ServiceNow, and you can confirm that the Job is being run in AAP.
 
-<img src="images/catalog_order.png" alt="Catalog Item" title="Catalog Item" width="1000" />
+<img src="images/spoke_catalog.png" alt="Catalog Item" title="Catalog Item" width="1000" />
 
 Congratulations! After completing these steps, you can now use a ServiceNow Catalog Item to launch a Template in AAP using Ansible Spoke. This is ideal for allowing end users to use a front end they are familiar with in order to perform this, and other automated tasks of varying complexities. This goes a long way toward reducing the time to value for the enterprise as a whole, rather than just the teams responsible for writing the playbooks being used.
 
