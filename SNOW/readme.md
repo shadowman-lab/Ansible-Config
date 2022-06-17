@@ -337,7 +337,7 @@ Click the **Submit** button at the bottom.
 ### Set up Ansible spoke
 
 #### 6)
-Navigate to **Connections & Credentials-->Connection & Credential Aliases**. Either click an existing "AnsibleTowerAlias" alias or click the blue **New** button. In the resulting dialog window, ensure the following fields are filled in:
+Navigate to **Connections & Credentials-->Connection & Credential Aliases**. Click the existing "AnsibleTowerAlias" alias. In the resulting dialog window, ensure the following fields are filled in:
 
 <img src="images/alias.png" alt="Connection & Credential Aliases" title="Connection & Credential Aliases" width="800" />
 
