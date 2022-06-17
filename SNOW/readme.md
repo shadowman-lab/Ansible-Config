@@ -337,13 +337,13 @@ Click the **Submit** button at the bottom.
 ### Set up Ansible spoke
 
 #### 6)
-Navigate to **Connections & Credentials-->Connection & Credential Aliases**. Either click an existing "Ansible" alias or click the blue **New** button. In the resulting dialog window, ensure the following fields are filled in:
+Navigate to **Connections & Credentials-->Connection & Credential Aliases**. Either click an existing "AnsibleTowerAlias" alias or click the blue **New** button. In the resulting dialog window, ensure the following fields are filled in:
 
 <img src="images/alias.png" alt="Connection & Credential Aliases" title="Connection & Credential Aliases" width="800" />
 
 | Parameter | Value |
 |-----|-----|
-| Name  | `AAP`  |
+| Name  | `AnsibleTowerAlias`  |
 |  Application |  Ansible Spoke |
 |  Type |  Connection and Credential |
 |  Connection Type |  HTTP |
@@ -416,7 +416,7 @@ Once it loads, click the 3 dots in the top right and select "Copy Action"
 | New action name | `Launch Workflow Job Template` |
 | Application | `Ansible Spoke` |
 
-In this new action, change the label from "Job Template ID" to "Workflow Job Template ID" and the name from "job_template_id" to "workflow_job_template_id"
+In this new action, Create a new label "Workflow Job Template ID" set to Mandatory and delete "job_template_id"
 
 <img src="images/action_inputs.png" alt="Action Inputs" title="Action Inputs" width="800" />
 
@@ -424,7 +424,7 @@ Select Pre Processing on the left-hand side
 
 <img src="images/input_vars.png" alt="Input Vars" title="Input Vars" width="800" />
 
-In the Input Variables section change "job_template_id" to "workflow_job_template_id"
+In the Input Variables section change "job_template_id" to "workflow_job_template_id" and for value drag in Workflow Job Template ID from the right side
 
 <img src="images/input_script.png" alt="Input Script" title="Input Scipt" width="800" />
 
@@ -440,7 +440,7 @@ Update the script:
 ```
 <img src="images/output_vars.png" alt="Output Vars" title="Output Vars" width="800" />
 
-In the Output Variables section update the Label and Name from "job_template_id" to "workflow_job_template_id"
+In the Output Variables section create a new label "Workflow Job Template ID" set to Mandatory and delete "job_template_id"
 
 Select Launch Workflow on the left-hand side
 
