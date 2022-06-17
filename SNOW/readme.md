@@ -540,7 +540,7 @@ Click on the blue **Done** Button
 #### 21)
 Under Actions, Select "Add an Action, Flow Logic or Subflow" then select Action. Under the Ansible Spoke select "Launch Job Template" or "Launch Workflow Job Template" depending on which type you want to run.
 
-Enter in the template ID number from AAP and any extra arguments the job requires. For the arguments, you can drag the variables from step one or from the trigger into the appropriate position.
+Enter in the template ID number from AAP and any extra arguments the job requires (this includes limits, survey items, etc). For the arguments, you can drag the variables from step one or from the trigger into the appropriate position.
 ```
 {
 	"extra_vars":
