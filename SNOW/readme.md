@@ -1,9 +1,9 @@
 # Connecting ServiceNow and Ansible Automation Platform (AAP)
 
 ## Sections
-[ServiceNow/AAP Integration Instructions using Rest Messages](https://github.com/shadowman-lab/Ansible-Config/tree/master/SNOW#have-aap-reach-out-to-servicenow)
+[ServiceNow/AAP Integration Instructions using Rest Messages](https://github.com/shadowman-lab/Ansible-Config/tree/master/SNOW#servicenowaap-integration-instructions-using-rest-messages)
 
-[ServiceNow/AAP Integration Instructions using Ansible Spoke](https://github.com/shadowman-lab/Ansible-Config/tree/master/SNOW#have-aap-reach-out-to-servicenow)
+[ServiceNow/AAP Integration Instructions using Ansible Spoke](https://github.com/shadowman-lab/Ansible-Config/tree/master/SNOW#servicenowaap-integration-instructions-using-ansible-spoke)
 
 [Have AAP reach out to ServiceNow](https://github.com/shadowman-lab/Ansible-Config/tree/master/SNOW#have-aap-reach-out-to-servicenow)
 
@@ -280,6 +280,314 @@ Lastly, to run this catalog item, navigate to **Self-Service-->Homepage** and se
 <img src="images/catalog_order.png" alt="Catalog Item" title="Catalog Item" width="1000" />
 
 Congratulations! After completing these steps, you can now use a ServiceNow Catalog Item to launch a Workflow Template in AAP. This is ideal for allowing end users to use a front end they are familiar with in order to perform this, and other automated tasks of varying complexities. This goes a long way toward reducing the time to value for the enterprise as a whole, rather than just the teams responsible for writing the playbooks being used.
+
+## ServiceNow/AAP Integration Instructions using Ansible Spoke
+
+You must ensure you have an Integration Hub subscription and Ansible spoke activated
+
+### Preparing AAP
+
+#### 1)
+In AAP, navigate to **Applications** on the left side of the screen. Click the **Blue Add Button** on the right, which will present you with a Create Application dialog screen. Fill in the following fields:
+| Parameter | Value |
+|-----|-----|
+| Name  | Descriptive name of the application that will contact AAP  |
+|  Organization |  `Default` |
+|  Authorization Grant Type |  `Authorization code` |
+|  Redirect URIs |  `https://<snow_instance_id>.service-now.com/api/sn_ansible_spoke/ansible_oauth_redirect` |
+|  Client Type |  `Confidential` |
+
+<img src="images/create_application.png" alt="AAP Create Application" title="AAP Create Application" width="1000" />
+
+#### 2)
+Click the blue **Save** button, at which point a window will pop up, presenting you with the Client ID and Client Secret needed for ServiceNow to make API calls into AAP. This will only be presented **ONCE**, so capture these values for later use.
+
+<img src="images/application_secrets.png" alt="AAP Application Secrets" title="AAP Application Secrets" width="500" />
+
+#### 3)
+Next, navigate to **Settings** on the left side of the screen and then **Miscellaneous Authentication settings**. After you click Edit at the buttom, you’ll want to toggle the **Allow External Users to Create Oauth2 Tokens** option to ***on***. Click the blue **Save** button to commit the change.
+
+<img src="images/tower_settings.png" alt="AAP Settings" title="AAP Settings" width="1000" />
+
+#### 4)
+The Orlando release of the ServiceNow developer instance does not allow for the self-signed certificate provided by AAP. We need to equip our AAP instance with a certificate from a trusted Certificate Authority. The easiest way to accomplish this to SSH into AAP and run the Certbot ACME client in order to generate a certificate from LetsEncrypt (instructions can be found [here](https://letsencrypt.org/getting-started/)). It is important to place the contents of the certificate you generate (found at `/etc/letsencrypt/live/<tower domain>/cert.pem`), followed by the LetsEncrypt intermediate certificate (starting on a new line) at location AAP places its self-signed certificate, `/etc/tower/tower.cert`. The LetsEncrypt intermediate certificate can be found [here](https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem.txt). You must also replace the contents of `/etc/tower/tower.key` with the contents of `/etc/letsencrypt/live/<tower domain>/privkey.pem`. 
+
+Be sure to restart the nginx service on your AAP server after updating the certificate and key.
+
+An example of the generated certificate with the intermediate certificate appended (what needs to be place in `/etc/tower/tower.cert`) is pictured below:
+
+<img src="images/fullchain_cert.png" alt="AAP Cert" title="AAP Cert" width="500" />
+
+### Preparing ServiceNow
+
+#### 5)
+Moving over to ServiceNow, Navigate to **System Definition-->Certificates**. This will take you to a screen of all the certificates Service Now uses. Click on the **blue New button**, and fill in these details:
+| Parameter | Value |
+|-----|-----|
+| Name  | Descriptive name of the certificate  |
+|  Format |  `PEM` |
+|  Type |  `Trust Store Cert` |
+|  PEM Certificate |  The certificate to authenticate against AAP with. Use the certificate you just generated on your AAP server, located at `/etc/tower/tower.cert.` Copy the contents of this file (EXCLUDE the intermediate certificate) into the field in ServiceNow. |
+
+<img src="images/tower_cert.png" alt="AAP Certificate" title="AAP Certificate" width="1000" />
+
+Click the **Submit** button at the bottom.
+
+#### 6)
+In ServiceNow, Navigate to **System OAuth-->Application Registry**. This will take you to a screen of all the Applications ServiceNow communicates with. Click on the **blue New button**, and you will be asked What kind of Oauth application you want to set up. Select **Connect to a third party Oauth Provider**.
+
+<img src="images/snow_app_reg.png" alt="SNOW Application Registry" title="SNOW Application Registry" width="800" />
+
+#### 7)
+On the new application screen, fill in these details:
+
+<img src="images/snow_app_reg_deets.png" alt="SNOW Application Registry Details" title="SNOW Application Registry Details" width="800" />
+
+| Parameter | Value |
+|-----|-----|
+| Name  | Descriptive Application Name  |
+|  Client ID |  The Client ID you got from AAP |
+|  Client Secret |  The Client Secret you got from AAP |
+|  Default Grant Type |  `Authorization Code` |
+|  Authorization URL |  `https://<aap_url>/api/o/authorize/` |
+|  Token URL |  `https://<aap_url>/api/o/token/` |
+|  Redirect URL |  `https://<snow_instance_id>.service-now.com/api/sn_ansible_spoke/ansible_oauth_redirect` |
+
+Click the **Submit** button at the bottom.
+
+#### 8)
+You should be taken out to the list of all Application Registries. Click back into the Application you just created. At the bottom, there should be two tabs: Click on the tab **Oauth Entity Scopes**. Under here, there is a section called **Insert a new row…**. Double click here, and fill in the field to say Writing Scope. Click on the **green check mark** to confirm this change. Then, right-click inside the grey area at the top where it says Application Registries and click Save in the menu that pops up.
+
+<img src="images/write_scope.png" alt="SNOW Write Scope" title="SNOW Write Scope" width="800" />
+
+#### 9)
+The writing scope should now be Clickable. Click on it, and in the dialog window that you are taken to, type **write** in the Oauth scope box. Click the **Update** button at the bottom.
+
+<img src="images/write_scope_deets.png" alt="SNOW Write Scope" title="SNOW Write Scope" width="800" />
+
+#### 10)
+Back in the Application Settings page, scroll back to the bottom and click the **Oauth Entity Profiles** tab. There should be an entity profile populated - click into it.
+
+<img src="images/oauth_entity.png" alt="Oauth Entity" title="Oauth Entity" width="500" />
+
+#### 11)
+You will be taken to the Oauth Entity Profile Window. At the bottom, Type Writing Scope into the Oauth Entity Scope field. Click the green check mark and **update**.
+
+<img src="images/oauth_entity_deets.png" alt="Oauth Entity" title="Oauth Entity" width="800" />
+
+#### 12)
+Navigate to **Connections & Credentials-->Connection & Credential Aliases**. Either click the exists "Ansible" alias or click the blue **New** button. In the resulting dialog window, ensure the following fields are filled in:
+
+<img src="images/alias.png" alt="Connection & Credential Aliases" title="Connection & Credential Aliases" width="800" />
+
+| Parameter | Value |
+|-----|-----|
+| Name  | `AnsibleTowerAlias`  |
+|  ID |  sn_ansible_spoke.AnsibleTowerAlias |
+|  Application |  Ansible Spoke |
+|  Type |  Connection and Credential |
+|  Connection Type |  HTTP |
+|  Default Retry Policy |  Default HTTP Retry Policy |
+|  Configuration Template |  Ansible |
+
+Right-click inside the grey area at the top; click **Save**.
+
+#### 13)
+Navigate to **Connections & Credentials-->Credentials**. Click the blue **New** button. In the resulting dialog window, ensure the following fields are filled in:
+
+| Parameter | Value |
+|-----|-----|
+| Name  | `Ansible Credentials`  |
+|  Applies to |  All MID servers |
+|  Active |  Checked |
+|  Oauth Entity Profile |  Select the Profile from your Application Registry created earlier  |
+
+
+Right-click inside the grey area at the top; click **Save**.
+
+Click the **Get Oauth Token** button on the screen. This will generate a pop-up window asking to authorize ServiceNow against your AAP instance/cluster. Click Authorize. ServiceNow will now have an Oauth2 token to authenticate against your AAP server.
+
+<img src="images/credentials.png" alt="Credentials" title="Credentials" width="500" />
+
+#### 14)
+Navigate to **Connections & Credentials-->Connection**. Click the blue **New** button. In the resulting dialog window, ensure the following fields are filled in:
+
+| Parameter | Value |
+|-----|-----|
+| Name  | `Ansible Connection`  |
+|  Active |  Checked |
+|  Credential |  `Ansible Credentials` |
+| Domain | Global |
+|  Connection alias |  Select the ID of the alias from step 12  |
+|  Connection URL |  https://<aap_url> |
+|  Version |  v2 |
+
+Right-click inside the grey area at the top; click **Save**.
+
+<img src="images/connection.png" alt="Connection" title="Connection" width="1000" />
+
+#### 15)
+Navigate to **Service Catalog-->Catalog Definitions->Maintain Items**. Click the blue **New** button on the resulting item list. In the resulting dialog box, fill in the following fields:
+
+<img src="images/catalog_item.png" alt="Catalog Item" title="Catalog Item" width="1000" />
+
+| Parameter | Value |
+|-----|-----|
+| Name | `Provision Cloud Webservers with Users` |
+| Catalog | The catalog that this item should be a part of |
+| Category | Required if you wish users to be able to search for this item |
+
+#### 16)
+Navigate back to the Catalog Item settings, and at the bottom, click the **New** button under the variables tab. In the window that results, populate the question you want to present to the user, and the variable name. You can also put a default value under the Default Value Tab. If you select a variable type of `Multiple Choice`, after submitting the changes you can add options under the ***Question Choices*** section at the bottom of the Variable settings page.
+
+<img src="images/catalog_vars.png" alt="Catalog Vars" title="Catalog Vars" width="1000" />
+
+Here are the fields required for each variable in this demo:
+##### cloud_provider
+| Parameter | Value |
+|-----|-----|
+| Type | `Multiple Choice` |
+| Question | `Which Cloud provider to provision into?` |
+| Name | `cloud_provider` |
+| Default value | `aws` |
+
+###### variable options
+| Text | Value | Order |
+|-----|-----|-----|
+| `Amazon Web Services` | `aws` | `100` |
+| Google Cloud Platform | `gcp` | `200` |
+
+##### num_instances
+| Parameter | Value |
+|-----|-----|
+| Type | `Single Line Text` |
+| Question | `How many instances should be spun up? (Any value from 1 through 10)` |
+| Name | `num_instances` |
+| Default value | `3` |
+
+##### instance_size
+| Parameter | Value |
+|-----|-----|
+| Type | `Multiple Choice` |
+| Question | `What size instance should be selected?` |
+| Name | `instance_size` |
+| Default value | `small` |
+
+###### variable options
+| Text | Value | Order |
+|-----|-----|-----|
+| `small` | `small` | `100` |
+| `medium` | `medium` |  `200` |
+| `large` | `large` |  `300` |
+
+#### 17)
+Navigate to **Process Automation-->Flow Designer**
+
+<img src="images/flow_designer.png" alt="Flow Designer" title="Flow Designer" width="800" />
+
+This will open up a new tab. Click Actions and in the Name section type "	Launch Job Template" and hit enter. Select the Launch Job Template Action.
+
+#### 18)
+Once it loads, click the 3 dots in the top right and select "Copy Action"
+
+<img src="images/copy_action.png" alt="Copy Action" title="Copy Action" width="800" />
+
+| Parameter | Value |
+|-----|-----|
+| New action name | `Launch Workflow Job Template` |
+| Application | `Ansible Spoke` |
+
+In this new action, change the label from "Job Template ID" to "Workflow Job Template ID" and the name from "job_template_id" to "workflow_job_template_id"
+
+<img src="images/action_inputs.png" alt="Action Inputs" title="Action Inputs" width="800" />
+
+Select Pre Processing on the left-hand side
+
+<img src="images/input_vars.png" alt="Input Vars" title="Input Vars" width="800" />
+
+In the Input Variables section change "job_template_id" to "workflow_job_template_id"
+
+<img src="images/input_script.png" alt="Input Script" title="Input Scipt" width="800" />
+
+Update the script:
+
+(function execute(inputs, outputs) {
+    inputs = new AnsibleUtils().trimStringInputs(inputs);
+    outputs.workflow_job_template_id = inputs.workflow_job_template_id;
+    if (inputs.data) {
+        outputs.payload = new AnsibleUtils().validateJson(inputs.data);
+    }
+})(inputs, outputs);
+
+<img src="images/output_vars.png" alt="Output Vars" title="Output Vars" width="800" />
+
+In the Output Variables section update the Label and Name from "job_template_id" to "workflow_job_template_id"
+
+Select Launch Workflow on the left-hand side
+
+Scroll down to the Resource Path section and change the url portion from "job_templates" to "workflow_job_templates"
+
+<img src="images/launch_workflow.png" alt="Launch Workflow" title="Launch Workflow" width="800" />
+
+#### 18)
+Go back to the Flow Designer home, click home in the top left. Click on the blue **New**, and then Flow.
+
+| Parameter | Value |
+|-----|-----|
+| Flow Name  | Provision Cloud Webservers with Users |
+|  Application |  Global |
+
+Click on the blue **Submit** Button
+
+<img src="images/new_flow.png" alt="New Flow" title="New Flow" width="800" />
+
+#### 19)
+In the New Tab that appears, click Add a trigger, select Service Catalog, Select Advance Options and select "Run flow in background (default)" 
+
+Click on the blue **Done** Button
+
+<img src="images/trigger.png" alt="Trigger" title="Trigger" width="800" />
+
+#### 20)
+Under Actions, Select "Add an Action, Flow Logic or Subflow" then select Action. Select "Get Catalog Variables". Drag "Requested Item Record" from the right side into the "Submitted Request [Requested Item] box"
+
+In "Template Catalog Items and Variable Sets [Catalog Items and Variable Sets]" Select your Catalog Item from before "Provision Cloud Webservers with Users" Select the variables you want to pass to AAP and click the right arrow.
+
+<img src="images/get_vars.png" alt="Get Vars" title="Get Vars" width="800" />
+
+Click on the blue **Done** Button
+
+#### 21)
+Under Actions, Select "Add an Action, Flow Logic or Subflow" then select Action. Under the Ansible Spoke select "Launch Job Template" or "Launch Workflow Job Template" depending on which type you want to run.
+
+Enter in the template ID number and extra arguments. For the arguments, you can drag the variables from step one or from the trigger into the appropriate position.
+
+{
+	"extra_vars":
+	{
+		"exclude": "DRAGGED FROM STEP1",
+		"ticket_number": "DRAGGED FROM STEP1"
+	}
+}
+Click on the blue **Done** Button
+
+<img src="images/launch_job.png" alt="Launch Job" title="Launch Job" width="800" />
+
+Click Save and then click Activate on the top bar
+
+#### 22)
+Navigate back to **Service Catalog-->Catalog Definitions->Maintain Items** and select the item you created earlier. Click on Process Engine and then populate the Flow field with the Flow you just created.
+
+Right-click inside the grey area at the top; click **Save**.
+
+<img src="images/process_engine.png" alt="Process Engine" title="Process Engine" width="600" />
+
+#### 23)
+Lastly, to run this catalog item, navigate to **Self-Service-->Homepage** and search for the catalog item you just created. Once found, click the **order now** button. You can see the results page pop up in ServiceNow, and you can confirm that the Job is being run in AAP.
+
+<img src="images/catalog_order.png" alt="Catalog Item" title="Catalog Item" width="1000" />
+
+Congratulations! After completing these steps, you can now use a ServiceNow Catalog Item to launch a Templates in AAP using Ansible Spoke. This is ideal for allowing end users to use a front end they are familiar with in order to perform this, and other automated tasks of varying complexities. This goes a long way toward reducing the time to value for the enterprise as a whole, rather than just the teams responsible for writing the playbooks being used.
 
 ## Have AAP reach out to ServiceNow
 
