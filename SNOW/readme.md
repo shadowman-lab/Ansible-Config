@@ -350,8 +350,6 @@ Navigate to **Connections & Credentials-->Connection & Credential Aliases**. Cli
 |  Default Retry Policy |  Default HTTP Retry Policy |
 |  Configuration Template |  Ansible |
 
-Right-click inside the grey area at the top; click **Save**.
-
 #### 7)
 Under Related Links select "Create New Connection & Credential" and enter in the following information:
 
