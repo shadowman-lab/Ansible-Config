@@ -284,7 +284,7 @@ Congratulations! After completing these steps, you can now use a ServiceNow Cata
 
 ## ServiceNow/AAP Integration Instructions using Ansible Spoke
 
-You must ensure you have an Integration Hub subscription and Ansible spoke activated
+You must ensure you have an Integration Hub Standard/Professional subscription and Ansible spoke activated
 
 ### Preparing AAP
 
