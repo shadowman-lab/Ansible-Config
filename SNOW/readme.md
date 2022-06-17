@@ -414,7 +414,7 @@ Once it loads, click the 3 dots in the top right and select "Copy Action"
 | New action name | `Launch Workflow Job Template` |
 | Application | `Ansible Spoke` |
 
-In this new action, Create a new label "Workflow Job Template ID" set to Mandatory and delete "job_template_id"
+In this new action, Create a new label "Workflow Job Template ID" set to Mandatory and delete "Job Template ID"
 
 <img src="images/action_inputs.png" alt="Action Inputs" title="Action Inputs" width="800" />
 
@@ -438,11 +438,11 @@ Update the script:
 ```
 <img src="images/output_vars.png" alt="Output Vars" title="Output Vars" width="800" />
 
-In the Output Variables section create a new label "Workflow Job Template ID" set to Mandatory and delete "job_template_id"
+In the Output Variables section create a new label "workflow_job_template_id" set to Mandatory and delete "job_template_id"
 
 Select Launch Workflow on the left-hand side
 
-Scroll down to the Resource Path section and change the url portion from "job_templates" to "workflow_job_templates"
+Scroll down to the Resource Path section and change the url portion from "job_templates" to "workflow_job_templates" and ensure you drag over from Pre Processing the workflow_job_template_id so the Resource path looks like "api/step->Launch Job Template->Version/workflow_job_templates/step->Pre Processing->workflow_job_template_id
 
 <img src="images/launch_workflow.png" alt="Launch Workflow" title="Launch Workflow" width="800" />
 
