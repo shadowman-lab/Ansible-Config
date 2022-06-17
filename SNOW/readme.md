@@ -440,7 +440,7 @@ Navigate to **Service Catalog-->Catalog Definitions->Maintain Items**. Click the
 #### 16)
 Navigate back to the Catalog Item settings, and at the bottom, click the **New** button under the variables tab. In the window that results, populate the question you want to present to the user, and the variable name. You can also put a default value under the Default Value Tab. If you select a variable type of `Multiple Choice`, after submitting the changes you can add options under the ***Question Choices*** section at the bottom of the Variable settings page.
 
-<img src="images/catalog_vars.png" alt="Catalog Vars" title="Catalog Vars" width="1000" />
+<img src="images/spoke_cat_vars.png" alt="Catalog Vars" title="Catalog Vars" width="1000" />
 
 Here are the fields required for each variable in this demo:
 ##### cloud_provider
@@ -550,7 +550,7 @@ Navigate back to **Service Catalog-->Catalog Definitions->Maintain Items** and s
 
 Right-click inside the grey area at the top; click **Save**.
 
-<img src="images/process_engine.png" alt="Process Engine" title="Process Engine" width="600" />
+<img src="images/process_engine.png" alt="Process Engine" title="Process Engine" width="800" />
 
 #### 23)
 Lastly, to run this catalog item, navigate to **Self-Service-->Homepage** and search for the catalog item you just created. Once found, click the **order now** button. You can see the results page pop up in ServiceNow, and you can confirm that the Job is being run in AAP.
