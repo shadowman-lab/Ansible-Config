@@ -361,7 +361,6 @@ Under Related Links select "Create New Connection & Credential" and enter in the
 |  Connection URL  |  `https://<aap_url>/api/o/authorize/` |
 |  Credential Name |  `<provider-name> Spoke Credentials` |
 |  Application Registry Name |  `<provider-name>` |
-
 |  OAuth Client ID | The Client ID you got from AAP |
 |  OAuth Client Secret | The Client Secret you got from AAP |
 |  OAuth Entity Profile Name | Ansible Entity Profile |
