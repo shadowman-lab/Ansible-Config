@@ -377,6 +377,8 @@ You will be taken to the Oauth Entity Profile Window. At the bottom, Type Writin
 
 <img src="images/oauth_entity_deets.png" alt="Oauth Entity" title="Oauth Entity" width="800" />
 
+### Set up Ansible spoke
+
 #### 12)
 Navigate to **Connections & Credentials-->Connection & Credential Aliases**. Either click the existing "Ansible" alias or click the blue **New** button. In the resulting dialog window, ensure the following fields are filled in:
 
@@ -428,6 +430,8 @@ Right-click inside the grey area at the top; click **Save**.
 
 <img src="images/connection.png" alt="Connection" title="Connection" width="1000" />
 
+### Create Catalog Item for User
+
 #### 15)
 Navigate to **Service Catalog-->Catalog Definitions->Maintain Items**. Click the blue **New** button on the resulting item list. In the resulting dialog box, fill in the following fields:
 
@@ -451,6 +455,8 @@ Here are the fields required for each variable in this demo:
 | Type | `Single Line Text` |
 | Question | `What packages would you like to exclude?` |
 | Name | `exclude` |
+
+### Update Spoke Actions to allow for Workflow Job Templates
 
 #### 17)
 Navigate to **Process Automation-->Flow Designer**
@@ -501,6 +507,8 @@ Scroll down to the Resource Path section and change the url portion from "job_te
 
 <img src="images/launch_workflow.png" alt="Launch Workflow" title="Launch Workflow" width="800" />
 
+### Create Flow for a Catalog Item Request
+
 #### 18)
 Go back to the Flow Designer home, click home in the top left. Click on the blue **New**, and then Flow.
 
@@ -547,6 +555,8 @@ Click on the blue **Done** Button
 <img src="images/launch_job.png" alt="Launch Job" title="Launch Job" width="800" />
 
 Click Save and then click Activate on the top bar
+
+### Update Catalog with newly created Flow
 
 #### 22)
 Navigate back to **Service Catalog-->Catalog Definitions->Maintain Items** and select the item you created earlier. Click on Process Engine and then populate the Flow field with the Flow you just created.
