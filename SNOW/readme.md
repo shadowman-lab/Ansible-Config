@@ -442,7 +442,7 @@ In the Output Variables section create a new label "workflow_job_template_id" se
 
 Select Launch Workflow on the left-hand side
 
-Scroll down to the Resource Path section and change the url portion from "job_templates" to "workflow_job_templates" and ensure you drag over from Pre Processing the workflow_job_template_id so the Resource path looks like "api/step->Launch Job Template->Version/workflow_job_templates/step->Pre Processing->workflow_job_template_id
+Scroll down to the Resource Path section and change the url portion from "job_templates" to "workflow_job_templates" and ensure you drag over from Pre Processing the workflow_job_template_id so the Resource path looks like "api/step->Launch Job Template->Version/workflow_job_templates/step->Pre Processing->workflow_job_template_id"
 
 <img src="images/launch_workflow.png" alt="Launch Workflow" title="Launch Workflow" width="800" />
 
