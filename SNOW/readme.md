@@ -463,7 +463,7 @@ Click on the blue **Submit** Button
 <img src="images/new_flow.png" alt="New Flow" title="New Flow" width="800" />
 
 #### 13)
-In the New Tab that appears, click Add a trigger, select Service Catalog, Select Advance Options and select "Run flow in background (default)" 
+In the New Tab that appears, click Add a trigger, select Service Catalog, Select Advanced Options and select "Run flow in background (default)" 
 
 Click on the blue **Done** Button
 
@@ -507,7 +507,7 @@ Right-click inside the grey area at the top; click **Save**.
 <img src="images/process_engine.png" alt="Process Engine" title="Process Engine" width="800" />
 
 #### 17)
-Lastly, to run this catalog item, navigate to **Self-Service-->Homepage** and search for the catalog item you just created. Once found, click the **order now** button. You can see the results page pop up in ServiceNow, and you can confirm that the Job is being run in AAP.
+Lastly, to run this catalog item, navigate to **Self-Service-->Service Catalog** and search for the catalog item you just created. Once found, click the **order now** button. You can see the results page pop up in ServiceNow, and you can confirm that the Job is being run in AAP.
 
 <img src="images/spoke_catalog.png" alt="Catalog Item" title="Catalog Item" width="1000" />
 
