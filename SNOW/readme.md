@@ -334,7 +334,7 @@ Moving over to ServiceNow, Navigate to **System Definition-->Certificates**. Thi
 
 Click the **Submit** button at the bottom.
 
-### Set up Ansible spoke
+### Set Up Ansible Spoke
 
 #### 6)
 Navigate to **Connections & Credentials-->Connection & Credential Aliases**. Click the existing "AnsibleTowerAlias" alias. In the resulting dialog window, ensure the following fields are filled in:
@@ -369,7 +369,11 @@ Under Related Links select "Create New Connection & Credential" and enter in the
 
 <img src="images/connection_credential.png" alt="Connection & Credential" title="Connection & Credential" width="800" />
 
-### Create Catalog Item for User
+Select **Create and Get OAuth Token** to complete the Ansible spoke set up.  This will generate a window asking to authorize ServiceNow against your AAP instance/cluster. Click **Authorize**. 
+
+Note: If you wish to have AAP use a specific user when reaching out from ServiceNow (such as a dedicated servicenow user) ensure you are logged in as that user when you click **Authorize**.
+
+### Create a Catalog Item for Users
 
 #### 8)
 Navigate to **Service Catalog-->Catalog Definitions->Maintain Items**. Click the blue **New** button on the resulting item list. In the resulting dialog box, fill in the following fields:
@@ -395,7 +399,7 @@ Here are the fields required for each variable in this demo:
 | Question | `What packages would you like to exclude?` |
 | Name | `exclude` |
 
-### Update Spoke Actions to allow for Workflow Job Templates
+### Update Spoke Actions For Workflow Job Templates
 
 #### 10)
 Navigate to **Process Automation-->Flow Designer**
@@ -448,7 +452,7 @@ Scroll down to the Resource Path section and change the url portion from "job_te
 
 Click Save and then Publish
 
-### Create Flow for a Catalog Item Request
+### Create Flow For A Catalog Item Request
 
 #### 12)
 Go back to the Flow Designer home, click home in the top left. Click on the blue **New**, and then Flow.
@@ -497,7 +501,7 @@ Click on the blue **Done** Button
 
 Click Save and then click Activate on the top bar
 
-### Update Catalog with newly created Flow
+### Update Catalog With Newly Created Flow
 
 #### 16)
 Navigate back to **Service Catalog-->Catalog Definitions->Maintain Items** and select the item you created earlier. Click on Process Engine and then populate the Flow field with the Flow you just created.
