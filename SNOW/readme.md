@@ -45,7 +45,7 @@ Click the blue **Save** button, at which point a window will pop up, presenting 
 <img src="images/application_secrets.png" alt="AAP Application Secrets" title="AAP Application Secrets" width="500" />
 
 #### 3)
-Next, navigate to **Settings** on the left side of the screen and then **Miscellaneous Authentication settings**. After you click Edit at the buttom, you’ll want to toggle the **Allow External Users to Create Oauth2 Tokens** option to ***on***. Click the blue **Save** button to commit the change.
+Next, navigate to **Settings** on the left side of the screen and then **Miscellaneous Authentication settings**. After you click Edit at the bottom, you’ll want to toggle the **Allow External Users to Create Oauth2 Tokens** option to ***on***. Click the blue **Save** button to commit the change.
 
 <img src="images/tower_settings.png" alt="AAP Settings" title="AAP Settings" width="1000" />
 
@@ -306,7 +306,7 @@ Click the blue **Save** button, at which point a window will pop up, presenting 
 <img src="images/application_secrets.png" alt="AAP Application Secrets" title="AAP Application Secrets" width="500" />
 
 #### 3)
-Next, navigate to **Settings** on the left side of the screen and then **Miscellaneous Authentication settings**. After you click Edit at the buttom, you’ll want to toggle the **Allow External Users to Create Oauth2 Tokens** option to ***on***. Click the blue **Save** button to commit the change.
+Next, navigate to **Settings** on the left side of the screen and then **Miscellaneous Authentication settings**. After you click Edit at the bottom, you’ll want to toggle the **Allow External Users to Create Oauth2 Tokens** option to ***on***. Click the blue **Save** button to commit the change.
 
 <img src="images/tower_settings.png" alt="AAP Settings" title="AAP Settings" width="1000" />
 
