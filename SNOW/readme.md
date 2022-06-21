@@ -284,7 +284,7 @@ Congratulations! After completing these steps, you can now use a ServiceNow Cata
 
 ## ServiceNow/AAP Integration Instructions using Ansible Spoke
 
-You must ensure you have an Integration Hub Standard/Professional subscription and Ansible spoke activated
+This walkthrough assumes you have an Integration Hub Standard/Professional subscription and Ansible spoke activated. It also assumes you have the ability to reach your automation controller from ServiceNow (a mid-server can be utilized). For this example, I will be utilizing an already existing Ansible Automation Platform (AAP) workflow that patches all of my Red Hat Enterprise Linux Servers and updates a ServiceNow Catalog Request. I will also be using Ansible Automation Platform 2.2 but this integration will work in Ansible Automation Platform 1.2 and 2.1 as well. Ansible spoke leverages the ServiceNow Flow Designer which can be easier to use when leveraging variables and building out the API Rest message.
 
 ### Preparing AAP
 
@@ -332,14 +332,12 @@ Moving over to ServiceNow, Navigate to **System Definition-->Certificates**. Thi
 
 <img src="images/tower_cert.png" alt="AAP Certificate" title="AAP Certificate" width="1000" />
 
-Click the **Submit** button at the bottom.
+Click the **Submit** (or **Update** if you had a previous AAP certificate) button at the bottom.
 
 ### Set Up Ansible Spoke
 
 #### 6)
 Navigate to **Connections & Credentials-->Connection & Credential Aliases**. Click the existing "AnsibleTowerAlias" alias. In the resulting dialog window, ensure the following fields are filled in:
-
-<img src="images/alias.png" alt="Connection & Credential Aliases" title="Connection & Credential Aliases" width="800" />
 
 | Parameter | Value |
 |-----|-----|
@@ -349,6 +347,8 @@ Navigate to **Connections & Credentials-->Connection & Credential Aliases**. Cli
 |  Connection Type |  HTTP |
 |  Default Retry Policy |  Default HTTP Retry Policy |
 |  Configuration Template |  Ansible |
+
+<img src="images/alias.png" alt="Connection & Credential Aliases" title="Connection & Credential Aliases" width="800" />
 
 #### 7)
 Under Related Links select "Create New Connection & Credential" and enter in the following information:
@@ -378,26 +378,27 @@ Note: If you wish to have AAP use a specific user when reaching out from Service
 #### 8)
 Navigate to **Service Catalog-->Catalog Definitions->Maintain Items**. Click the blue **New** button on the resulting item list. In the resulting dialog box, fill in the following fields:
 
-<img src="images/cat_item.png" alt="Catalog Item" title="Catalog Item" width="1000" />
-
 | Parameter | Value |
 |-----|-----|
 | Name | `AAP Ansible Spoke Patch` |
 | Catalog | The catalog that this item should be a part of |
 | Category | Required if you wish users to be able to search for this item |
 
+<img src="images/cat_item.png" alt="Catalog Item" title="Catalog Item" width="1000" />
+
 #### 9)
 Navigate back to the Catalog Item settings, and at the bottom, click the **New** button under the variables tab. In the window that results, populate the question you want to present to the user, and the variable name. You can also put a default value under the Default Value Tab. If you select a variable type of `Multiple Choice`, after submitting the changes you can add options under the ***Question Choices*** section at the bottom of the Variable settings page.
 
-<img src="images/spoke_cat_vars.png" alt="Catalog Vars" title="Catalog Vars" width="1000" />
-
 Here are the fields required for each variable in this demo:
+
 ##### exclude
 | Parameter | Value |
 |-----|-----|
 | Type | `Single Line Text` |
 | Question | `What packages would you like to exclude?` |
 | Name | `exclude` |
+
+<img src="images/spoke_cat_vars.png" alt="Catalog Vars" title="Catalog Vars" width="1000" />
 
 ### Update Spoke Actions For Workflow Job Templates
 
@@ -412,6 +413,8 @@ This will open up a new tab. Click Actions and in the Name section type "Launch 
 Once it loads, click the 3 dots in the top right and select "Copy Action"
 
 <img src="images/copy_action.png" alt="Copy Action" title="Copy Action" width="800" />
+
+Enter in a name and select Ansible Spoke as the Application in the box that opens.
 
 | Parameter | Value |
 |-----|-----|
@@ -428,9 +431,7 @@ Select Pre Processing on the left-hand side
 
 In the Input Variables section change "job_template_id" to "workflow_job_template_id" and for value drag in Workflow Job Template ID from the right side under input variables
 
-<img src="images/input_script.png" alt="Input Script" title="Input Scipt" width="800" />
-
-Update the script:
+Update the script to utilize this new id:
 ```
 (function execute(inputs, outputs) {
     inputs = new AnsibleUtils().trimStringInputs(inputs);
@@ -440,9 +441,12 @@ Update the script:
     }
 })(inputs, outputs);
 ```
-<img src="images/output_vars.png" alt="Output Vars" title="Output Vars" width="800" />
+
+<img src="images/input_script.png" alt="Input Script" title="Input Scipt" width="800" />
 
 In the Output Variables section create a new label "workflow_job_template_id" set to Mandatory and delete "job_template_id"
+
+<img src="images/output_vars.png" alt="Output Vars" title="Output Vars" width="800" />
 
 Select Launch Workflow on the left-hand side
 
@@ -504,14 +508,14 @@ Click Save and then click Activate on the top bar
 ### Update Catalog With Newly Created Flow
 
 #### 16)
-Navigate back to **Service Catalog-->Catalog Definitions->Maintain Items** and select the item you created earlier. Click on Process Engine and then populate the Flow field with the Flow you just created.
+Navigate back to **Service Catalog-->Catalog Definitions->Maintain Items** and select the item you created earlier. Click on **Process Engine** and then populate the Flow field with the Flow you just created.
 
 Right-click inside the grey area at the top; click **Save**.
 
 <img src="images/process_engine.png" alt="Process Engine" title="Process Engine" width="800" />
 
 #### 17)
-Lastly, to run this catalog item, navigate to **Self-Service-->Service Catalog** and search for the catalog item you just created. Once found, click the **order now** button. You can see the results page pop up in ServiceNow, and you can confirm that the Job is being run in AAP.
+Lastly, to run this catalog item, navigate to **Self-Service-->Service Catalog** and search for the catalog item you just created. Once found, click the **Order Now** button. You can see the results page pop up in ServiceNow, and you can confirm that the Job is being run in AAP.
 
 <img src="images/spoke_catalog.png" alt="Catalog Item" title="Catalog Item" width="1000" />
 
