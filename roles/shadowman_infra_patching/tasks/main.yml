@@ -38,6 +38,7 @@
     dest: /tmp/yum.conf.cleanbackup
     flat: yes
   check_mode: false
+  delegate_to: tower1.shadowman.dev
   run_once: true
 
 - name: restore regular config for AAP updates
