@@ -5,6 +5,7 @@
     dest: /tmp/yum.conf.backup
     flat: yes
   check_mode: false
+  delegate_to: tower1.shadowman.dev
   run_once: true
 
 - name: ensure excluded config is copied
