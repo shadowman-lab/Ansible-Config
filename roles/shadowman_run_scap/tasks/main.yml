@@ -3,9 +3,8 @@
 
 - name: get results
   ansible.builtin.slurp:
-    src: '/home/ansible/test.txt'
+    src: './report.xml'
   register: scap_report_file
-  become: false
 
 - name: set report facts
   ansible.builtin.set_fact:
@@ -29,7 +28,7 @@
       failed_rules: "{{ rule_result | json_query('@[?result==`fail`]') }}"
     cacheable: True
   vars:
-    report_from_xml: "{{ scap_report_file['content'] | b64decode | from_xml | replace('{http://checklists.nist.gov/xccdf/1.2}','') }}"
+    report_from_xml: "{{ scap_report_file['content'] | b64decode | ansible.utils.from_xml | replace('{http://checklists.nist.gov/xccdf/1.2}','') }}"
     test_result: "{{ report_from_xml['Benchmark']['TestResult'] }}"
     rule_result: "{{ test_result['rule-result'] }}"
 
@@ -41,6 +40,15 @@
       status: "{{ true if ((openscap_scan_results.severity_of_failed_rules_count.high|int) < 10) else false }}"
       type: "{{ scap_content_type }}"
     cacheable: True
+
+- name: Copy files to Tower host
+  ansible.builtin.fetch:
+    src: ./{{ item }}
+    dest: "/tmp/{{ inventory_hostname }}/{{ item }}"
+    flat: true
+  loop:
+    - report.xml
+    - index.html
 
 - name: Copy folders to reports host
   ansible.builtin.copy:
