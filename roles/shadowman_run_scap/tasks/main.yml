@@ -99,7 +99,7 @@
 
 - name: DISPLAY LINK TO SUMMARY REPORT
   ansible.builtin.debug:
-    msg: "http://report.shadowman.dev/openscap/summary/"
+    msg: "http://report.shadowman.dev/openscap/linuxsummary/"
 
 - name: Send Report via E-mail
   community.general.mail:
