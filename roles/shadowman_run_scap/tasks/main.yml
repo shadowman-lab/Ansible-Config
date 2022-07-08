@@ -71,3 +71,19 @@
     mode: '0644'
   delegate_to: report.shadowman.dev
   run_once: true
+
+- name: Send Report via E-mail
+  community.general.mail:
+    host: "{{ EMAIL_HOST }}"
+    username: "{{ EMAIL_USERNAME }}"
+    password: "{{ EMAIL_PASSWORD }}"
+    port: "{{ EMAIL_PORT }}"
+    subject: "Linux Patching Report"
+    body: "{{ lookup('template', 'report.j2') }}"
+    from: "{{ EMAIL_FROM }}"
+    to: "{{ EMAIL_TO }}"
+    subtype: html
+  delegate_to: localhost  
+  become: false
+  when: sendemailreport
+
