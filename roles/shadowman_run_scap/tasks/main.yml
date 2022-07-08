@@ -100,6 +100,7 @@
 - name: DISPLAY LINK TO SUMMARY REPORT
   ansible.builtin.debug:
     msg: "http://report.shadowman.dev/openscap/linuxsummary/"
+  run_once: true
 
 - name: Send Report via E-mail
   community.general.mail:
