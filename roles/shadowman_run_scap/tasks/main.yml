@@ -15,10 +15,20 @@
   register: command_result
   failed_when: "'Error' in command_result.stderr"
 
+- name: Copy files to EE
+  ansible.builtin.fetch:
+    src: ./{{ item }}
+    dest: "/tmp/{{ inventory_hostname }}/{{ item }}"
+    flat: true
+  loop:
+    - report.xml
+    - index.html
+
 - name: get results
   ansible.builtin.slurp:
-    src: './report.xml'
+    src: '/tmp/{{ inventory_hostname }}/report.xml'
   register: scap_report_file
+  delegate_to: localhost
 
 - name: set report facts
   ansible.builtin.set_fact:
@@ -55,15 +65,6 @@
       type: "{{ scap_content_type }}"
     cacheable: True
 
-- name: Copy files to Tower host
-  ansible.builtin.fetch:
-    src: ./{{ item }}
-    dest: "/tmp/{{ inventory_hostname }}/{{ item }}"
-    flat: true
-  loop:
-    - report.xml
-    - index.html
-
 - name: Copy folders to reports host
   ansible.builtin.copy:
     src: "/tmp/{{ inventory_hostname }}"
@@ -80,7 +81,7 @@
 - name: Template report
   ansible.builtin.template:
     src: "scan_reports.html.j2"
-    dest: "{{ file_path }}/index.html"
+    dest: "{{ file_path }}/summary/index.html"
     owner: root
     group: root
     mode: '0644'
