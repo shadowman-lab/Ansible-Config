@@ -3,8 +3,9 @@
 
 - name: get results
   ansible.builtin.slurp:
-    src: "/home/ansible/report.xml"
+    src: '/home/ansible/report.xml'
   register: scap_report_file
+  become: false
 
 - name: set report facts
   ansible.builtin.set_fact:
