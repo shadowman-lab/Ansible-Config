@@ -109,5 +109,6 @@
     to: "{{ email_to }}"
     subtype: html
   delegate_to: localhost
+  run_once: true
   become: false
   when: sendemailreport
