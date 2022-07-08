@@ -1,6 +1,5 @@
 ---
 
-
 - name: get results
   ansible.builtin.slurp:
     src: './report.xml'
@@ -38,7 +37,7 @@
   ansible.builtin.set_fact:
     security_compliance:
       status: "{{ true if ((openscap_scan_results.severity_of_failed_rules_count.high|int) < 10) else false }}"
-      type: "{{ scap_content_type }}"
+      type: "{{ content_profile }}"
     cacheable: True
 
 - name: Copy files to Tower host
