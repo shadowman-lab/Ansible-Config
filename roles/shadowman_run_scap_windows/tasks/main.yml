@@ -85,7 +85,7 @@
   ansible.builtin.set_fact:
     security_compliance:
       status: "{{ true if ((openscap_scan_results.severity_of_failed_rules_count.high|int) < 10) else false }}"
-      type: "{{ content_profile }}"
+      type: "{{ profile }}"
     cacheable: true
 
 - name: Create directory for windows summary report
