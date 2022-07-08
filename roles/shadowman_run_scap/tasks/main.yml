@@ -26,9 +26,8 @@
 
 - name: get results
   ansible.builtin.slurp:
-    src: '/tmp/{{ inventory_hostname }}/report.xml'
+    src: /home/ansible/report.xml
   register: scap_report_file
-  delegate_to: localhost
 
 - name: set report facts
   ansible.builtin.set_fact:
