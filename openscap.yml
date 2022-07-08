@@ -1,7 +1,6 @@
 ---
 - name: Build openscap report
   hosts: all
-  strategy: free
 
   roles:
     - shadowman_run_scap

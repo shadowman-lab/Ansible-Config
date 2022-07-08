@@ -15,6 +15,46 @@
   register: command_result
   failed_when: "'Error' in command_result.stderr"
 
+- name: get results
+  ansible.builtin.slurp:
+    src: './report.xml'
+  register: scap_report_file
+
+- name: set report facts
+  ansible.builtin.set_fact:
+    openscap_scan_results:
+      benchmark_id: "{{ test_result['benchmark']['@id'] }}"
+      total_rules_count: "{{ rule_result | length }}"
+      score: "{{ test_result['score']['#text'] }}%"
+      rule_results_count:
+        notchecked: "{{ rule_result | json_query('@[?result==`notchecked`]') | length }}"
+        fixed: "{{ rule_result | json_query('@[?result==`fixed`]') | length }}"
+        error: "{{ rule_result | json_query('@[?result==`error`]') | length }}"
+        notapplicable: "{{ rule_result | json_query('@[?result==`notapplicable`]') | length }}"
+        informational: "{{ rule_result | json_query('@[?result==`informational`]') | length }}"
+        unknown: "{{ rule_result | json_query('@[?result==`unknown`]') | length }}"
+        fail: "{{ rule_result | json_query('@[?result==`fail`]') | length }}"
+        pass: "{{ rule_result | json_query('@[?result==`pass`]') | length }}"
+      severity_of_failed_rules_count:
+        low: "{{ rule_result | json_query('@[?result==`fail`]') | selectattr('@severity', 'equalto', 'low') | list | length }}"
+        medium: "{{ rule_result | json_query('@[?result==`fail`]') | selectattr('@severity', 'equalto', 'medium') | list | length }}"
+        high: "{{ rule_result | json_query('@[?result==`fail`]') | selectattr('@severity', 'equalto', 'high') | list | length }}"
+      failed_rules: "{{ rule_result | json_query('@[?result==`fail`]') }}"
+    cacheable: True
+  vars:
+    report_from_xml: "{{ scap_report_file['content'] | b64decode | from_xml | replace('{http://checklists.nist.gov/xccdf/1.2}','') }}"
+    test_result: "{{ report_from_xml['Benchmark']['TestResult'] }}"
+    rule_result: "{{ test_result['rule-result'] }}"
+
+# we set the security_compliance based on some condition
+# in real world, you can have additional conditions
+- name: set security compliance status
+  ansible.builtin.set_fact:
+    security_compliance:
+      status: "{{ true if ((openscap_scan_results.severity_of_failed_rules_count.high|int) < 10) else false }}"
+      type: "{{ scap_content_type }}"
+    cacheable: True
+
 - name: Copy files to Tower host
   ansible.builtin.fetch:
     src: ./{{ item }}
@@ -36,3 +76,13 @@
 - name: DISPLAY LINK TO INVENTORY REPORT
   ansible.builtin.debug:
     msg: "http://report.shadowman.dev/openscap/{{ inventory_hostname }}"
+
+- name: Template report
+  ansible.builtin.template:
+    src: "scan_reports.html.j2"
+    dest: "{{ file_path }}/index.html"
+    owner: root
+    group: root
+    mode: '0644'
+  delegate_to: report.shadowman.dev
+  run_once: true
