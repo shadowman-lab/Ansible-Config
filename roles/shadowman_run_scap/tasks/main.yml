@@ -15,12 +15,12 @@
   register: command_result
   failed_when: "'Error' in command_result.stderr"
 
-- name: get results
+- name: Get results
   ansible.builtin.slurp:
     src: './report.xml'
   register: scap_report_file
 
-- name: set report facts
+- name: Set report facts
   ansible.builtin.set_fact:
     openscap_scan_results:
       benchmark_id: "{{ test_result['benchmark']['@id'] }}"
@@ -48,7 +48,7 @@
 
 # we set the security_compliance based on some condition
 # in real world, you can have additional conditions
-- name: set security compliance status
+- name: Set security compliance status
   ansible.builtin.set_fact:
     security_compliance:
       status: "{{ true if ((openscap_scan_results.severity_of_failed_rules_count.high|int) < 10) else false }}"
@@ -73,29 +73,33 @@
     mode: '0644'
   delegate_to: report.shadowman.dev
 
-- name: DISPLAY LINK TO INVENTORY REPORT
+- name: DISPLAY LINK TO REPORT
   ansible.builtin.debug:
     msg: "http://report.shadowman.dev/openscap/{{ inventory_hostname }}"
 
-- name: Create directory for summary report
+- name: Create directory for linux summary report
   ansible.builtin.file:
-    path: "{{ file_path }}/summary"
+    path: "{{ file_path }}/linuxsummary"
     state: directory
-    mode: '0644'
+    mode: '0755'
     owner: root
     group: root
   delegate_to: report.shadowman.dev
   run_once: true
 
-- name: Template Summray Report
+- name: Template Summary Report
   ansible.builtin.template:
     src: "scan_reports.html.j2"
-    dest: "{{ file_path }}/summary/index.html"
+    dest: "{{ file_path }}/linuxsummary/index.html"
     owner: root
     group: root
     mode: '0644'
   delegate_to: report.shadowman.dev
   run_once: true
+
+- name: DISPLAY LINK TO SUMMARY REPORT
+  ansible.builtin.debug:
+    msg: "http://report.shadowman.dev/openscap/summary/"
 
 - name: Send Report via E-mail
   community.general.mail:
