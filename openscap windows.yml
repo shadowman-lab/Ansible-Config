@@ -2,7 +2,6 @@
 - name: Build SCAP report Windows
   hosts: all
   gather_facts: false
-  strategy: free
 
   roles:
     - shadowman_run_scap_windows
