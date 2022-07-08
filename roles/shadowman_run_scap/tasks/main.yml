@@ -15,6 +15,28 @@
   register: command_result
   failed_when: "'Error' in command_result.stderr"
 
+- name: Copy files to Tower host
+  ansible.builtin.fetch:
+    src: ./{{ item }}
+    dest: "/tmp/{{ inventory_hostname }}/{{ item }}"
+    flat: true
+  loop:
+    - report.xml
+    - index.html
+
+- name: Copy folders to reports host
+  ansible.builtin.copy:
+    src: "/tmp/{{ inventory_hostname }}"
+    dest: "{{ file_path }}"
+    owner: root
+    group: root
+    mode: '0644'
+  delegate_to: report.shadowman.dev
+
+- name: DISPLAY LINK TO REPORT
+  ansible.builtin.debug:
+    msg: "http://report.shadowman.dev/openscap/{{ inventory_hostname }}"
+
 - name: Get results
   ansible.builtin.slurp:
     src: './report.xml'
@@ -54,28 +76,6 @@
       status: "{{ true if ((openscap_scan_results.severity_of_failed_rules_count.high|int) < 10) else false }}"
       type: "{{ content_profile }}"
     cacheable: true
-
-- name: Copy files to Tower host
-  ansible.builtin.fetch:
-    src: ./{{ item }}
-    dest: "/tmp/{{ inventory_hostname }}/{{ item }}"
-    flat: true
-  loop:
-    - report.xml
-    - index.html
-
-- name: Copy folders to reports host
-  ansible.builtin.copy:
-    src: "/tmp/{{ inventory_hostname }}"
-    dest: "{{ file_path }}"
-    owner: root
-    group: root
-    mode: '0644'
-  delegate_to: report.shadowman.dev
-
-- name: DISPLAY LINK TO REPORT
-  ansible.builtin.debug:
-    msg: "http://report.shadowman.dev/openscap/{{ inventory_hostname }}"
 
 - name: Create directory for linux summary report
   ansible.builtin.file:
