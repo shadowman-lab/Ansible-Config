@@ -3,7 +3,7 @@
 
 - name: get results
   ansible.builtin.slurp:
-    src: '/home/ansible/report.xml'
+    src: '/home/ansible/test.txt'
   register: scap_report_file
   become: false
 
