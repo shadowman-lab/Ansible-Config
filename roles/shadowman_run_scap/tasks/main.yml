@@ -105,8 +105,8 @@
     port: "{{ EMAIL_PORT }}"
     subject: "Linux Scan Report"
     body: "{{ lookup('template', 'scan_reports.html.j2') }}"
-    from: "{{ EMAIL_FROM }}"
-    to: "{{ EMAIL_TO }}"
+    from: "{{ email_from }}"
+    to: "{{ email_to }}"
     subtype: html
   delegate_to: localhost
   become: false
