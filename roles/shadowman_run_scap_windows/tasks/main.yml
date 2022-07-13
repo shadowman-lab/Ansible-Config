@@ -19,14 +19,14 @@
     src: Windows_Server_2016_STIG.xml
     dest: C:\Program Files (x86)\OpenSCAP 1.3.0\Windows_Server_2016_STIG.xml
 
-- name: create HTML report
+- name: Create Compliance Report
   ansible.windows.win_command: oscap.exe xccdf eval --profile xccdf_mil.disa.stig_profile_{{ profile }} --results C:\Users\ansible\report.xml --report C:\Users\ansible\index.html Windows_Server_2016_STIG.xml
   args:
     chdir: C:\Program Files (x86)\OpenSCAP 1.3.0\
   register: command_result
   failed_when: command_result.rc != 2
 
-- name: Copy files to Tower host
+- name: Copy files to EE
   ansible.builtin.fetch:
     src: "C:\\Users\\ansible\\{{ item }}"
     dest: "/tmp/{{ inventory_hostname }}/"
@@ -113,6 +113,17 @@
     msg: "http://report.shadowman.dev/openscap/windowssummary/"
   run_once: true
 
+- name: Template Summary Report for e-mail 
+  ansible.builtin.template:
+    src: "scan_reports.html.j2"
+    dest: "/tmp/index.html"
+    owner: root
+    group: root
+    mode: '0644'
+  delegate_to: localhost
+  run_once: true
+  when: sendemailreport
+
 - name: Send Report via E-mail
   community.general.mail:
     host: "{{ EMAIL_HOST }}"
@@ -120,7 +131,9 @@
     password: "{{ EMAIL_PASSWORD }}"
     port: "{{ EMAIL_PORT }}"
     subject: "Windows Scan Report"
-    body: "{{ lookup('template', 'scan_reports.html.j2') }}"
+    body: "Windows Compliance Scan Completed"
+    attach:
+      - /tmp/index.html
     from: "{{ email_from }}"
     to: "{{ email_to }}"
     subtype: html
