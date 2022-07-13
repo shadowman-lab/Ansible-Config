@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title> Windows Compliance Report </title>
+</head>
+<body>
+<center>
+<h1>Ansible Windows Compliance Report</h1>
+</center>
+<table border = "1" cellpadding = "5" cellspacing = "5">
+    <thead>
+        <tr>
+            <th>Host</th>
+            <th>OS</th>
+            <th>Compliance</th>
+            <th>Rules Passed</th>
+            <th>Rules Failed</th>
+            <th>Low Severity Failed</th>
+            <th>Medium Severity Failed</th>
+            <th>High Severity Failed</th>
+            <th>Score</th>
+        </tr>
+    </thead>
+    <tbody>
+{% for windows_host in ansible_play_hosts|sort %}
+        <tr>
+            <td>{{hostvars[windows_host]['inventory_hostname']}}</td>
+            <td>{{hostvars[windows_host]['ansible_distribution']|default("none")}}</td>
+            <td>{{hostvars[windows_host].security_compliance.status}}</td>
+            <td>{{hostvars[windows_host].openscap_scan_results.rule_results_count.pass}}</td>
+            <td>{{hostvars[windows_host].openscap_scan_results.rule_results_count.fail}}</td>
+            <td>{{hostvars[windows_host].openscap_scan_results.severity_of_failed_rules_count.high}}</td>
+            <td>{{hostvars[windows_host].openscap_scan_results.severity_of_failed_rules_count.medium}}</td>
+            <td>{{hostvars[windows_host].openscap_scan_results.severity_of_failed_rules_count.low}}</td>
+            <td>{{hostvars[windows_host].openscap_scan_results.score}}</td>
+        </tr>
+{% endfor %}
+    </tbody>
+</table>
+<center><p>Created with Ansible on {{hostvars[ansible_play_hosts[0]].ansible_date_time.iso8601}}</p></center>
+</body>
+</html>
