@@ -26,13 +26,13 @@
         <tr>
             <td>{{hostvars[windows_host]['inventory_hostname']}}</td>
             <td>{{hostvars[windows_host]['ansible_distribution']|default("none")}}</td>
-            <td>{{hostvars[windows_host].security_compliance.status}}</td>
-            <td>{{hostvars[windows_host].openscap_scan_results.rule_results_count.pass}}</td>
-            <td>{{hostvars[windows_host].openscap_scan_results.rule_results_count.fail}}</td>
-            <td>{{hostvars[windows_host].openscap_scan_results.severity_of_failed_rules_count.high}}</td>
-            <td>{{hostvars[windows_host].openscap_scan_results.severity_of_failed_rules_count.medium}}</td>
-            <td>{{hostvars[windows_host].openscap_scan_results.severity_of_failed_rules_count.low}}</td>
-            <td>{{hostvars[windows_host].openscap_scan_results.score}}</td>
+            <td>{{hostvars[windows_host].security_compliance.status|default("none")}}</td>
+            <td>{{hostvars[windows_host].openscap_scan_results.rule_results_count.pass|default("none")}}</td>
+            <td>{{hostvars[windows_host].openscap_scan_results.rule_results_count.fail|default("none")}}</td>
+            <td>{{hostvars[windows_host].openscap_scan_results.severity_of_failed_rules_count.high|default("none")}}</td>
+            <td>{{hostvars[windows_host].openscap_scan_results.severity_of_failed_rules_count.medium|default("none")}}</td>
+            <td>{{hostvars[windows_host].openscap_scan_results.severity_of_failed_rules_count.low|default("none")}}</td>
+            <td>{{hostvars[windows_host].openscap_scan_results.score|default("none")}}</td>
         </tr>
 {% endfor %}
     </tbody>
