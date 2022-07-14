@@ -113,6 +113,17 @@
     msg: "http://report.shadowman.dev/openscap/windowssummary/"
   run_once: true
 
+- name: Template Summary Report for e-mail 
+  ansible.builtin.template:
+    src: "scan_reports.html.j2"
+    dest: "/tmp/index.html"
+    owner: root
+    group: root
+    mode: '0644'
+  delegate_to: localhost
+  run_once: true
+  when: sendemailreport
+
 - name: Send Report via E-mail
   community.general.mail:
     host: "{{ EMAIL_HOST }}"
@@ -120,10 +131,11 @@
     password: "{{ EMAIL_PASSWORD }}"
     port: "{{ EMAIL_PORT }}"
     subject: "Windows Scan Report"
-    body: "{{ lookup('template', 'email_reports.html.j2') }}"
+    body: "Windows Compliance Scan Completed, please see the attached report"
+    attach:
+      - /tmp/index.html
     from: "{{ email_from }}"
     to: "{{ email_to }}"
-    subtype: html
   delegate_to: localhost
   run_once: true
   become: false
