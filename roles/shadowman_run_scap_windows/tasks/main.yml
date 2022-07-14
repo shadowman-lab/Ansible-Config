@@ -116,7 +116,7 @@
 - name: Template Summary Report for e-mail 
   ansible.builtin.template:
     src: "scan_reports.html.j2"
-    dest: "/tmp/index.html"
+    dest: "/tmp/windows{{ ansible_date_time.iso8601 }}.html"
     owner: root
     group: root
     mode: '0644'
@@ -133,7 +133,7 @@
     subject: "Windows Scan Report"
     body: "Windows Compliance Scan Completed, please see the attached report"
     attach:
-      - /tmp/index.html
+      - /tmp/windows{{ ansible_date_time.iso8601 }}.html
     from: "{{ email_from }}"
     to: "{{ email_to }}"
   delegate_to: localhost
