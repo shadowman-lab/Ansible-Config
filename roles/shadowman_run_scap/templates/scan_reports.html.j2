@@ -40,7 +40,7 @@ padding:"inner"+a,content:b,"":"outer"+a},function(c,d){n.fn[d]=function(d,e){va
         <td class="text-center">Unknown</td>
 {% endif %}
 {% if hostvars[target_host].security_compliance is defined %}
-        <td class="text-center">{{ hostvars[target_host].security_compliance.profile }}</td>
+        <td class="text-center">{{ hostvars[target_host].security_compliance.type }}</td>
 {% else %}
         <td class="text-center">Unknown</td>
 {% endif %}
