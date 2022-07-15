@@ -72,7 +72,6 @@
         low: "{{ rule_result | json_query('@[?result==`fail`]') | selectattr('@severity', 'equalto', 'low') | list | length }}"
         medium: "{{ rule_result | json_query('@[?result==`fail`]') | selectattr('@severity', 'equalto', 'medium') | list | length }}"
         high: "{{ rule_result | json_query('@[?result==`fail`]') | selectattr('@severity', 'equalto', 'high') | list | length }}"
-      failed_rules: "{{ rule_result | json_query('@[?result==`fail`]') }}"
     cacheable: true
   vars:
     report_from_xml: "{{ scap_report_file['content'] | b64decode | ansible.utils.from_xml | replace('{http://checklists.nist.gov/xccdf/1.2}','') }}"

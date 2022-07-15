@@ -25,6 +25,7 @@ padding:"inner"+a,content:b,"":"outer"+a},function(c,d){n.fn[d]=function(d,e){va
         <tr>
             <th class="text-center">Host</th>
             <th class="text-center">OS</th>
+            <th class="text-center">Profile</th>
             <th class="text-center">Compliance</th>
             <th class="text-center" style="width: 40%">Scan Results</th>
         </tr>
@@ -35,6 +36,11 @@ padding:"inner"+a,content:b,"":"outer"+a},function(c,d){n.fn[d]=function(d,e){va
         <td class="text-center">{{ target_host }}</td>
 {% if hostvars[target_host].ansible_distribution is defined %}
         <td class="text-center">{{ hostvars[target_host].ansible_distribution }}</td>
+{% else %}
+        <td class="text-center">Unknown</td>
+{% endif %}
+{% if hostvars[target_host].security_compliance is defined %}
+        <td class="text-center">{{ hostvars[target_host].security_compliance.profile }}</td>
 {% else %}
         <td class="text-center">Unknown</td>
 {% endif %}
