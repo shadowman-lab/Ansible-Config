@@ -34,17 +34,17 @@
             <td>Azure</td>
         </tr>
 {% endfor %}
-{% for rhv_host in rhv_info.ovirt_vms | selectattr('tags') %}
+{% for rhv_host in rhv_info.ovirt_vms %}
         <tr>
             <td>{{ rhv_host.name }}</td>
-            <td>{{ rhv_host | json_query('tags[*].name') | join(',') }}</td>
+            <td>{{ rhv_host | json_query('tags[*].name') | join(',') | default('no tags') }}</td>
             <td>RHV</td>
         </tr>
 {% endfor %}
 {% for vmware_host in vmware_info.virtual_machines %}
         <tr>
             <td>{{ vmware_host.guest_name }}</td>
-            <td>{{ vmware_host | json_query('tags[*].name') | join(',') }}</td>
+            <td>{{ vmware_host | json_query('tags[*].name') | join(',') | default('no tags') }}</td>
             <td>VMWare</td>
         </tr>
 {% endfor %}
