@@ -97,7 +97,7 @@ function downloadCSVFile(csv_data) {
     var todayDate = new Date().toISOString().slice(0, 10);
 
     // Download csv file
-    temp_link.download = "linuxpatching-" + todayDate + ".csv";
+    temp_link.download = "tagsreport-" + todayDate + ".csv";
     var url = window.URL.createObjectURL(CSVFile);
     temp_link.href = url;
 
