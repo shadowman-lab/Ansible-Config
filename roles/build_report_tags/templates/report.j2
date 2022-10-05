@@ -27,13 +27,6 @@
         </tr>
     </thead>
     <tbody>
-{% for vmware_host in vmware_info.virtual_machines %}
-        <tr>
-            <td>{{ vmware_host.guest_name }}</td>
-            <td>{{ vmware_host | json_query('tags[*].name') | join(',') }}</td>
-            <td>VMWare</td>
-        </tr>
-{% endfor %}
 {% for azure_host in azurevms.vms %}
         <tr>
             <td>{{ azure_host.name }}</td>
@@ -46,6 +39,13 @@
             <td>{{ rhv_host.name }}</td>
             <td>{{ rhv_host | json_query('tags[*].name') | join(',') }}</td>
             <td>RHV</td>
+        </tr>
+{% endfor %}
+{% for vmware_host in vmware_info.virtual_machines %}
+        <tr>
+            <td>{{ vmware_host.guest_name }}</td>
+            <td>{{ vmware_host | json_query('tags[*].name') | join(',') }}</td>
+            <td>VMWare</td>
         </tr>
 {% endfor %}
     </tbody>
