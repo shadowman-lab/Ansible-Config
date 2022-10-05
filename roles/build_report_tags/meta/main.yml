@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   author: Alex Dworjan
-  description: Build Linux Patching Report
+  description: Build Tags Report
   company: Red Hat, Inc.
   license: Apache License 2.0
   min_ansible_version: 2.9

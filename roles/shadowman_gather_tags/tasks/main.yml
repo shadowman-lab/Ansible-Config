@@ -10,7 +10,7 @@
   azure.azcollection.azure_rm_virtualmachine_info:
     tags:
       - owner
-  register: azurevms
+  register: azure_info
 
 - name: Block for RHV
   block:

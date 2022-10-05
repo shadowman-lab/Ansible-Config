@@ -27,8 +27,8 @@
         </tr>
     </thead>
     <tbody>
-{% if azurevms.vms is defined %}
-{% for azure_host in azurevms.vms %}
+{% if azure_info.vms is defined %}
+{% for azure_host in azure_info.vms %}
         <tr>
             <td>{{ azure_host.name }}</td>
             <td>{{ azure_host.tags.owner | default('no owner') }},{{ azure_host.tags.environment | default('no environment') }},{{ azure_host.tags.operating_system | default('no operating system') }}</td>
