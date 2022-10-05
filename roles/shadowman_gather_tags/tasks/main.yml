@@ -6,23 +6,11 @@
     vm_type: "vm"
   register: vmware_info
 
-- name: Debug
-  ansible.builtin.debug:
-    msg: "{{ item.guest_name }} {{ item | json_query('tags[*].name') }}"
-  loop: "{{ vmware_info.virtual_machines }}"
-  loop_control:
-    label: "{{ item.guest_name }}"
-
 - name: Get Azure VM Info
   azure.azcollection.azure_rm_virtualmachine_info:
     tags:
       - owner
   register: azurevms
-
-- name: Debug
-  ansible.builtin.debug:
-    msg: "{{ item.name }} {{ item.tags.owner }}"
-  loop: "{{ azurevms.vms }}"
 
 - name: Block for RHV
   block:
@@ -40,13 +28,6 @@
       follow:
         - tags
     register: rhv_info
-
-  - name: Debug
-    ansible.builtin.debug:
-      msg: "{{ item.name }} {{ item | json_query('tags[*].name') }}"
-    loop: "{{ rhv_info.ovirt_vms | selectattr('tags') }}"
-    loop_control:
-      label: "{{ item.name }}"  
 
   always:
     - name: Logout from RHV
