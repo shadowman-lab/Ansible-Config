@@ -37,7 +37,7 @@
 {% for azure_host in azurevms.vms %}
         <tr>
             <td>{{ azure_host.name }}</td>
-            <td>{{ azure_host.tags.owner | default('omit') }} {{ azure_host.tags.environment | default('omit') }} {{ azure_host.tags.operating_system | default('omit') }}</td>
+            <td>{{ azure_host.tags.owner | default('no owner') }},{{ azure_host.tags.environment | default('no environment') }},{{ azure_host.tags.operating_system | default('no operatingsystem') }}</td>
             <td>Azure</td>
         </tr>
 {% endfor %}
