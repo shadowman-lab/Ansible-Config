@@ -27,6 +27,7 @@
         </tr>
     </thead>
     <tbody>
+{% if azurevms.vms is defined %}
 {% for azure_host in azurevms.vms %}
         <tr>
             <td>{{ azure_host.name }}</td>
@@ -34,6 +35,8 @@
             <td>Azure</td>
         </tr>
 {% endfor %}
+{% endif %}
+{% if rhv_info.ovirt_vms is defined %}
 {% for rhv_host in rhv_info.ovirt_vms %}
         <tr>
             <td>{{ rhv_host.name }}</td>
@@ -41,6 +44,8 @@
             <td>RHV</td>
         </tr>
 {% endfor %}
+{% endif %}
+{% if vmware_info.virtual_machines is defined %}
 {% for vmware_host in vmware_info.virtual_machines %}
         <tr>
             <td>{{ vmware_host.guest_name }}</td>
@@ -48,6 +53,7 @@
             <td>VMWare</td>
         </tr>
 {% endfor %}
+{% endif %}
     </tbody>
 </table>
 <center><p>Created with Ansible</p></center>
