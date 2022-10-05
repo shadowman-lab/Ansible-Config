@@ -1,0 +1,14 @@
+---
+- name: Install Windows Package
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: Install Windows Package
+      ansible.windows.win_package:
+        path: "{{ package_path }}"
+        product_id: "{{ package_id }}"
+        arguments:
+          - /install
+          - /passive
+          - /norestart

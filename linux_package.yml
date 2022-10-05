@@ -1,0 +1,10 @@
+---
+- name: Install Linux Package
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: Install Linux Package
+      ansible.builtin.yum:
+        name: "{{ packagename }}"
+        state: latest

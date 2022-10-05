@@ -1,0 +1,6 @@
+---
+- name: Run compliance scan using created policies
+  ansible.builtin.command: insights-client --compliance
+  register: command_result
+  failed_when: "'command not found' in command_result.stdout"
+  changed_when: command_result.rc == 0

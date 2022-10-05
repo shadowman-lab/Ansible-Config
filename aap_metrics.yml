@@ -1,0 +1,6 @@
+---
+- name: Pull AAP Metrics
+  hosts: all
+
+  roles:
+    - shadowman_aap_metrics

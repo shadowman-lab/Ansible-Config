@@ -1,0 +1,12 @@
+---
+- name: Install Insights and OpenSCAP
+  ansible.builtin.yum:
+    name:
+      - openscap-scanner
+      - scap-security-guide
+      - insights-client
+    state: latest
+
+- name: Register Insights Client
+  redhat.insights.insights_register:
+    state: present

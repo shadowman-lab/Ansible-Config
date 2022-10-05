@@ -1,0 +1,6 @@
+---
+- name: Build Compliance Playbook
+  hosts: all
+
+  roles:
+    - shadowman_compliance_playbook_create

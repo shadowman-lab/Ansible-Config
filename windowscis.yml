@@ -1,0 +1,7 @@
+---
+- name: Windows CIS Compliance
+  hosts: all
+  strategy: free
+
+  roles:
+    - shadowman_cis_windows_2016

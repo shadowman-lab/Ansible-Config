@@ -1,0 +1,14 @@
+---
+- name: Create/Update/Remove User in AD
+  ansible.windows.win_domain_user:
+    firstname: "{{ first_name }}"
+    surname: "{{ last_name }}"
+    name: "{{ username }}"
+    password: "{{ password }}"
+    groups:
+      - Domain Admins
+    groups_action: add
+    state: "{{ state }}"
+    update_password: on_create
+    domain_username: "{{ domainuser }}"
+    domain_password: "{{ domainpassword }}"

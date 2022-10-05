@@ -1,0 +1,10 @@
+---
+- name: Restore firewall for IP
+  hosts: all
+  gather_facts: false
+
+  vars:
+    state: disabled
+
+  roles:
+    - shadowman_firewall_security

@@ -1,0 +1,10 @@
+---
+- name: Block IP on firewall
+  hosts: all
+  gather_facts: false
+
+  vars:
+    state: enabled
+
+  roles:
+    - shadowman_firewall_security

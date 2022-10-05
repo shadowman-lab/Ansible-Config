@@ -1,0 +1,6 @@
+---
+- name: Build openscap report
+  hosts: all
+
+  roles:
+    - shadowman_run_scap

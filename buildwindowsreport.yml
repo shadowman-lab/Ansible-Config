@@ -1,0 +1,16 @@
+---
+- name: Create Windows Report
+  hosts: all
+  tasks:
+
+    - name: Scan Systems for detailed report
+      ansible.builtin.include_role:
+        name: shadowman_scan_systems
+      when: detailedreport == 'True'
+
+    - name: Build the report
+      ansible.builtin.include_role:
+        name: shadowman.reports.build_report_windows
+        apply:
+          delegate_to: report.shadowman.dev
+          run_once: true

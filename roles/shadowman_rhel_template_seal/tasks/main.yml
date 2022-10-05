@@ -1,0 +1,70 @@
+---
+- name: Enable initial-setup service
+  ansible.builtin.systemd:
+    name: initial-setup.service
+    enabled: true
+  when: ansible_distribution_version is match("7.*")
+
+- name: Set Machine ID file permissions
+  ansible.builtin.file:
+    path: /etc/machine-id
+    mode: 0777
+
+- name: Unregister this machine from Satellite
+  community.general.redhat_subscription:
+    state: absent
+    org_id: Shadow_Man
+
+- name: Remove from IDM
+  ansible.builtin.command: "ipa-client-install --uninstall --unattended"
+  when: ansible_host != ''
+  register: output
+  ignore_errors: true
+
+- name: Ensure host and its DNS record is absent for RHEL
+  community.general.ipa_host:
+    name: "{{ operating_system | lower }}updates.shadowman.dev"
+    state: absent
+    ipa_pass: "{{ IPA_PASS }}"
+    ipa_host: "{{ IPA_HOST }}"
+    ipa_user: "{{ IPA_USER }}"
+    update_dns: true
+
+- name: Remove and Clean all Subscription Data
+  ansible.builtin.shell: subscription-manager remove --all && subscription-manager clean
+
+- name: Delete All Machine Specific Files
+  ansible.builtin.file:
+    state: absent
+    path: "{{ item }}"
+  with_items:
+    - /var/lib/dbus/machine-id
+    - /etc/rhsm/facts/katello.facts
+
+- name: Find files in ssh_host
+  ansible.builtin.find:
+    paths: /etc/ssh/
+    patterns: 'ssh_host_*'
+  register: ssh_host_delete
+
+- name: Delete files in ssh_host
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: absent
+  loop: "{{ ssh_host_delete.files }}"
+  loop_control:
+    label: "{{ item.path }}"
+
+- name: Find files in rules.d
+  ansible.builtin.find:
+    paths: /etc/udev/rules.d/
+    patterns: '70-persistent-*'
+  register: rules_delete
+
+- name: Delete files in rules.d
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: absent
+  loop: "{{ rules_delete.files }}"
+  loop_control:
+    label: "{{ item.path }}"

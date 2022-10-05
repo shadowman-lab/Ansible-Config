@@ -1,0 +1,48 @@
+---
+- name: Perform Compliance Scans
+  hosts: all
+  strategy: free
+
+  tasks:
+
+    - name: PCI Compliance RHEL7
+      ansible.builtin.include_role:
+        name: shadowman_pci_rhel7
+      when:
+        - compliance == "PCI"
+        - os is match(".*7.*")
+
+    - name: PCI Compliance RHEL8
+      ansible.builtin.include_role:
+        name: shadowman_pci_rhel8
+      when:
+        - compliance == "PCI"
+        - os is match(".*8.*")
+
+    - name: NIST Compliance RHEL7
+      ansible.builtin.include_role:
+        name: shadowman_nist_rhel7
+      when:
+        - compliance == "NIST"
+        - os is match(".*7.*")
+
+    - name: NIST Compliance RHEL8
+      ansible.builtin.include_role:
+        name: shadowman_nist_rhel8
+      when:
+        - compliance == "NIST"
+        - os is match(".*8.*")
+
+    - name: CIS Compliance RHEL7
+      ansible.builtin.include_role:
+        name: shadowman_cis_rhel7
+      when:
+        - compliance == "CIS"
+        - os is match(".*7.*")
+
+    - name: CIS Compliance RHEL8
+      ansible.builtin.include_role:
+        name: shadowman_cis_rhel8
+      when:
+        - compliance == "CIS"
+        - os is match(".*8.*")

@@ -1,0 +1,7 @@
+---
+- name: Add VM to AD
+  hosts: "{{ vm_name }}"
+  gather_facts: false
+
+  roles:
+    - shadowman_add_to_ad

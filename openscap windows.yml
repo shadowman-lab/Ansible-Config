@@ -1,0 +1,6 @@
+---
+- name: Build SCAP report Windows
+  hosts: all
+
+  roles:
+    - shadowman_run_scap_windows

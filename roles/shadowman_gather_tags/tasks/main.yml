@@ -1,0 +1,55 @@
+---
+- name: Get VMWare tag info
+  community.vmware.vmware_vm_info:
+    validate_certs: false
+    show_tag: true
+    vm_type: "vm"
+  register: vm_info
+
+- name: Debug
+  ansible.builtin.debug:
+    msg: "{{ item.guest_name }} {{ item | json_query('tags[*].name') }}"
+  loop: "{{ vm_info.virtual_machines }}"
+  loop_control:
+    label: "{{ item.guest_name }}"
+
+- name: Get Azure VM Info
+  azure.azcollection.azure_rm_virtualmachine_info:
+    tags:
+      - owner
+  register: azurevms
+
+- name: Debug
+  ansible.builtin.debug:
+    msg: "{{ item.name }} {{ item.tags.owner }}"
+  loop: "{{ azurevms.vms }}"
+
+- name: Block for RHV
+  block:
+  - name: Login to RHV
+    redhat.rhv.ovirt_auth:
+      hostname: "{{ rhvm_fqdn }}"
+      username: "{{ rhvm_user }}"
+      password: "{{ rhvm_password }}"
+      ca_file: "{{ rhvm_cafile | default(omit) }}"
+      insecure: "{{ rhvm_insecure | default(true) }}"  
+
+  - name: Get RHV VM info
+    redhat.rhv.ovirt_vm_info:
+      auth: "{{ ovirt_auth }}"
+      follow:
+        - tags
+    register: vm_info
+
+  - name: Debug
+    ansible.builtin.debug:
+      msg: "{{ item.name }} {{ item | json_query('tags[*].name') }}"
+    loop: "{{ vm_info.ovirt_vms | selectattr('tags') }}"
+    loop_control:
+      label: "{{ item.name }}"  
+
+  always:
+    - name: Logout from RHV
+      redhat.rhv.ovirt_auth:
+        state: absent
+        ovirt_auth: "{{ ovirt_auth }}"

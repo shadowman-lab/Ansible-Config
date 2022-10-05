@@ -1,0 +1,8 @@
+---
+- name: Patch Linux
+  ansible.builtin.include_tasks: patch_linux.yml
+  when: os is match("rhel.*")
+
+- name: Patch Windows
+  ansible.builtin.include_tasks: patch_windows.yml
+  when: os is match("windows.*") or os is match("2016.*")

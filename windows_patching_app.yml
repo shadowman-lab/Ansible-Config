@@ -1,0 +1,7 @@
+---
+- name: Windows patching playbook
+  hosts: all
+  gather_facts: false
+
+  roles:
+    - shadowman_patching

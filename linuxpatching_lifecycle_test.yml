@@ -1,0 +1,7 @@
+---
+- name: Test Patching RHEL Servers
+  hosts: "{{ lifecycle_environment }}"
+  check_mode: true
+
+  roles:
+    - shadowman_patching

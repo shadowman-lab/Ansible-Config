@@ -1,0 +1,8 @@
+---
+- name: Add Fancy Legal Disclaimer (MOTD)
+  ansible.builtin.copy:
+    src: templates/add_motd
+    dest: /etc/motd
+    owner: root
+    group: root
+    mode: '0644'

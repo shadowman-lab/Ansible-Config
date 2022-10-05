@@ -1,0 +1,9 @@
+---
+- hosts: all
+  vars:
+      is_container: false
+
+  roles:
+      - role: "{{ playbook_dir }}"
+        win2016stig_system_is_container: "{{ is_container | default(false) }}"
+        win2016stig_skip_for_travis: true

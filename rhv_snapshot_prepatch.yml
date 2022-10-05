@@ -1,0 +1,7 @@
+---
+- name: Create Pre patch snapshot on a VM
+  hosts: all
+  gather_facts: false
+
+  roles:
+    - shadowman_create_snapshot

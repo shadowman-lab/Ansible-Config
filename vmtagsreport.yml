@@ -1,0 +1,10 @@
+---
+- name: Test filter
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+
+    - name: Get VM info
+      ansible.builtin.include_role:
+        name: shadowman_gather_tags

@@ -1,0 +1,8 @@
+---
+- name: Reboot Linux
+  ansible.builtin.include_tasks: linux.yml
+  when: os is match("rhel.*")
+
+- name: Reboot Windows
+  ansible.builtin.include_tasks: windows.yml
+  when: os is match("windows.*")

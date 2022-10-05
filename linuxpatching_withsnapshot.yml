@@ -1,0 +1,15 @@
+---
+- name: Patch RHEL Servers
+  hosts: all
+
+  tasks:
+    - name: Block for Patching
+      block:
+        - name: Patching role
+          ansible.builtin.include_role:
+            name: shadowman_patching
+
+      rescue:
+        - name: Patching role
+          ansible.builtin.include_role:
+            name: shadowman_snapshot_restore_rhv

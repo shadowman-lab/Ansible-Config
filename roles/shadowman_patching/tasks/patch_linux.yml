@@ -1,0 +1,88 @@
+---
+- name: Upgrade all packages (yum)
+  ansible.builtin.yum:
+    name: '*'
+    state: latest
+    exclude: "{{ exclude_packages }}"
+  when: ansible_pkg_mgr == "yum"
+  register: patchingresult
+
+- name: Combine results into single line
+  ansible.builtin.set_fact:
+    myresults: "{{ myresults | default([]) }} + [ '{{ item[0] }}' + ': ' + '{{ item[1] }}' ]"
+  loop: "{{ patchingresult.changes.updated }}"
+  loop_control:
+    label: "{{ item[0] }}"
+  when:
+    - ansible_pkg_mgr == "yum"
+    - patchingresult.changes.updated is defined
+
+- name: Display RHEL 7 Patching Results
+  ansible.builtin.debug:
+    msg: "{{ myresults | default('System is up to date') }}"
+  when:
+    - ansible_pkg_mgr == "yum"
+
+- name: Upgrade all packages (dnf)
+  ansible.builtin.dnf:
+    name: '*'
+    state: latest
+    exclude: "{{ exclude_packages }}"
+  when: ansible_pkg_mgr == "dnf"
+  register: patchingresultdnf
+
+- name: Display RHEL 8 Patching Results
+  ansible.builtin.debug:
+    msg: "{{ patchingresultdnf.results }}"
+  when: ansible_pkg_mgr == "dnf"
+
+- name: Check to see if we need a reboot
+  ansible.builtin.command: needs-restarting -r
+  register: result
+  changed_when: result.rc == 1
+  failed_when: result.rc > 1
+  check_mode: false
+
+- name: Reboot Server if Necessary
+  ansible.builtin.reboot:
+  when: result.rc == 1
+
+- name: Set patching data for ServiceNow Yum if patching happened
+  ansible.builtin.set_stats:
+    data:
+      work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] {{ patchingresult.changes.updated | flatten(levels=1) | to_nice_json }}"
+      expose_to_cloud_redhat_com_results: "{{ inventory_hostname }}:{{ patchingresult.changes.updated | flatten(levels=1) | to_nice_json }}"
+  when:
+    - ansible_pkg_mgr == "yum"
+    - patchingresult.changes.updated is defined
+    - ticket_number is defined
+
+- name: Set patching data for ServiceNow Yum if system already patched
+  ansible.builtin.set_stats:
+    data:
+      work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] All packages are up to date"
+      expose_to_cloud_redhat_com_results: "{{ inventory_hostname }}:All packages are up to date"
+  when:
+    - ansible_pkg_mgr == "yum"
+    - patchingresult.changes.updated is not defined
+    - ticket_number is defined
+
+- name: Set patching data for ServiceNow DNF
+  ansible.builtin.set_stats:
+    data:
+      work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] {{ patchingresultdnf.results | flatten(levels=1) | to_nice_json }}"
+      expose_to_cloud_redhat_com_results: "{{ inventory_hostname }}:{{ patchingresultdnf.results | flatten(levels=1) | to_nice_json }}"
+  when:
+    - ansible_pkg_mgr == "dnf"
+    - patchingresultdnf.changed == true
+    - ticket_number is defined
+
+- name: Set patching data for ServiceNow DNF if system is already patched
+  ansible.builtin.set_stats:
+    data:
+      work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] All packages are up to date"
+      expose_to_cloud_redhat_com_results: "{{ inventory_hostname }}:All packages are up to date"
+  when:
+    - ansible_pkg_mgr == "dnf"
+    - patchingresultdnf.changed == false
+    - ticket_number is defined

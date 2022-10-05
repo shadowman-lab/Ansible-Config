@@ -1,0 +1,363 @@
+---
+win2016stig_cat1_patch: yes
+win2016stig_cat2_patch: yes
+win2016stig_cat3_patch: yes
+
+win2016stig_min_ansible_version: "2.6"
+
+# We've defined complexity-high to mean that we cannot automatically remediate
+# the rule in question.  In the future this might mean that the remediation
+# may fail in some cases.
+win2016stig_complexity_high: no
+
+# Show "changed" for complex items not remediated per complexity-high setting
+# to make them stand out.  "changed" items on a second run of the role would
+# indicate items requiring manual review.
+win2016stig_audit_complex: yes
+
+# We've defined disruption-high to indicate items that are likely to cause
+# disruption in a normal workflow.  These items can be remediated automatically
+# but are disabled by default to avoid disruption.
+win2016stig_disruption_high: no
+
+# Show "changed" for disruptive items not remediated per disruption-high
+# setting to make them stand out.
+win2016stig_audit_disruptive: yes
+
+winstig_skip_for_travis: false
+
+# Some tasks need to be skipped for CI/CD testing to work correctly
+winstig_skip_for_test: false
+
+win2016stig_workaround_for_disa_benchmark: true
+win2016stig_workaround_for_ssg_benchmark: true
+
+# tweak role to run in a non-privileged container
+win2016stig_system_is_container: no
+
+# These variables correspond with the STIG IDs defined in the STIG and allows you to enable/disable specific rules.
+# PLEASE NOTE: These work in coordination with the cat1, cat2, cat3 group variables. You must enable an entire group
+# in order for the variables below to take effect.
+# CAT 1 rules
+wn16_00_000010: true
+wn16_dc_000010: true
+wn16_ms_000010: true
+wn16_00_000040: true
+wn16_00_000110: true
+wn16_00_000120: true
+wn16_00_000150: true
+wn16_ac_000090: true
+wn16_dc_000070: true
+wn16_dc_000080: true
+wn16_dc_000090: true
+wn16_dc_000100: true
+wn16_dc_000110: true
+wn16_dc_000150: true
+wn16_ms_000120: true
+wn16_cc_000250: true
+wn16_cc_000260: true
+wn16_cc_000270: true
+wn16_cc_000460: true
+wn16_cc_000500: true
+wn16_cc_000530: true
+wn16_dc_000290: true
+wn16_dc_000300: true
+wn16_so_000020: true
+wn16_so_000250: true
+wn16_so_000260: true
+wn16_so_000270: true
+wn16_so_000300: true
+wn16_so_000360: true
+wn16_so_000380: true
+wn16_ur_000030: true
+wn16_ur_000090: true
+wn16_ur_000130: true
+
+
+# CAT 2 rules
+wn16_00_000030: true
+wn16_00_000050: true
+wn16_00_000060: true
+wn16_00_000070: true
+wn16_00_000080: true
+wn16_00_000090: true
+wn16_00_000100: true
+wn16_00_000140: true
+wn16_00_000160: true
+wn16_00_000170: true
+wn16_00_000180: true
+wn16_00_000190: true
+wn16_00_000210: true
+wn16_00_000220: true
+wn16_00_000230: true
+wn16_00_000240: true
+wn16_00_000250: true
+wn16_00_000270: true
+wn16_00_000280: true
+wn16_00_000290: true
+wn16_00_000300: true
+wn16_00_000310: true
+wn16_00_000320: true
+wn16_00_000330: true
+wn16_00_000340: true
+wn16_00_000350: true
+wn16_00_000360: true
+wn16_00_000370: true
+wn16_00_000380: true
+wn16_00_000390: true
+wn16_00_000400: true
+wn16_00_000410: true
+wn16_00_000420: true
+wn16_00_000430: true
+wn16_00_000440: true
+wn16_ac_000010: true
+wn16_ac_000020: true
+wn16_ac_000030: true
+wn16_ac_000040: true
+wn16_ac_000050: true
+wn16_ac_000060: true
+wn16_ac_000070: true
+wn16_ac_000080: true
+wn16_dc_000020: true
+wn16_dc_000030: true
+wn16_dc_000040: true
+wn16_dc_000050: true
+wn16_dc_000060: true
+wn16_dc_000120: true
+wn16_dc_000130: true
+wn16_dc_000140: true
+wn16_dc_000170: true
+wn16_dc_000180: true
+wn16_dc_000190: true
+wn16_dc_000200: true
+wn16_dc_000210: true
+wn16_dc_000220: true
+wn16_au_000010: true
+wn16_au_000020: true
+wn16_au_000030: true
+wn16_au_000040: true
+wn16_au_000050: true
+wn16_au_000060: true
+wn16_au_000070: true
+wn16_au_000080: true
+wn16_dc_000230: true
+wn16_au_000100: true
+wn16_au_000120: true
+wn16_au_000140: true
+wn16_au_000150: true
+wn16_au_000160: true
+wn16_au_000170: true
+wn16_dc_000240: true
+wn16_dc_000250: true
+wn16_dc_000260: true
+wn16_dc_000270: true
+wn16_au_000220: true
+wn16_au_000230: true
+wn16_au_000240: true
+wn16_au_000250: true
+wn16_au_000260: true
+wn16_au_000270: true
+wn16_au_000280: true
+wn16_au_000290: true
+wn16_au_000300: true
+wn16_au_000310: true
+wn16_au_000320: true
+wn16_au_000330: true
+wn16_au_000340: true
+wn16_au_000350: true
+wn16_au_000360: true
+wn16_au_000370: true
+wn16_au_000380: true
+wn16_au_000390: true
+wn16_au_000400: true
+wn16_au_000410: true
+wn16_au_000420: true
+wn16_cc_000280: true
+wn16_au_000440: true
+wn16_au_000450: true
+wn16_cc_000010: true
+wn16_ms_000020: true
+wn16_cc_000030: true
+wn16_cc_000080: true
+wn16_cc_000090: true
+wn16_cc_000100: true
+wn16_cc_000110: true
+wn16_cc_000140: true
+wn16_cc_000150: true
+wn16_cc_000160: true
+wn16_cc_000170: true
+wn16_cc_000180: true
+wn16_ms_000030: true
+wn16_cc_000210: true
+wn16_cc_000220: true
+wn16_ms_000040: true
+wn16_cc_000290: true
+wn16_cc_000300: true
+wn16_cc_000310: true
+wn16_cc_000320: true
+wn16_cc_000330: true
+wn16_cc_000340: true
+wn16_cc_000360: true
+wn16_cc_000370: true
+wn16_cc_000380: true
+wn16_cc_000390: true
+wn16_cc_000400: true
+wn16_cc_000410: true
+wn16_cc_000420: true
+wn16_cc_000421: true
+wn16_cc_000430: true
+wn16_cc_000440: true
+wn16_cc_000450: true
+wn16_cc_000470: true
+wn16_cc_000480: true
+wn16_cc_000490: true
+wn16_cc_000510: true
+wn16_cc_000520: true
+wn16_cc_000540: true
+wn16_cc_000550: true
+wn16_pk_000010: true
+wn16_pk_000020: true
+wn16_pk_000030: true
+wn16_dc_000280: true
+wn16_dc_000310: true
+wn16_so_000030: true
+wn16_so_000040: true
+wn16_so_000050: true
+wn16_dc_000320: true
+wn16_dc_000330: true
+wn16_so_000080: true
+wn16_so_000090: true
+wn16_so_000100: true
+wn16_so_000110: true
+wn16_so_000120: true
+wn16_so_000130: true
+wn16_so_000140: true
+wn16_so_000150: true
+wn16_ms_000050: true
+wn16_so_000190: true
+wn16_so_000200: true
+wn16_so_000210: true
+wn16_so_000230: true
+wn16_so_000240: true
+wn16_so_000290: true
+wn16_ms_000310: true
+wn16_so_000320: true
+wn16_so_000330: true
+wn16_so_000340: true
+wn16_so_000350: true
+wn16_so_000390: true
+wn16_so_000400: true
+wn16_so_000410: true
+wn16_so_000420: true
+wn16_so_000430: true
+wn16_so_000460: true
+wn16_so_000470: true
+wn16_so_000480: true
+wn16_so_000490: true
+wn16_so_000500: true
+wn16_so_000510: true
+wn16_so_000520: true
+wn16_so_000530: true
+wn16_uc_000030: true
+wn16_ur_000010: true
+wn16_dc_000340: true
+wn16_ms_000340: true
+wn16_dc_000350: true
+wn16_ur_000050: true
+wn16_dc_000360: true
+wn16_ur_000070: true
+wn16_ur_000080: true
+wn16_ur_000100: true
+wn16_ur_000110: true
+wn16_ur_000120: true
+wn16_dc_000370: true
+wn16_ms_000370: true
+wn16_dc_000380: true
+wn16_ms_000380: true
+wn16_dc_000390: true
+wn16_ms_000390: true
+wn16_dc_000400: true
+wn16_ms_000400: true
+wn16_dc_000410: true
+wn16_ms_000410: true
+wn16_dc_000420: true
+wn16_ms_000420: true
+wn16_ur_000200: true
+wn16_ur_000210: true
+wn16_ur_000220: true
+wn16_ur_000230: true
+wn16_ur_000240: true
+wn16_ur_000250: true
+wn16_ur_000260: true
+wn16_ur_000270: true
+wn16_ur_000280: true
+wn16_ur_000290: true
+wn16_ur_000300: true
+wn16_ur_000310: true
+wn16_so_000180: true
+wn16_so_000010: true
+wn16_00_000411: true
+wn16_00_000412: true
+wn16_00_000460: true
+wn16_au_000285: true
+wn16_au_000286: true
+wn16_dc_000430: true
+
+
+# CAT 3 rules
+wn16_00_000200: true
+wn16_00_000450: true
+wn16_dc_000160: true
+wn16_cc_000040: true
+wn16_cc_000050: true
+wn16_cc_000060: true
+wn16_cc_000070: true
+wn16_cc_000240: true
+wn16_cc_000350: true
+wn16_so_000160: true
+wn16_so_000450: true
+wn16_00_000470: true
+wn16_00_000480: true
+
+
+# CAT 1 defaults
+# This SID is the same for standalone, member, domain controller for 'Administrators' group
+wn16_ur_000130_sedebugprivilege: "*S-1-5-32-544"
+
+# CAT 2 defaults
+wn16_00_000030_pass_age: 60
+
+wn16_ac_000010_lockoutduration: 15
+wn16_ac_000020_lockoutbadcount: 3
+wn16_ac_000030_resetlockoutcount: 15
+wn16_ac_000040_passwordhistorysize: 24
+wn16_ac_000050_maximumpasswordage: 60
+wn16_ac_000060_minimumpasswordage: 1
+wn16_ac_000070_minimumpasswordlength: 14
+
+wn16_so_000030_newadministratorname: ansibleadmin
+wn16_so_000040_newguestname: ansibleguest
+
+wn16_so_000150_legalnoticetext: |
+    You are accessing a U.S. Government (USG) Information System (IS) that is provided for USG-authorized use only.
+
+    By using this IS (which includes any device attached to this IS), you consent to the following conditions:
+
+    -The USG routinely intercepts and monitors communications on this IS for purposes including, but not limited to, penetration testing, COMSEC monitoring, network operations and defense, personnel misconduct (PM), law enforcement (LE), and counterintelligence (CI) investigations.
+
+    -At any time, the USG may inspect and seize data stored on this IS.
+
+    -Communications using, or data stored on, this IS are not private, are subject to routine monitoring, interception, and search, and may be disclosed or used for any USG-authorized purpose.
+
+    -This IS includes security measures (e.g., authentication and access controls) to protect USG interests--not for your personal benefit or privacy.
+
+    -Notwithstanding the above, using this IS does not constitute consent to PM, LE or CI investigative searching or monitoring of the content of privileged communications, or work product, related to personal representation or services by attorneys, psychotherapists, or clergy, and their assistants. Such communications and work product are private and confidential. See User Agreement for details.
+
+wn16_cc_000300_app_maxsize: 32768
+wn16_cc_000310_sec_maxsize: 196608
+wn16_cc_000320_sys_maxsize: 32768
+
+wn16_dc_000430_pass_age: 180
+
+# CAT 3 defaults
+wn16_so_000160_legalnoticecaption: "DoD Notice and Consent Banner"

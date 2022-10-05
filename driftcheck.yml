@@ -1,0 +1,26 @@
+---
+- name: Perform Drift check
+  hosts: all
+  strategy: free
+
+  tasks:
+
+    - name: Linux Setup
+      ansible.builtin.include_role:
+        name: shadowman_linux_setup
+      when: ansible_os_family is match("RedHat")
+
+    - name: RHEL register
+      ansible.builtin.include_role:
+        name: shadowman_rhel_register
+      when: ansible_os_family is match("RedHat")
+
+    - name: IDM register
+      ansible.builtin.include_role:
+        name: shadowman_add_to_idm
+      when: ansible_os_family is match("RedHat")
+
+    - name: Windows Config
+      ansible.builtin.include_role:
+        name: shadowman_add_to_ad
+      when: ansible_os_family is match("Windows")

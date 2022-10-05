@@ -1,0 +1,24 @@
+---
+- name: Setup RHEL for Template
+  hosts: "{{ operating_system | lower }}updates.shadowman.dev"
+  gather_facts: false
+
+  pre_tasks:
+
+    - name: Set facts for ansible_host to work with IP addr
+      ansible.builtin.set_fact:
+        ansible_host: "{{ ip_addr }}"
+      delegate_to: localhost
+
+    - name: Gather Facts
+      ansible.builtin.setup:
+
+    - name: RHEL Hostname Set
+      ansible.builtin.hostname:
+        name: "{{ inventory_hostname }}"
+
+  roles:
+    - shadowman_rhel_register
+    - shadowman_add_to_idm
+    - shadowman_patching
+    - shadowman_rhel_template_seal

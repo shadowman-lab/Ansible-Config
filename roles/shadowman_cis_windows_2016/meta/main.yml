@@ -1,0 +1,23 @@
+---
+galaxy_info:
+    author: "Ryan Speelman"
+    description: "Ansible role to apply Windows Server 2016 CIS Benchmark"
+    company: "MindPoint Group"
+    license: MIT
+    role_name: windows_2016_cis
+    min_ansible_version: 2.6
+
+    platforms:
+        - name: Windows
+          versions:
+              - 2016
+
+    galaxy_tags:
+        - system
+        - security
+        - cis
+        - hardening
+        - microsoft
+        - windows
+
+    dependencies: []

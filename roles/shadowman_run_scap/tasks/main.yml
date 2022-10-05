@@ -1,0 +1,130 @@
+---
+- name: Make sure openscap-scanner and scap-security guide are installed
+  ansible.builtin.yum:
+    name:
+      - openscap-scanner
+      - scap-security-guide
+    state: latest
+
+- name: Check if  SCAP Security Guide (SSG) profile is available
+  ansible.builtin.stat:
+    path: "/usr/share/xml/scap/ssg/content/ssg-rhel{{ ansible_distribution_major_version }}-ds.xml"
+
+- name: Create Compliance Reports
+  ansible.builtin.command: "oscap xccdf eval --profile xccdf_org.ssgproject.content_profile_{{ content_profile }} --results report.xml --report index.html /usr/share/xml/scap/ssg/content/ssg-rhel{{ ansible_distribution_major_version }}-ds.xml"
+  register: command_result
+  failed_when: "'Error' in command_result.stderr"
+
+- name: Copy files to EE
+  ansible.builtin.fetch:
+    src: ./{{ item }}
+    dest: "/tmp/{{ inventory_hostname }}/{{ item }}"
+    flat: true
+  loop:
+    - report.xml
+    - index.html
+
+- name: Copy folders to reports host
+  ansible.builtin.copy:
+    src: "/tmp/{{ inventory_hostname }}"
+    dest: "{{ file_path }}"
+    owner: root
+    group: root
+    mode: '0644'
+  delegate_to: report.shadowman.dev
+
+- name: DISPLAY LINK TO REPORT
+  ansible.builtin.debug:
+    msg: "http://report.shadowman.dev/openscap/{{ inventory_hostname }}"
+
+- name: Get results
+  ansible.builtin.slurp:
+    src: './report.xml'
+  register: scap_report_file
+
+- name: Set report facts
+  ansible.builtin.set_fact:
+    openscap_scan_results:
+      benchmark_id: "{{ test_result['benchmark']['@id'] }}"
+      total_rules_count: "{{ rule_result | length }}"
+      score: "{{ test_result['score']['#text'] }}%"
+      rule_results_count:
+        notchecked: "{{ rule_result | json_query('@[?result==`notchecked`]') | length }}"
+        fixed: "{{ rule_result | json_query('@[?result==`fixed`]') | length }}"
+        error: "{{ rule_result | json_query('@[?result==`error`]') | length }}"
+        notapplicable: "{{ rule_result | json_query('@[?result==`notapplicable`]') | length }}"
+        informational: "{{ rule_result | json_query('@[?result==`informational`]') | length }}"
+        unknown: "{{ rule_result | json_query('@[?result==`unknown`]') | length }}"
+        fail: "{{ rule_result | json_query('@[?result==`fail`]') | length }}"
+        pass: "{{ rule_result | json_query('@[?result==`pass`]') | length }}"
+      severity_of_failed_rules_count:
+        low: "{{ rule_result | json_query('@[?result==`fail`]') | selectattr('@severity', 'equalto', 'low') | list | length }}"
+        medium: "{{ rule_result | json_query('@[?result==`fail`]') | selectattr('@severity', 'equalto', 'medium') | list | length }}"
+        high: "{{ rule_result | json_query('@[?result==`fail`]') | selectattr('@severity', 'equalto', 'high') | list | length }}"
+    cacheable: true
+  vars:
+    report_from_xml: "{{ scap_report_file['content'] | b64decode | ansible.utils.from_xml | replace('{http://checklists.nist.gov/xccdf/1.2}', '') }}"
+    test_result: "{{ report_from_xml['Benchmark']['TestResult'] }}"
+    rule_result: "{{ test_result['rule-result'] }}"
+
+# we set the security_compliance based on some condition
+# in real world, you can have additional conditions
+- name: Set security compliance status
+  ansible.builtin.set_fact:
+    security_compliance:
+      status: "{{ true if ((openscap_scan_results.severity_of_failed_rules_count.high | int) < 10) else false }}"
+      type: "{{ content_profile }}"
+    cacheable: true
+
+- name: Create directory for linux summary report
+  ansible.builtin.file:
+    path: "{{ file_path }}/linuxsummary"
+    state: directory
+    mode: '0755'
+    owner: root
+    group: root
+  delegate_to: report.shadowman.dev
+  run_once: true
+
+- name: Template Summary Report
+  ansible.builtin.template:
+    src: "scan_reports.html.j2"
+    dest: "{{ file_path }}/linuxsummary/index.html"
+    owner: root
+    group: root
+    mode: '0644'
+  delegate_to: report.shadowman.dev
+  run_once: true
+
+- name: DISPLAY LINK TO SUMMARY REPORT
+  ansible.builtin.debug:
+    msg: "http://report.shadowman.dev/openscap/linuxsummary/"
+  run_once: true
+
+- name: Template Summary Report for e-mail
+  ansible.builtin.template:
+    src: "scan_reports.html.j2"
+    dest: "/tmp/linux{{ ansible_date_time.iso8601 }}.html"
+    owner: root
+    group: root
+    mode: '0644'
+  delegate_to: localhost
+  run_once: true
+  when: sendemailreport
+
+- name: Send Report via E-mail
+  community.general.mail:
+    host: "{{ EMAIL_HOST }}"
+    username: "{{ EMAIL_USERNAME }}"
+    password: "{{ EMAIL_PASSWORD }}"
+    port: "{{ EMAIL_PORT }}"
+    subject: "Linux Scan Report"
+    body: "Linux Compliance Scan Completed, please see the attached report"
+    attach:
+      - /tmp/linux{{ ansible_date_time.iso8601 }}.html
+    from: "{{ email_from }}"
+    to: "{{ email_to }}"
+  delegate_to: localhost
+  run_once: true
+  become: false
+  when: sendemailreport
