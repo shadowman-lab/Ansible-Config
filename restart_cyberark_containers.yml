@@ -1,6 +1,0 @@
-- name: Restart Podman service and container for CyberArk
-  hosts: all
-  gather_facts: false
-
-  roles:
-    - shadowman_cyberark_restart
