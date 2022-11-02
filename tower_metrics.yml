@@ -1,6 +1,7 @@
 ---
 - name: Pull Tower Metrics
   hosts: all
+  gather_facts: false
 
   roles:
     - shadowman_tower_metrics
