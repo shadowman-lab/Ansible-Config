@@ -1,0 +1,16 @@
+---
+- name: Pull Tower Metrics
+  community.postgresql.postgresql_query:
+    db: awx
+    query: SELECT * FROM public.main_host WHERE last_job_id >= {{ last_job_id }} ORDER BY last_job_id DESC
+    login_user: "{{ db_user }}"
+    login_password: "{{ db_password }}"
+  register: towermetrics
+
+- name: Host Automated
+  ansible.builtin.debug:
+    msg: "{{ towermetrics.rowcount }}"
+
+- name: Display Host Automated Information
+  ansible.builtin.debug:
+    msg: "{{ towermetrics.query_result }}"
