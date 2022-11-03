@@ -1,7 +1,6 @@
 ---
 - name: Pull AAP Metrics
   hosts: all
-  gather_facts: false
 
   roles:
     - shadowman_aap_metrics
