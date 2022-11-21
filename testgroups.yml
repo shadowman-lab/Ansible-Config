@@ -1,0 +1,10 @@
+---
+- name: Group Test
+  hosts: all
+  gather_facts: false
+
+  tasks:
+    - name: Run debug
+      ansible.builtin.debug:
+        msg: "Test"
+      when: inventory_hostname in groups["*RHEL"]
