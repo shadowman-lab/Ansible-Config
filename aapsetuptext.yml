@@ -1,6 +1,7 @@
 ---
 - name: Test AAP location
   hosts: all
+  connection: local
 
   tasks:
     - name: Test shell
