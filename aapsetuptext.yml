@@ -1,0 +1,7 @@
+---
+- name: Test AAP location
+  hosts: all
+
+  tasks:
+    - name: Test shell
+      ansible.builtin.shell: "find /root/ansible-automation-platform-setup-bundle-2.2.1-1/setup.sh"
