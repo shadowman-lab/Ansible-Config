@@ -1,0 +1,11 @@
+include README.md
+include .gitignore
+include *.yml
+include .DS_Store
+include .config/ansible-lint.yml
+include .github/workflows/ansible-lint.yml
+include *.code-workspace
+recursive-exclude .git *
+recursive-include collections *.yml
+recursive-include roles *
+recursive-include SNOW *
