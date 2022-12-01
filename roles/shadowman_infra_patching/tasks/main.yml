@@ -20,6 +20,7 @@
   ansible.builtin.dnf:
     name: '*'
     state: latest
+    update_only: true
 
 - name: Check to see if we need a reboot
   ansible.builtin.command: needs-restarting -r

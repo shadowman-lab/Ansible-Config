@@ -3,6 +3,7 @@
   ansible.builtin.yum:
     name: '*'
     state: latest
+    update_only: true
   async: 1000
   poll: 0
   register: yum_sleeper
