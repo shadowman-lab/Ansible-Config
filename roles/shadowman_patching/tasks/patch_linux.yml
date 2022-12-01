@@ -4,6 +4,7 @@
     name: '*'
     state: latest
     exclude: "{{ exclude_packages }}"
+    update_only: true
   when: ansible_pkg_mgr == "yum"
   register: patchingresult
 
@@ -28,6 +29,7 @@
     name: '*'
     state: latest
     exclude: "{{ exclude_packages }}"
+    update_only: true
   when: ansible_pkg_mgr == "dnf"
   register: patchingresultdnf
 
@@ -74,7 +76,7 @@
       expose_to_cloud_redhat_com_results: "{{ inventory_hostname }}:{{ patchingresultdnf.results | flatten(levels=1) | to_nice_json }}"
   when:
     - ansible_pkg_mgr == "dnf"
-    - patchingresultdnf.changed == true
+    - patchingresultdnf.changed
     - ticket_number is defined
 
 - name: Set patching data for ServiceNow DNF if system is already patched
@@ -84,5 +86,5 @@
       expose_to_cloud_redhat_com_results: "{{ inventory_hostname }}:All packages are up to date"
   when:
     - ansible_pkg_mgr == "dnf"
-    - patchingresultdnf.changed == false
+    - not patchingresultdnf.changed
     - ticket_number is defined
