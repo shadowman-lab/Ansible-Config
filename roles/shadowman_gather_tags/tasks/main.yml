@@ -12,20 +12,20 @@
 
 - name: Block for RHV
   block:
-  - name: Login to RHV
-    redhat.rhv.ovirt_auth:
-      hostname: "{{ rhvm_fqdn }}"
-      username: "{{ rhvm_user }}"
-      password: "{{ rhvm_password }}"
-      ca_file: "{{ rhvm_cafile | default(omit) }}"
-      insecure: "{{ rhvm_insecure | default(true) }}"  
+    - name: Login to RHV
+      redhat.rhv.ovirt_auth:
+        hostname: "{{ rhvm_fqdn }}"
+        username: "{{ rhvm_user }}"
+        password: "{{ rhvm_password }}"
+        ca_file: "{{ rhvm_cafile | default(omit) }}"
+        insecure: "{{ rhvm_insecure | default(true) }}"
 
-  - name: Get RHV VM info
-    redhat.rhv.ovirt_vm_info:
-      auth: "{{ ovirt_auth }}"
-      follow:
-        - tags
-    register: rhv_info
+    - name: Get RHV VM info
+      redhat.rhv.ovirt_vm_info:
+        auth: "{{ ovirt_auth }}"
+        follow:
+          - tags
+      register: rhv_info
 
   always:
     - name: Logout from RHV

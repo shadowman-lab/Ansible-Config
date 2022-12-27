@@ -5,7 +5,7 @@
       - openscap-scanner
       - scap-security-guide
       - insights-client
-    state: latest
+    state: present
 
 - name: Register Insights Client
   redhat.insights.insights_register:

@@ -4,7 +4,7 @@
     name: https://sat6.shadowman.dev/pub/katello-ca-consumer-latest.noarch.rpm
     state: present
     disable_gpg_check: true
-  when: 
+  when:
     - ansible_distribution_version is match("7.*")
     - shadowman_provision_hypervisor | default('RHV') != "Azure"
 
@@ -13,7 +13,7 @@
     name: https://sat6.shadowman.dev/pub/katello-ca-consumer-latest.noarch.rpm
     state: present
     disable_gpg_check: true
-  when: 
+  when:
     - ansible_distribution_version is match("8.*")
     - shadowman_provision_hypervisor | default('RHV') != "Azure"
 
@@ -22,7 +22,7 @@
     state: present
     activationkey: "RHEL7 Everything"
     org_id: Shadow_Man
-  when: 
+  when:
     - ansible_distribution_version is match("7.*")
     - shadowman_provision_hypervisor | default('RHV') != "Azure"
   ignore_errors: true
@@ -32,7 +32,7 @@
     state: present
     activationkey: "RHEL8"
     org_id: Shadow_Man
-  when: 
+  when:
     - ansible_distribution_version is match("8.*")
     - shadowman_provision_hypervisor | default('RHV') != "Azure"
   ignore_errors: true

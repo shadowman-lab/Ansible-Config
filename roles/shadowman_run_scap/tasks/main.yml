@@ -4,7 +4,7 @@
     name:
       - openscap-scanner
       - scap-security-guide
-    state: latest
+    state: present
 
 - name: Check if  SCAP Security Guide (SSG) profile is available
   ansible.builtin.stat:

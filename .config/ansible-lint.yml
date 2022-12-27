@@ -31,3 +31,4 @@ warn_list:
   - empty-string-compare
   - git-latest
   - name
+  - args[module]
