@@ -1,0 +1,55 @@
+---
+- name: Block for Sat Install
+  when: rhsatellite
+  block:
+
+  - name: Create folder
+    ansible.builtin.file:
+      path: "/etc/osbuild-composer/repositories"
+      recurse: true
+      state: directory
+      owner: root
+      mode: 0755
+
+  - name: Template out file
+    ansible.builtin.template:
+      src: templates/rhel-8.json.j2
+      dest: /etc/osbuild-composer/repositories/{{ item }}.json
+      owner: root
+      mode: 0644
+    loop:
+      - "rhel-8"
+      - "rhel-86"
+      - "rhel-87"
+
+  - name: Copy existing cert
+    ansible.builtin.copy:
+      remote_src: true
+      src: /etc/rhsm/ca/redhat-uep.pem
+      dest: /etc/rhsm/ca/redhat-uep.rpmsave
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: Delete file
+    ansible.builtin.file:
+      state: absent
+      path: /etc/rhsm/ca/redhat-uep.pem
+
+  - name: Create Sym link
+    ansible.builtin.file:
+      state: link
+      src: /etc/rhsm/ca/katello-server-ca.pem
+      dest: /etc/rhsm/ca/redhat-uep.pem
+      owner: root
+      group: root
+      mode: 0644
+
+  - name: Restart osbuild
+    ansible.builtin.systemd:
+      name: "{{ item }}"
+      state: restarted
+    loop:
+      - osbuild-worker@.service.d
+      - osbuild-worker@1.service
+      - osbuild-composer.service

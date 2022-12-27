@@ -1,0 +1,23 @@
+---
+- name: Run osbuild_builder role
+  hosts: all
+
+  tasks:
+
+    - name: Run the os builder role
+      ansible.builtin.import_role:
+        name: infra.osbuild.builder
+      vars:
+        builder_compose_type: vmdk
+        builder_blueprint_name: adworjanbuild
+        builder_compose_pkgs:
+          - git
+          - firewalld
+        builder_compose_customizations:
+          user:
+            name: "{{ builder_user }}"
+            description: "Builder user"
+            password: "{{ builder_password }}"
+            groups: '["users", "wheel"]'
+          firewalld.services:
+            enabled: ["ssh", "https"]

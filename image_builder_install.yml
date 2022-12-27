@@ -1,0 +1,13 @@
+---
+- name: Install Image Builder
+  hosts: all
+
+  tasks:
+
+    - name: Run the role to install image builder
+      ansible.builtin.import_role:
+        name: infra.osbuild.setup_server
+
+    - name: Run role to setup image builder for Satellite
+      ansible.builtin.import_role:
+        name: shadowman_image_builder_install
