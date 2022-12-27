@@ -8,8 +8,8 @@
       ansible.builtin.import_role:
         name: infra.osbuild.builder
       vars:
-        builder_compose_type: vmdk
-        builder_blueprint_name: adworjanbuild
+        builder_compose_type: "{{ image_type }}"
+        builder_blueprint_name: "{{ blueprint_name }}"
         builder_compose_pkgs:
           - git
           - firewalld
