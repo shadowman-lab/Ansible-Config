@@ -1,13 +1,9 @@
 ---
 - name: Add Windows host to AD
-  ansible.windows.win_domain_membership:
+  microsoft.ad.membership:
     dns_domain_name: ad.shadowman.dev
     hostname: "{{ fqdn.split('.')[0] }}"
     domain_admin_user: "{{ domainuser }}"
     domain_admin_password: "{{ domainpassword }}"
     state: domain
-  register: domain_state
-
-- name: Reboot server if needed
-  ansible.windows.win_reboot:
-  when: domain_state.reboot_required
+    reboot: true

@@ -1,13 +1,13 @@
 ---
 - name: Create/Update/Remove User in AD
-  community.windows.win_domain_user:
+  microsoft.ad.user:
     firstname: "{{ first_name }}"
     surname: "{{ last_name }}"
     name: "{{ username }}"
     password: "{{ password }}"
     groups:
-      - Domain Admins
-    groups_action: add
+      set:
+        - Domain Admins
     state: "{{ state }}"
     update_password: on_create
     domain_username: "{{ domainuser }}"
