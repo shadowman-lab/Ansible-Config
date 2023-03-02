@@ -21,4 +21,4 @@
     ipa_host: "{{ IPA_HOST }}"
     ipa_user: "{{ IPA_USER }}"
   loop: "{{ idm_group_names }}"
-  when: (state == "present") and (idm_group_names | length) > 0
+  when: (state == "present") and group_name is defined
