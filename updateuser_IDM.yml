@@ -1,0 +1,7 @@
+---
+- name: Create/Update/Remove User in IDM
+  hosts: localhost
+  gather_facts: false
+
+  roles:
+    - shadowman_idm_user

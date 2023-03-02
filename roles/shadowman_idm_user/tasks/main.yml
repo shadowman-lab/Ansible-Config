@@ -1,0 +1,24 @@
+---
+- name: Update user in IDM
+  community.general.ipa_user:
+    name: "{{ idm_username }}"
+    state: "{{ state }}"
+    givenname: "{{ idm_firstname | default(omit) }}"
+    sn: "{{ idm_lastname | default(omit) }}"
+    password: "{{ idm_password | default(omit) }}"
+    ipa_pass: "{{ IPA_PASS }}"
+    ipa_host: "{{ IPA_HOST }}"
+    ipa_user: "{{ IPA_USER }}"
+
+- name: Add user to IDM groups
+  community.general.ipa_group:
+    name: "{{ item }}"
+    user:
+      - "{{ idm_username }}"
+    append: true
+    state: present
+    ipa_pass: "{{ IPA_PASS }}"
+    ipa_host: "{{ IPA_HOST }}"
+    ipa_user: "{{ IPA_USER }}"
+  loop: "{{ group_names }}"
+  when: (state == "present") and (group_names | length) > 0
