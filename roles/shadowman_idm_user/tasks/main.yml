@@ -10,6 +10,10 @@
     ipa_host: "{{ IPA_HOST }}"
     ipa_user: "{{ IPA_USER }}"
 
+- name: Debug
+  ansible.builtin.debug:
+    msg: "{{ group_name }} and {{ group_names }}"
+
 - name: Add user to IDM groups
   community.general.ipa_group:
     name: "{{ item }}"
