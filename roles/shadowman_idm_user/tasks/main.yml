@@ -10,10 +10,6 @@
     ipa_host: "{{ IPA_HOST }}"
     ipa_user: "{{ IPA_USER }}"
 
-- name: Debug
-  ansible.builtin.debug:
-    msg: "{{ group_name }} and {{ group_names }}"
-
 - name: Add user to IDM groups
   community.general.ipa_group:
     name: "{{ item }}"
@@ -25,4 +21,4 @@
     ipa_host: "{{ IPA_HOST }}"
     ipa_user: "{{ IPA_USER }}"
   loop: "{{ group_names }}"
-  when: (state == "present") and (group_names | length) > 0
+  when: (state == "present") and (idm_group_names | length) > 0

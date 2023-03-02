@@ -1,2 +1,2 @@
 ---
-group_names: "{{ group_name.split(',') }}"
+idm_group_names: "{{ group_name.split(',') }}"
