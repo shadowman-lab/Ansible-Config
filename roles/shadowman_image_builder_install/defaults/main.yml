@@ -1,2 +1,6 @@
 ---
 rhsatellite: true
+sat_host: "sat6.shadowman.dev"
+sat_organization: "Shadow_Man"
+sat_environment: "Development"
+sat_contentview: "Everything_Red_Hat"

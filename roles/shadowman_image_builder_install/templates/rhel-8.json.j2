@@ -2,13 +2,13 @@
     "x86_64": [
     {
       "name": "baseos",
-      "baseurl": "https://sat6.shadowman.dev/pulp/content/Shadow_Man/Development/Everything_Red_Hat/content/dist/rhel8/8/x86_64/baseos/os/",
+      "baseurl": "https://{{ sat_host }}/pulp/content/{{ sat_organization }}/{{ sat_environment }}/{{ sat_contentview }}/content/dist/rhel8/8/x86_64/baseos/os/",
       "rhsm": true
     },
     {
       "name": "appstream",
-      "baseurl": "https://sat6.shadowman.dev/pulp/content/Shadow_Man/Development/Everything_Red_Hat/content/dist/rhel8/8/x86_64/appstream/os/",
+      "baseurl": "https://{{ sat_host }}/pulp/content/{{ sat_organization }}/{{ sat_environment }}/{{ sat_contentview }}/content/dist/rhel8/8/x86_64/appstream/os/",
       "rhsm": true
     }
-    ]
+  ]
 }
