@@ -1,0 +1,18 @@
+---
+- name: Copy Cert
+  ansible.builtin.copy:
+    src: /certs/shadowman_cert.cer
+    dest: /etc/cockpit/ws-certs.d/shadowman_cert.crt
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Cockpit_restart
+
+- name: Copy Key
+  ansible.builtin.copy:
+    src: /certs/shadowman_private.key
+    dest: /etc/cockpit/ws-certs.d/shadowman_cert.key
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Cockpit_restart

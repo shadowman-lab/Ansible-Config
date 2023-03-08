@@ -11,3 +11,7 @@
     - name: Run role to setup image builder for Satellite
       ansible.builtin.import_role:
         name: shadowman_image_builder_install
+
+    - name: Run role to setup ssl for cockpit
+      ansible.builtin.import_role:
+        name: shadowman_image_builder_cockpit_ssl
