@@ -1,8 +1,0 @@
----
-- name: Change State on all ICMP for source addr
-  ansible.posix.firewalld:
-    zone: drop
-    state: "{{ state }}"
-    permanent: true
-    source: "{{ ip_addr }}/24"
-  notify: restart_firewalld
