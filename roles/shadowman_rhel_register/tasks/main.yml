@@ -5,7 +5,7 @@
     state: present
     disable_gpg_check: true
   when:
-    - ansible_distribution_version is match("7.*")
+    - ansible_pkg_mgr == "yum"
     - shadowman_provision_hypervisor | default('RHV') != "Azure"
 
 - name: Install Katello RPM for Satellite Server for RHEL 8
@@ -14,7 +14,7 @@
     state: present
     disable_gpg_check: true
   when:
-    - ansible_distribution_version is match("8.*")
+    - ansible_pkg_mgr == "dnf"
     - shadowman_provision_hypervisor | default('RHV') != "Azure"
 
 - name: Use Activation Key to Register RHEL7 Machine to Satellite
@@ -34,6 +34,16 @@
     org_id: Shadow_Man
   when:
     - ansible_distribution_version is match("8.*")
+    - shadowman_provision_hypervisor | default('RHV') != "Azure"
+  ignore_errors: true
+
+- name: Use Activation Key to Register RHEL9 Machine to Satellite
+  community.general.redhat_subscription:
+    state: present
+    activationkey: "RHEL9"
+    org_id: Shadow_Man
+  when:
+    - ansible_distribution_version is match("9.*")
     - shadowman_provision_hypervisor | default('RHV') != "Azure"
   ignore_errors: true
 
@@ -61,3 +71,11 @@
       - rhel-8-for-x86_64-baseos-rpms
     purge: true
   when: ansible_distribution_version is match("8.*")
+
+- name: Enable Repositories for RHEL 8
+  community.general.rhsm_repository:
+    name:
+      - rhel-9-for-x86_64-appstream-rpms
+      - rhel-9-for-x86_64-baseos-rpms
+    purge: true
+  when: ansible_distribution_version is match("9.*")

@@ -1,21 +1,21 @@
 ---
-- name: Install dnf utils RHEL 8
+- name: Install dnf utils
   ansible.builtin.dnf:
     name: dnf-utils
     state: present
-  when: ansible_distribution_version is match("8.*")
+  when: ansible_pkg_mgr == "dnf"
 
 - name: Install IPA Client for RHEL 7
   ansible.builtin.yum:
     name: ipa-client
     state: present
-  when: ansible_distribution_version is match("7.*")
+  when: ansible_pkg_mgr == "yum"
 
 - name: Install IPA Client for RHEL 8
   ansible.builtin.dnf:
     name: ipa-client
     state: present
-  when: ansible_distribution_version is match("8.*")
+  when: ansible_pkg_mgr == "dnf"
 
 - name: Run IPA Client Script to add to IDM
   ansible.builtin.command: "ipa-client-install --principal '{{ IPA_USER }}' --password '{{ IPA_PASS }}' --hostname '{{ fqdn }}' --enable-dns-updates --mkhomedir --unattended"
