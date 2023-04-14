@@ -8,7 +8,7 @@
     - ansible_pkg_mgr == "yum"
     - shadowman_provision_hypervisor | default('RHV') != "Azure"
 
-- name: Install Katello RPM for Satellite Server for RHEL 8
+- name: Install Katello RPM for Satellite Server for RHEL 8 or 9
   ansible.builtin.dnf:
     name: https://sat6.shadowman.dev/pub/katello-ca-consumer-latest.noarch.rpm
     state: present
