@@ -20,6 +20,7 @@
   ansible.builtin.dnf:
     name: '*'
     state: latest
+    exclude: "{{ exclude_packages }}"
     update_only: true
 
 - name: Check to see if we need a reboot
