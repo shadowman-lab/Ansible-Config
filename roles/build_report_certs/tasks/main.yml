@@ -27,16 +27,6 @@
     mode: '0644'
   check_mode: false
 
-- name: Copy logo over
-  ansible.builtin.copy:
-    src: "webpage_logo.png"
-    dest: "{{ file_path }}"
-    directory_mode: true
-    owner: root
-    group: root
-    mode: '0644'
-  check_mode: false
-
 - name: Display link to Linux patch report
   ansible.builtin.debug:
     msg: "Please go to http://{{ ansible_host }}/cert.html"

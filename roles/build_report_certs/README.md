@@ -31,21 +31,29 @@ The role can be used to create an html report on any number of RHEL hosts using 
 
   tasks:
   
-  - name: Get the cert from a port
-    community.crypto.get_certificate:
-      host: "{{ inventory_hostname }}"
-      port: "{{ certificate_port }}"
-    delegate_to: localhost
-    register: cert
-    no_log: true
-  
-  - name: Set facts for report
-    ansible.builtin.set_fact:
-      expire_days: "{{ ((cert.not_after | to_datetime('%Y%m%d%H%M%SZ')) - (ansible_date_time.iso8601 | to_datetime('%Y-%m-%dT%H:%M:%SZ'))).days }}"
-      issuer: "{{ cert.issuer }}"
-      expiration: "{{ cert.not_after | to_datetime('%Y%m%d%H%M%SZ') }}"
-      expired: "{{ cert.expired }}"
+  - name: Block for cert Check
+    block:
 
+      - name: Get the cert from a port
+        community.crypto.get_certificate:
+          host: "{{ inventory_hostname }}"
+          port: "{{ certificate_port }}"
+        delegate_to: localhost
+        register: cert
+
+      - name: Set facts for report
+        ansible.builtin.set_fact:
+          expire_days: "{{ ((cert.not_after | to_datetime('%Y%m%d%H%M%SZ')) - (ansible_date_time.iso8601 | to_datetime('%Y-%m-%dT%H:%M:%SZ'))).days }}"
+          issuer: "{{ cert.issuer }}"
+          expiration: "{{ cert.not_after | to_datetime('%Y%m%d%H%M%SZ') }}"
+          expired: "{{ cert.expired }}"
+
+    rescue:
+
+      - name: Display error
+        ansible.builtin.debug:
+        msg: "{{ cert.msg }}"
+        
   - name: Build the report
     ansible.builtin.include_role:
       name: build_report_certs
