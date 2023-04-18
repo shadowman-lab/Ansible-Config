@@ -11,7 +11,7 @@ Must run on Apache server
 Role Variables / Configuration
 --------------
 
-Must register facts for each host expire_days, issuer, expiration, expired. Set var sendemailreport to false if not also sending the report via e-mail
+Must register facts for each host expire_days, issuer, expiration, expired, include_no_cert. Set var sendemailreport to false if not also sending the report via e-mail
 
 Dependencies
 ------------
