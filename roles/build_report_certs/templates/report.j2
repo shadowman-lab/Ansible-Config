@@ -31,6 +31,7 @@
     </thead>
     <tbody>
 {% for host in ansible_play_hosts|sort %}
+{% if hostvars[host]['issuer'] is defined and include_no_cert == true %}
         <tr>
             <td>{{hostvars[host]['inventory_hostname']}}</td>
             <td>{{hostvars[host]['ansible_distribution']|default("none")}}</td>
@@ -45,6 +46,7 @@
             <td>{{hostvars[host]['expire_days']|default("0")}}</td>
             {% endif %}
         </tr>
+{% endif %}
 {% endfor %}
     </tbody>
 </table>
