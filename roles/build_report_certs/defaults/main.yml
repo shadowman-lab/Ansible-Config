@@ -1,6 +1,0 @@
-email_from: tower@shadowman.dev
-to_emails: alex@shadowman.dev,tower@shadowman.dev
-email_to: "{{ to_emails.split(',') }}"
-sendemailreport: true
-num_days_to_warn: 60
-include_no_cert: 'False'
