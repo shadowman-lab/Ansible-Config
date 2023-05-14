@@ -1,0 +1,9 @@
+---
+- name: Test controller vars
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+    - name: Debug vars
+      ansible.builtin.debug:
+        msg: "Vars {{ awx_inventory_name }} and {{ controller_inventory_name }} and {{ tower_inventory_name }}"
