@@ -6,4 +6,4 @@
   tasks:
     - name: Debug vars
       ansible.builtin.debug:
-        msg: "Vars {{ awx_inventory_name }} and {{ controller_inventory_name }} and {{ tower_inventory_name }}"
+        msg: "Vars {{ awx_inventory_name }} and {{ tower_inventory_name }}"
