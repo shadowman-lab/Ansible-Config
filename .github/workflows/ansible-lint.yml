@@ -13,7 +13,7 @@ jobs:
 
     - name: Lint Ansible Playbook
       # replace "master" with any valid ref
-      uses: ansible/ansible-lint-action@main
+      uses: ansible/ansible-lint-action@v6.11.0
       # optional:
       # with:
       #   path: "playbooks/"  # <-- only one value is allowed
