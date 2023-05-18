@@ -1,0 +1,13 @@
+---
+- name: Controller test
+  hosts: localhost
+  gather_facts: false
+
+  tasks:
+
+    - name: Create Inventory 
+      ansible.controller.inventory:
+        organization: "Infrastructure"
+        name: "Test"
+        state: present
+        validate_certs: false
