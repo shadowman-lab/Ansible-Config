@@ -24,7 +24,7 @@
   community.general.redhat_subscription:
     state: present
     activationkey: "RHEL7"
-    org_id: Shadow_Man
+    org_id: Shadowman
     force_register: true
   when:
     - ansible_distribution_version is match("7.*")
@@ -35,7 +35,7 @@
   community.general.redhat_subscription:
     state: present
     activationkey: "RHEL8"
-    org_id: Shadow_Man
+    org_id: Shadowman
     force_register: true
   when:
     - ansible_distribution_version is match("8.*")
@@ -46,7 +46,7 @@
   community.general.redhat_subscription:
     state: present
     activationkey: "RHEL9"
-    org_id: Shadow_Man
+    org_id: Shadowman
   when:
     - ansible_distribution_version is match("9.*")
     - shadowman_provision_hypervisor | default('RHV') != "Azure"
