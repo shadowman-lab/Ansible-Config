@@ -1,4 +1,7 @@
 ---
+- name: Clean subscription manager
+  ansible.builtin.command: "subscription-manager clean"
+
 - name: Install Katello RPM for Satellite Server for RHEL 7
   ansible.builtin.yum:
     name: https://sat6.shadowman.dev/pub/katello-ca-consumer-latest.noarch.rpm
@@ -22,6 +25,7 @@
     state: present
     activationkey: "RHEL7"
     org_id: Shadow_Man
+    force_register: true
   when:
     - ansible_distribution_version is match("7.*")
     - shadowman_provision_hypervisor | default('RHV') != "Azure"
@@ -32,6 +36,7 @@
     state: present
     activationkey: "RHEL8"
     org_id: Shadow_Man
+    force_register: true
   when:
     - ansible_distribution_version is match("8.*")
     - shadowman_provision_hypervisor | default('RHV') != "Azure"
