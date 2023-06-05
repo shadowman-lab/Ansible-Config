@@ -20,7 +20,7 @@
 - name: Use Activation Key to Register RHEL7 Machine to Satellite
   community.general.redhat_subscription:
     state: present
-    activationkey: "RHEL7 Everything"
+    activationkey: "RHEL7"
     org_id: Shadow_Man
   when:
     - ansible_distribution_version is match("7.*")
