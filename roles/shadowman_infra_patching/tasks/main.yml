@@ -1,21 +1,4 @@
 ---
-- name: Ensure excluded config is fetched
-  ansible.builtin.fetch:
-    src: /etc/yum.conf.backup
-    dest: /tmp/yum.conf.backup
-    flat: true
-  check_mode: false
-  delegate_to: tower1.shadowman.dev
-  run_once: true
-
-- name: Ensure excluded config is copied
-  ansible.builtin.copy:
-    src: /tmp/yum.conf.backup
-    dest: /etc/yum.conf
-    owner: root
-    group: root
-    mode: '0644'
-
 - name: Upgrade all packages (dnf)
   ansible.builtin.dnf:
     name: '*'
@@ -29,20 +12,3 @@
   changed_when: result.rc == 1
   failed_when: result.rc > 1
   check_mode: false
-
-- name: Ensure clean config is fetched
-  ansible.builtin.fetch:
-    src: /etc/yum.conf.cleanbackup
-    dest: /tmp/yum.conf.cleanbackup
-    flat: true
-  check_mode: false
-  delegate_to: tower1.shadowman.dev
-  run_once: true
-
-- name: Restore regular config for AAP updates
-  ansible.builtin.copy:
-    src: /tmp/yum.conf.cleanbackup
-    dest: /etc/yum.conf
-    owner: root
-    group: root
-    mode: '0644'
