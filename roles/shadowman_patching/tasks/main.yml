@@ -1,6 +1,6 @@
 ---
-- name: Patch Linux
-  ansible.builtin.include_tasks: patch_linux.yml
+- name: Patch RHEL
+  ansible.builtin.include_tasks: patch_rhel.yml
   when: os is match("rhel.*")
 
 - name: Patch Windows
