@@ -64,18 +64,22 @@
     purge: true
   when: ansible_distribution_version is match("7.*")
 
-- name: Enable Repositories for RHEL 8
+- name: Enable Repositories for RHEL 8 when not using Azure base image
   community.general.rhsm_repository:
     name:
       - rhel-8-for-x86_64-appstream-rpms
       - rhel-8-for-x86_64-baseos-rpms
     purge: true
-  when: ansible_distribution_version is match("8.*")
+  when:
+    - ansible_distribution_version is match("8.*")
+    - shadowman_provision_hypervisor | default('RHV') != "Azure"
 
-- name: Enable Repositories for RHEL 8
+- name: Enable Repositories for RHEL 9 when not using Azure base image
   community.general.rhsm_repository:
     name:
       - rhel-9-for-x86_64-appstream-rpms
       - rhel-9-for-x86_64-baseos-rpms
     purge: true
-  when: ansible_distribution_version is match("9.*")
+  when:
+    - ansible_distribution_version is match("9.*")
+    - shadowman_provision_hypervisor | default('RHV') != "Azure"
