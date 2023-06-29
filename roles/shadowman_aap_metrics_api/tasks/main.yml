@@ -1,0 +1,18 @@
+---
+- name: Get host metrics
+  ansible.builtin.uri:
+    url: "https://{{ lookup('ansible.builtin.env', 'CONTROLLER_HOST') }}/api/v2/host_metrics/?last_automation__gte={{ ansible_date_time.year }}-{{ ansible_date_time.month }}-01%2000:00:00&last_automation__lte={{ ansible_date_time.year }}-{{ ansible_date_time.month }}-{{ ansible_date_time.day }}%20{{ ansible_date_time.time }}"
+    user: "{{ lookup('ansible.builtin.env', 'CONTROLLER_USERNAME') }}"
+    password: "{{ lookup('ansible.builtin.env', 'CONTROLLER_PASSWORD') }}"
+    force_basic_auth: true
+    status_code:
+      - 200
+  register: aapmetrics
+
+- name: Hosts Automated
+  ansible.builtin.debug:
+    msg: "{{ aapmetrics.json.count }}"
+
+- name: Display Host Automated Information
+  ansible.builtin.debug:
+    msg: "{{ aapmetrics.json.results }}"

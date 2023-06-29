@@ -1,0 +1,6 @@
+---
+- name: Pull AAP Metrics
+  hosts: localhost
+
+  roles:
+    - shadowman_aap_metrics_api
