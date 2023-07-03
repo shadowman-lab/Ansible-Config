@@ -13,7 +13,7 @@
 - name: Unregister this machine from Satellite
   community.general.redhat_subscription:
     state: absent
-    org_id: Shadow_Man
+    org_id: Shadowman
 
 - name: Remove from IDM
   ansible.builtin.command: "ipa-client-install --uninstall --unattended"
