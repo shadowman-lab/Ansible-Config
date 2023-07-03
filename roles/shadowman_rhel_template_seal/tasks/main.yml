@@ -15,15 +15,6 @@
     state: absent
     org_id: Shadowman
 
-- name: Delete host from Sat
-  redhat.satellite.host:
-    name: "{{ operating_system | lower }}updates.shadowman.dev"
-    username: "{{ username }}"
-    password: "{{ password }}"
-    server_url: "{{ server_url }}"
-    state: absent
-  delegate_to: localhost
-
 - name: Remove from IDM
   ansible.builtin.command: "ipa-client-install --uninstall --unattended"
   when: ansible_host != ''
