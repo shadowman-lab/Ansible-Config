@@ -1,6 +1,6 @@
 ---
 - name: Patch Servers based on environment and owner
-  hosts: tag_{{ env }}:&tag_{{ owner }}*
+  hosts: tag_{{ env }}:&tag_{{ owner.split('@')[0] }}*
 
   roles:
     - shadowman_patching
