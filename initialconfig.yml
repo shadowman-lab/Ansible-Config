@@ -11,6 +11,11 @@
         ansible_host: "{{ ip_addr }}"
       delegate_to: localhost
 
+    - name: Wait for connection on AWS
+      ansible.builtin.wait_for_connection:
+        timeout: 900
+      when: shadowman_provision_hypervisor | default('RHV') == "AWS"
+
     - name: Gather facts to work with remainder of playbook
       ansible.builtin.setup:
 
