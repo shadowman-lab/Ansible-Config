@@ -1,0 +1,7 @@
+---
+- name: Remove Windows User
+  hosts: "{{ vm_name | default('all')}}"
+  gather_facts: false
+
+  roles:
+    - shadowman_windows_user

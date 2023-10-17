@@ -1,0 +1,5 @@
+---
+- name: Ensure user is absent
+  ansible.windows.win_user:
+    name: "{{ usertodelete }}"
+    state: absent
