@@ -1,0 +1,8 @@
+---
+- name: Start EC2 Instances based on tag
+  amazon.aws.ec2_instance:
+    region: "{{ item }}"
+    filters:
+      "tag:owner": "{{ owner }}"
+      "tag:env": "{{ env }}"
+    state: started
