@@ -1,5 +1,5 @@
 ---
-- name: Start EC2 Instances based on tag
+- name: Start EC2 Instances based on tag in region {{ item }}
   amazon.aws.ec2_instance:
     region: "{{ item }}"
     filters:
