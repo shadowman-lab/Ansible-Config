@@ -1,7 +1,0 @@
-- name: AWS Scheduler for Parking
-  hosts: localhost
-  connection: local
-  gather_facts: false
-
-  roles:
-    - aws_schedule_parking

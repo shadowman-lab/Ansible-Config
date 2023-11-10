@@ -1,5 +1,0 @@
----
-- name: Loop over all ec2 regions
-  ansible.builtin.include_tasks:
-    file: start_ec2.yml
-  loop: "{{ ec2_regions }}"
