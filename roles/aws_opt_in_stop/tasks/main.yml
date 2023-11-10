@@ -1,6 +1,7 @@
 ---
 - name: Stop EC2 Instances based on tag
   amazon.aws.ec2_instance:
+    region: "{{ aws_region }}"
     filters:
       "tag:owner": "{{ owner }}"
       "tag:env": "{{ env }}"
