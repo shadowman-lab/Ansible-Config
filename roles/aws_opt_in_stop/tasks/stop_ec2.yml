@@ -6,3 +6,5 @@
       "tag:owner": "{{ owner }}"
       "tag:env": "{{ env }}"
     state: stopped
+  register: stopresult
+  failed_when: stopresult.msg != "You must include an image_id or image.id parameter to create an instance, or use a launch_template."
