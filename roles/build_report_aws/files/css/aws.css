@@ -2,7 +2,8 @@ p.hostname {
   color: #000000;
   font-weight: bolder;
   font-size: large;
-  text-align: center;
+  margin: auto;
+  width: 50%;
 }
 
 #subtable {
@@ -193,10 +194,7 @@ div#net_content {
 
 img.router_image {
     vertical-align: middle;
-    margin: 0 auto;
-    margin-left: auto;
-    margin-right: auto;
-    display: block;
+    padding: 0px 10px 10px 10px;
 }
 
 table.net_info {
