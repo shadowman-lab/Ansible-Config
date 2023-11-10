@@ -27,4 +27,4 @@
 
 - name: Set facts all info for {{ item }}
   ansible.builtin.set_fact:
-    all_ec2_regions: "{{ all_ec2_regions | default ([]) + [{ item | replace('-','_'): hostvars[inventory_hostname][item | replace('-','_')]}] }}"
+    all_ec2_regions: "{{ all_ec2_regions | default([]) + [{item | replace('-', '_'): hostvars[inventory_hostname][item | replace('-', '_')]}] }}"
