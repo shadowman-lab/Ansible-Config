@@ -4,4 +4,4 @@
   gather_facts: false
 
   roles:
-    - azure_schedule_parking
+    - aws_schedule_parking
