@@ -1,0 +1,7 @@
+- name: AWS Start VMs
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  roles:
+    - aws_opt_in_start
