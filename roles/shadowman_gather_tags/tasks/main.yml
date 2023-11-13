@@ -3,6 +3,7 @@
   community.vmware.vmware_vm_info:
     validate_certs: false
     show_tag: true
+    folder: "/Shadowman/vm/Discovered virtual machine"
     vm_type: "vm"
   register: vmware_info
 
