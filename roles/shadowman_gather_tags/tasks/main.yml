@@ -11,10 +11,6 @@
   azure.azcollection.azure_rm_virtualmachine_info:
   register: azure_info
 
-- name: Get AWS VM Info
-  amazon.aws.ec2_instance_info:
-  register: aws_info
-
 - name: Block for RHV
   block:
     - name: Login to RHV
