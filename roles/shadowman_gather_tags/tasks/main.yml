@@ -22,7 +22,7 @@
   loop: "{{ allregions.regions }}"
   loop_control:
     label: "{{ item.region_name }}"
-  register: azure_info
+  register: aws_info
 
 - name: Block for RHV
   block:
