@@ -1,0 +1,48 @@
+- name: Ensure Apache is installed
+  ansible.builtin.yum:
+    name: httpd
+    state: present
+
+- name: Ensure Apache is started
+  ansible.builtin.service:
+    name: httpd
+    state: started
+
+- name: Create HTML report
+  ansible.builtin.template:
+    src: report.j2
+    dest: "{{ file_path }}/tags.html"
+    owner: root
+    group: root
+    mode: '0644'
+  check_mode: false
+
+- name: Copy CSS over
+  ansible.builtin.copy:
+    src: "css"
+    dest: "{{ file_path }}"
+    directory_mode: true
+    owner: root
+    group: root
+    mode: '0644'
+  check_mode: false
+
+- name: Display link to Linux patch report
+  ansible.builtin.debug:
+    msg: "Please go to http://{{ ansible_host }}/tags.html"
+
+- name: Send Report via E-mail
+  community.general.mail:
+    host: "{{ EMAIL_HOST }}"
+    username: "{{ EMAIL_USERNAME }}"
+    password: "{{ EMAIL_PASSWORD }}"
+    port: "{{ EMAIL_PORT }}"
+    subject: "Tags Report"
+    body: "{{ lookup('template', 'report.j2') }}"
+    from: "{{ email_from }}"
+    to: "{{ email_to }}"
+    subtype: html
+  delegate_to: localhost
+  become: false
+  check_mode: false
+  when: sendemailreport

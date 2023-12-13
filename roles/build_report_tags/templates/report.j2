@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title> Tags Report </title>
+</head>
+<body>
+<center>
+<h1>Ansible Tags Report</h1>
+<style>
+@media print {
+   .noprint {
+        display: none !important;
+    }
+}
+</style>
+<div class="noprint">
+<button type="button" onclick="tableToCSV()">Download CSV</button>
+<input type="button" value="Print" onClick="window.print()">
+</div>
+</center>
+<table width = "100%" border = "1" cellpadding = "5" cellspacing = "5">
+    <thead>
+        <tr>
+            <th>Hostname</th>
+            <th>Tags</th>
+            <th>Hypervisor</th>
+        </tr>
+    </thead>
+    <tbody>
+{% if azure_info.vms is defined %}
+{% for azure_host in azure_info.vms %}
+        <tr>
+            <td>{{ azure_host.name }}</td>
+            <td>{{ azure_host.tags.owner | default('no owner') }},{{ azure_host.tags.environment | default('no environment') }},{{ azure_host.tags.operating_system | default('no operating system') }}</td>
+            <td>Azure</td>
+        </tr>
+{% endfor %}
+{% endif %}
+{% if rhv_info.ovirt_vms is defined %}
+{% for rhv_host in rhv_info.ovirt_vms %}
+        <tr>
+            <td>{{ rhv_host.name }}</td>
+            <td>{{ rhv_host | json_query('tags[*].name') | join(',') | default('no tags') }}</td>
+            <td>RHV</td>
+        </tr>
+{% endfor %}
+{% endif %}
+{% if vmware_info.virtual_machines is defined %}
+{% for vmware_host in vmware_info.virtual_machines %}
+        <tr>
+            <td>{{ vmware_host.guest_name }}</td>
+            <td>{{ vmware_host | json_query('tags[*].name') | join(',') | default('no tags') }}</td>
+            <td>VMWare</td>
+        </tr>
+{% endfor %}
+{% endif %}
+{% if aws_info.results is defined %}
+{% for aws_regions in aws_info.results %}
+{% if aws_regions.instances is defined %}
+{% for aws_host in aws_regions.instances %}
+        <tr>
+            <td>{{ aws_host.tags.Name }}</td>
+            <td>{{ aws_host.tags.owner | default('no owner') }},{{ aws_host.tags.env | default('no environment') }},{{ aws_host.tags.operating_system | default('no operating system') }}</td>
+            <td>AWS</td>
+        </tr>
+{% endfor %}
+{% endif %}
+{% endfor %}
+{% endif %}
+    </tbody>
+</table>
+<center><p>Created with Ansible</p></center>
+<script type="text/javascript">
+function tableToCSV() {
+
+    // Variable to store the final csv data
+    var csv_data = [];
+
+    // Get each row data
+    var rows = document.getElementsByTagName('tr');
+    for (var i = 0; i < rows.length; i++) {
+
+        // Get each column data
+        var cols = rows[i].querySelectorAll('td,th');
+
+        // Stores each csv row data
+        var csvrow = [];
+        for (var j = 0; j < (cols.length); j++) {
+
+            // Get the text data of each cell of
+            // a row and push it to csvrow
+            if ( j == cols.length-1 && i==0){}
+            else{
+            csvrow.push(cols[j].textContent.replace(/,/g, " "));
+            }
+
+       }
+       csv_data.push(csvrow.join(","));
+}
+
+    // combine each row data with new line character
+    csv_data = csv_data.join('\n');
+
+    // Call this function to download csv file
+    downloadCSVFile(csv_data);
+}
+function downloadCSVFile(csv_data) {
+
+    // Create CSV file object and feed our
+    // csv_data into it
+    CSVFile = new Blob([csv_data], { type: "text/csv" });
+
+    // Create to temporary link to initiate
+    // download process
+    var temp_link = document.createElement('a');
+    var todayDate = new Date().toISOString().slice(0, 10);
+
+    // Download csv file
+    temp_link.download = "tagsreport-" + todayDate + ".csv";
+    var url = window.URL.createObjectURL(CSVFile);
+    temp_link.href = url;
+
+    // This link should not be displayed
+    temp_link.style.display = "none";
+    document.body.appendChild(temp_link);
+
+    // Automatically click the link to trigger download
+    temp_link.click();
+    document.body.removeChild(temp_link);
+}
+</script>
+</body>
+</html>

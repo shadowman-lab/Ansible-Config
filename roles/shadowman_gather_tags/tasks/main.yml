@@ -11,6 +11,19 @@
   azure.azcollection.azure_rm_virtualmachine_info:
   register: azure_info
 
+- name: Get AWS regions
+  amazon.aws.aws_region_info:
+    region: "us-east-2"
+  register: allregions
+
+- name: Get AWS VM Info
+  amazon.aws.ec2_instance_info:
+    region: "{{ item.region_name }}"
+  loop: "{{ allregions.regions }}"
+  loop_control:
+    label: "{{ item.region_name }}"
+  register: azure_info
+
 - name: Block for RHV
   block:
     - name: Login to RHV
