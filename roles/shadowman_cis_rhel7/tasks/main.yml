@@ -18474,8 +18474,6 @@
 
 - name: Unit Socket Exists - autofs.socket
   command: systemctl list-unit-files autofs.socket
-  args:
-    warn: false
   register: socket_file_exists
   changed_when: false
   ignore_errors: true
@@ -20177,8 +20175,6 @@
 
 - name: Unit Socket Exists - avahi-daemon.socket
   command: systemctl list-unit-files avahi-daemon.socket
-  args:
-    warn: false
   register: socket_file_exists
   changed_when: false
   ignore_errors: true
@@ -21118,8 +21114,6 @@
 
 - name: Unit Socket Exists - rpcbind.socket
   command: systemctl list-unit-files rpcbind.socket
-  args:
-    warn: false
   register: socket_file_exists
   changed_when: false
   ignore_errors: true
@@ -21489,8 +21483,6 @@
 
 - name: Unit Socket Exists - rsyncd.socket
   command: systemctl list-unit-files rsyncd.socket
-  args:
-    warn: false
   register: socket_file_exists
   changed_when: false
   ignore_errors: true

@@ -877,8 +877,6 @@
 
 - name: Read signatures in GPG key
   command: gpg --show-keys --with-fingerprint --with-colons "/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release"
-  args:
-    warn: false
   changed_when: false
   register: gpg_fingerprints
   check_mode: false
@@ -1880,8 +1878,6 @@
 
 - name: Unit Socket Exists - debug-shell.socket
   command: systemctl list-unit-files debug-shell.socket
-  args:
-    warn: false
   register: socket_file_exists
   changed_when: false
   ignore_errors: true
@@ -7575,8 +7571,6 @@
 
 - name: Unit Socket Exists - systemd-coredump.socket
   command: systemctl list-unit-files systemd-coredump.socket
-  args:
-    warn: false
   register: socket_file_exists
   changed_when: false
   ignore_errors: true
@@ -8016,8 +8010,6 @@
 
 - name: Unit Socket Exists - kdump.socket
   command: systemctl list-unit-files kdump.socket
-  args:
-    warn: false
   register: socket_file_exists
   changed_when: false
   ignore_errors: true

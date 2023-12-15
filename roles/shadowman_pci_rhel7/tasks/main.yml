@@ -110,8 +110,6 @@
 - name: Read files with incorrect hash
   command: rpm -Va --nodeps --nosize --nomtime --nordev --nocaps --nolinkto --nouser
     --nogroup --nomode --noghost --noconfig
-  args:
-    warn: false
   register: files_with_incorrect_hash
   changed_when: false
   failed_when: files_with_incorrect_hash.rc > 1
@@ -139,8 +137,6 @@
 
 - name: Create list of packages
   command: rpm -qf "{{ item }}"
-  args:
-    warn: false
   with_items: '{{ files_with_incorrect_hash.stdout_lines | map(''regex_findall'',
     ''^[.]+[5]+.* (\/.*)'', ''\1'') | map(''join'') | select(''match'', ''(\/.*)'')
     | list | unique }}'
@@ -172,8 +168,6 @@
 
 - name: Reinstall packages of files with incorrect hash
   command: '{{ package_manager_reinstall_cmd }} ''{{ item }}'''
-  args:
-    warn: false
   with_items: '{{ list_of_packages.results | map(attribute=''stdout_lines'') | list
     | unique }}'
   when:
@@ -203,8 +197,6 @@
 - name: Read list of files with incorrect permissions
   command: rpm -Va --nodeps --nosignature --nofiledigest --nosize --nomtime --nordev
     --nocaps --nolinkto --nouser --nogroup
-  args:
-    warn: false
   register: files_with_incorrect_permissions
   failed_when: files_with_incorrect_permissions.rc > 1
   changed_when: false
@@ -232,8 +224,6 @@
 
 - name: Create list of packages
   command: rpm -qf "{{ item }}"
-  args:
-    warn: false
   with_items: '{{ files_with_incorrect_permissions.stdout_lines | map(''regex_findall'',
     ''^[.]+[M]+.* (\/.*)'', ''\1'') | map(''join'') | select(''match'', ''(\/.*)'')
     | list | unique }}'
@@ -264,8 +254,6 @@
 
 - name: Correct file permissions with RPM
   command: rpm --setperms '{{ item }}'
-  args:
-    warn: false
   with_items: '{{ list_of_packages.results | map(attribute=''stdout_lines'') | list
     | unique }}'
   when: (files_with_incorrect_permissions.stdout_lines | length > 0)
@@ -1104,8 +1092,6 @@
 
 - name: Read signatures in GPG key
   command: gpg --with-fingerprint --with-colons "/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release"
-  args:
-    warn: false
   changed_when: false
   register: gpg_fingerprints
   check_mode: false
@@ -9328,7 +9314,6 @@
     set -o pipefail
     find / -not \( -fstype afs -o -fstype ceph -o -fstype cifs -o -fstype smb3 -o -fstype smbfs -o -fstype sshfs -o -fstype ncpfs -o -fstype ncp -o -fstype nfs -o -fstype nfs4 -o -fstype gfs -o -fstype gfs2 -o -fstype glusterfs -o -fstype gpfs -o -fstype pvfs2 -o -fstype ocfs2 -o -fstype lustre -o -fstype davfs -o -fstype fuse.sshfs \) -type f \( -perm -4000 -o -perm -2000 \) 2> /dev/null
   args:
-    warn: false
     executable: /bin/bash
   check_mode: false
   register: find_result

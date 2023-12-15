@@ -19302,8 +19302,6 @@
 
 - name: Unit Socket Exists - autofs.socket
   command: systemctl list-unit-files autofs.socket
-  args:
-    warn: false
   register: socket_file_exists
   changed_when: false
   ignore_errors: true
@@ -20967,8 +20965,6 @@
 
 - name: Unit Socket Exists - avahi-daemon.socket
   command: systemctl list-unit-files avahi-daemon.socket
-  args:
-    warn: false
   register: socket_file_exists
   changed_when: false
   ignore_errors: true
@@ -21673,8 +21669,6 @@
 
 - name: Unit Socket Exists - dhcpd.socket
   command: systemctl list-unit-files dhcpd.socket
-  args:
-    warn: false
   register: socket_file_exists
   changed_when: false
   ignore_errors: true
@@ -21741,8 +21735,6 @@
 
 - name: Unit Socket Exists - named.socket
   command: systemctl list-unit-files named.socket
-  args:
-    warn: false
   register: socket_file_exists
   changed_when: false
   ignore_errors: true
@@ -21809,8 +21801,6 @@
 
 - name: Unit Socket Exists - vsftpd.socket
   command: systemctl list-unit-files vsftpd.socket
-  args:
-    warn: false
   register: socket_file_exists
   changed_when: false
   ignore_errors: true
@@ -21877,8 +21867,6 @@
 
 - name: Unit Socket Exists - httpd.socket
   command: systemctl list-unit-files httpd.socket
-  args:
-    warn: false
   register: socket_file_exists
   changed_when: false
   ignore_errors: true
@@ -21942,8 +21930,6 @@
 
 - name: Unit Socket Exists - dovecot.socket
   command: systemctl list-unit-files dovecot.socket
-  args:
-    warn: false
   register: socket_file_exists
   changed_when: false
   ignore_errors: true
@@ -22056,8 +22042,6 @@
 
 - name: Unit Socket Exists - rpcbind.socket
   command: systemctl list-unit-files rpcbind.socket
-  args:
-    warn: false
   register: socket_file_exists
   changed_when: false
   ignore_errors: true
@@ -22118,8 +22102,6 @@
 
 - name: Unit Socket Exists - nfs-server.socket
   command: systemctl list-unit-files nfs-server.socket
-  args:
-    warn: false
   register: socket_file_exists
   changed_when: false
   ignore_errors: true
@@ -22331,8 +22313,6 @@
 
 - name: Unit Socket Exists - rsyncd.socket
   command: systemctl list-unit-files rsyncd.socket
-  args:
-    warn: false
   register: socket_file_exists
   changed_when: false
   ignore_errors: true
@@ -22474,8 +22454,6 @@
 
 - name: Unit Socket Exists - cups.socket
   command: systemctl list-unit-files cups.socket
-  args:
-    warn: false
   register: socket_file_exists
   changed_when: false
   ignore_errors: true
@@ -22539,8 +22517,6 @@
 
 - name: Unit Socket Exists - squid.socket
   command: systemctl list-unit-files squid.socket
-  args:
-    warn: false
   register: socket_file_exists
   changed_when: false
   ignore_errors: true
@@ -22598,8 +22574,6 @@
 
 - name: Unit Socket Exists - smb.socket
   command: systemctl list-unit-files smb.socket
-  args:
-    warn: false
   register: socket_file_exists
   changed_when: false
   ignore_errors: true
@@ -22657,8 +22631,6 @@
 
 - name: Unit Socket Exists - snmpd.socket
   command: systemctl list-unit-files snmpd.socket
-  args:
-    warn: false
   register: socket_file_exists
   changed_when: false
   ignore_errors: true
