@@ -60,12 +60,12 @@
       total_rules_count: "{{ rule_result | length }}"
       score: "{{ test_result['score']['#text'] }}%"
       rule_results_count:
-        notchecked: "{{ rule_result | json_query('@[?result==`notchecked`]') | length }}"
-        fixed: "{{ rule_result | json_query('@[?result==`fixed`]') | length }}"
-        error: "{{ rule_result | json_query('@[?result==`error`]') | length }}"
-        notapplicable: "{{ rule_result | json_query('@[?result==`notapplicable`]') | length }}"
-        informational: "{{ rule_result | json_query('@[?result==`informational`]') | length }}"
-        unknown: "{{ rule_result | json_query('@[?result==`unknown`]') | length }}"
+        # notchecked: "{{ rule_result | json_query('@[?result==`notchecked`]') | length }}"
+        # fixed: "{{ rule_result | json_query('@[?result==`fixed`]') | length }}"
+        # error: "{{ rule_result | json_query('@[?result==`error`]') | length }}"
+        # notapplicable: "{{ rule_result | json_query('@[?result==`notapplicable`]') | length }}"
+        # informational: "{{ rule_result | json_query('@[?result==`informational`]') | length }}"
+        # unknown: "{{ rule_result | json_query('@[?result==`unknown`]') | length }}"
         fail: "{{ rule_result | json_query('@[?result==`fail`]') | length }}"
         pass: "{{ rule_result | json_query('@[?result==`pass`]') | length }}"
       severity_of_failed_rules_count:
