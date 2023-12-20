@@ -1,0 +1,8 @@
+---
+- name: Copy Powershell script to temp folder
+  ansible.windows.win_copy:
+    src: files/example.ps1
+    dest: C:/temp/example.ps1
+
+- name: Run Powershell script
+  ansible.windows.win_command: "powershell.exe -ExecutionPolicy ByPass -File C:/temp/example.ps1"
