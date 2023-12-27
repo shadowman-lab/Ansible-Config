@@ -3,13 +3,13 @@
 - name: "HIGH | WN16-00-000010 | Users with Administrative privileges must have separate accounts for administrative duties and normal operational tasks."
   block:
       - name: "HIGH | WN16-00-000010 | AUDIT | Users with Administrative privileges must have separate accounts for administrative duties and normal operational tasks."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_00_000010_audit
         check_mode: no
         changed_when: no
 
       - name: "HIGH | WN16-00-000010 | PATCH | Users with Administrative privileges must have separate accounts for administrative duties and normal operational tasks."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_00_000010
@@ -24,13 +24,13 @@
 - name: "HIGH | WN16-DC-000010 | Only administrators responsible for the domain controller must have Administrator rights on the system."
   block:
       - name: "HIGH | WN16-DC-000010 | AUDIT | Only administrators responsible for the domain controller must have Administrator rights on the system."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_dc_000010_audit
         check_mode: no
         changed_when: no
 
       - name: "HIGH | WN16-DC-000010 | PATCH | Only administrators responsible for the domain controller must have Administrator rights on the system."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_dc_000010
@@ -47,13 +47,13 @@
 - name: "HIGH | WN16-MS-000010 | Only administrators responsible for the member server or standalone system must have Administrator rights on the system."
   block:
       - name: "HIGH | WN16-MS-000010 | AUDIT | Only administrators responsible for the member server or standalone system must have Administrator rights on the system."
-        win_shell: Get-LocalGroupMember -Name 'Administrators'
+        ansible.windows.win_shell: Get-LocalGroupMember -Name 'Administrators'
         register: wn16_ms_000010_audit
         check_mode: false
         changed_when: no
 
       - name: "HIGH | WN16-MS-000010 | AUDIT | Only administrators responsible for the member server or standalone system must have Administrator rights on the system."
-        debug:
+        ansible.builtin.debug:
             msg:
                 - The following users or groups have Administrator rights on this system
                 - "{{ wn16_ms_000010_audit.stdout.split('\n') }}"
@@ -71,13 +71,13 @@
 - name: "HIGH | WN16-00-000040 | Administrative accounts must not be used with applications that access the Internet, such as web browsers, or with potential Internet sources, such as email."
   block:
       - name: "HIGH | WN16-00-000040 | AUDIT | Administrative accounts must not be used with applications that access the Internet, such as web browsers, or with potential Internet sources, such as email."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_00_000040_audit
         check_mode: no
         changed_when: no
 
       - name: "HIGH | WN16-00-000040 | PATCH | Administrative accounts must not be used with applications that access the Internet, such as web browsers, or with potential Internet sources, such as email."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_00_000040
@@ -93,7 +93,7 @@
 - name: "HIGH | WN16-00-000110 | Systems must be maintained at a supported servicing level."
   block:
       - name: "HIGH | WN16-00-000110 | AUDIT | Systems must be maintained at a supported servicing level - OS Major Version."
-        win_reg_stat:
+        ansible.windows.win_reg_stat:
             path: HKLM:\Software\Microsoft\Windows NT\CurrentVersion\
             name: CurrentMajorVersionNumber
         register: wn16_00_000110_audit_currentmajorversionnumber
@@ -101,7 +101,7 @@
         changed_when: no
 
       - name: "HIGH | WN16-00-000110 | AUDIT | Systems must be maintained at a supported servicing level - OS Build (currentNumber)."
-        win_reg_stat:
+        ansible.windows.win_reg_stat:
             path: HKLM:\Software\Microsoft\Windows NT\CurrentVersion
             name: CurrentBuildNumber
         register: wn16_00_000110_audit_currentbuildnumber
@@ -109,7 +109,7 @@
         changed_when: no
 
       - name: "HIGH | WN16-00-000110 | AUDIT | Systems must be maintained at a supported servicing level - OS Release"
-        win_reg_stat:
+        ansible.windows.win_reg_stat:
             path: HKLM:\Software\Microsoft\Windows NT\CurrentVersion
             name: ReleaseId
         register: wn16_00_000110_audit_releaseid
@@ -117,7 +117,7 @@
         changed_when: no
 
       - name: "HIGH | WN16-00-000110 | AUDIT | Systems must be maintained at a supported servicing level - OS Build"
-        win_reg_stat:
+        ansible.windows.win_reg_stat:
             path: HKLM:\Software\Microsoft\Windows NT\CurrentVersion
             name: CurrentBuild
         register: wn16_00_000110_audit_currentbuild
@@ -138,13 +138,13 @@
       # mcaffee is the approved virus? McAfee VirusScan Enterprise has been replaced by McAfee Endpoint Security. Start your migration now. https://www.mcafee.com/enterprise/en-us/products/virusscan-enterprise.html
       # so guess we need to scan for the old and the new in case customers not migrated?
       - name: "HIGH | WN16-00-000120 | AUDIT | The Windows Server 2016 system must use an anti-virus program."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_00_000120_audit
         check_mode: no
         changed_when: no
 
       - name: "HIGH | WN16-00-000120 | PATCH | The Windows Server 2016 system must use an anti-virus program."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_00_000120
@@ -160,7 +160,7 @@
   block:
       # use facts or powershell to audit?
       - name: Get disk facts
-        win_disk_facts:
+        community.windows.win_disk_facts:
         #   - name: Output first disk size
         #     debug:
         # var: ansible_facts.disks[*].partitions[*].volumes
@@ -169,7 +169,7 @@
 
 
       - name: "HIGH | WN16-00-000150 | AUDIT | Local volumes must use a format that supports NTFS attributes."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_00_000150_audit
         check_mode: no
         changed_when: no
@@ -187,16 +187,16 @@
   # oval:mil.disa.stig.windows:tst:101900
   block:
       - name: "HIGH | WN16-AC-000090 | AUDIT | Windows Server 2016 reversible password encryption must be disabled."
-        win_shell: Get-LocalUser -Name * | Select-Object name,AllowReversiblePasswordEncryption
+        ansible.windows.win_shell: Get-LocalUser -Name * | Select-Object name,AllowReversiblePasswordEncryption
         register: wn16_ac_000090_audit
         check_mode: false
         # failed_when: wn16_ac_000090_audit
         changed_when: no
-      - debug:
+      - ansible.builtin.debug:
             var: wn16_ac_000090_audit.stdout_lines
 
       - name: "HIGH | WN16-AC-000090 | PATCH | Windows Server 2016 reversible password encryption must be disabled."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         # this would be on a DC however?
         # Get-ADUser -Filter * | Set-ADUser -AllowReversiblePasswordEncryption $false
         changed_when: no
@@ -213,13 +213,13 @@
 - name: "HIGH | WN16-DC-000070 | Permissions on the Active Directory data files must only allow System and Administrators access."
   block:
       - name: "HIGH | WN16-DC-000070 | AUDIT | Permissions on the Active Directory data files must only allow System and Administrators access."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_dc_000070_audit
         check_mode: no
         changed_when: no
 
       - name: "HIGH | WN16-DC-000070 | PATCH | Permissions on the Active Directory data files must only allow System and Administrators access."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
 
   when:
@@ -236,13 +236,13 @@
 - name: "HIGH | WN16-DC-000080 | The Active Directory SYSVOL directory must have the proper access control permissions."
   block:
       - name: "HIGH | WN16-DC-000080 | AUDIT | The Active Directory SYSVOL directory must have the proper access control permissions."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_dc_000080_audit
         check_mode: no
         changed_when: no
 
       - name: "HIGH | WN16-DC-000080 | PATCH | The Active Directory SYSVOL directory must have the proper access control permissions."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
 
   when:
@@ -259,13 +259,13 @@
 - name: "HIGH | WN16-DC-000090 | Active Directory Group Policy objects must have proper access control permissions."
   block:
       - name: "HIGH | WN16-DC-000090 | AUDIT | Active Directory Group Policy objects must have proper access control permissions."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_dc_000090_audit
         check_mode: no
         changed_when: no
 
       - name: "HIGH | WN16-DC-000090 | PATCH | Active Directory Group Policy objects must have proper access control permissions."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
 
   when:
@@ -282,13 +282,13 @@
 - name: "HIGH | WN16-DC-000100 | The Active Directory Domain Controllers Organizational Unit (OU) object must have the proper access control permissions."
   block:
       - name: "HIGH | WN16-DC-000100 | AUDIT | The Active Directory Domain Controllers Organizational Unit (OU) object must have the proper access control permissions."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_dc_000100_audit
         check_mode: no
         changed_when: no
 
       - name: "HIGH | WN16-DC-000100 | PATCH | The Active Directory Domain Controllers Organizational Unit (OU) object must have the proper access control permissions."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
 
   when:
@@ -305,13 +305,13 @@
 - name: "HIGH | WN16-DC-000110 | Domain-created Active Directory Organizational Unit (OU) objects must have proper access control permissions."
   block:
       - name: "HIGH | WN16-DC-000110 | AUDIT | Domain-created Active Directory Organizational Unit (OU) objects must have proper access control permissions."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_dc_000110_audit
         check_mode: no
         changed_when: no
 
       - name: "HIGH | WN16-DC-000110 | PATCH | Domain-created Active Directory Organizational Unit (OU) objects must have proper access control permissions."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_dc_000110
@@ -327,13 +327,13 @@
 - name: "HIGH | WN16-DC-000150 | Directory data (outside the root DSE) of a non-public directory must be configured to prevent anonymous access."
   block:
       - name: "HIGH | WN16-DC-000150 | AUDIT | Directory data (outside the root DSE) of a non-public directory must be configured to prevent anonymous access."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_dc_000150_audit
         check_mode: no
         changed_when: no
 
       - name: "HIGH | WN16-DC-000150 | PATCH | Directory data (outside the root DSE) of a non-public directory must be configured to prevent anonymous access."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
 
   when:
@@ -350,7 +350,7 @@
 - name: "HIGH | WN16-MS-000120 | Windows Server 2016 must be running Credential Guard on domain-joined member servers."
   block:
       - name: "HIGH | WN16-MS-000120 | PATCH | Windows Server 2016 must be running Credential Guard on domain-joined member servers."
-        win_regedit:
+        ansible.windows.win_regedit:
             path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard
             state: present
             value: "{{ item }}"
@@ -375,7 +375,7 @@
       - needstesting
 
 - name: "HIGH | WN16-CC-000250 | AutoPlay must be turned off for non-volume devices."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\Software\Policies\Microsoft\Windows\Explorer
       state: present
       value: NoAutoplayfornonVolume
@@ -389,7 +389,7 @@
       - tested
 
 - name: "HIGH | WN16-CC-000260 | The default AutoRun behavior must be configured to prevent AutoRun commands."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer
       state: present
       value: NoAutorun
@@ -405,7 +405,7 @@
       - tested
 
 - name: "HIGH | WN16-CC-000270 | AutoPlay must be disabled for all drives."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer
       state: present
       name: NoDriveTypeAutoRun
@@ -421,7 +421,7 @@
       - tested
 
 - name: "HIGH | WN16-CC-000460 | The Windows Installer Always install with elevated privileges option must be disabled."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\Software\Policies\Microsoft\Windows\Installer
       state: present
       value: AlwaysInstallElevated
@@ -437,7 +437,7 @@
       - tested
 
 - name: "HIGH | WN16-CC-000500 | The Windows Remote Management (WinRM) client must not use Basic authentication."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\Software\Policies\Microsoft\Windows\WinRM\Client
       state: present
       value: AllowBasic
@@ -453,7 +453,7 @@
       - tested
 
 - name: "HIGH | WN16-CC-000530 | The Windows Remote Management (WinRM) service must not use Basic authentication."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\Software\Policies\Microsoft\Windows\WinRM\Service
       state: present
       value: AllowBasic
@@ -471,13 +471,13 @@
 - name: "HIGH | WN16-DC-000290 | Domain Controller PKI certificates must be issued by the DoD PKI or an approved External Certificate Authority (ECA)."
   block:
       - name: "HIGH | WN16-DC-000290 | AUDIT | Domain Controller PKI certificates must be issued by the DoD PKI or an approved External Certificate Authority (ECA)."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_dc_000290_audit
         check_mode: no
         changed_when: no
 
       - name: "HIGH | WN16-DC-000290 | PATCH | Domain Controller PKI certificates must be issued by the DoD PKI or an approved External Certificate Authority (ECA)."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
 
   when:
@@ -494,13 +494,13 @@
 - name: "HIGH | WN16-DC-000300 | PKI certificates associated with user accounts must be issued by the DoD PKI or an approved External Certificate Authority (ECA)."
   block:
       - name: "HIGH | WN16-DC-000300 | AUDIT | PKI certificates associated with user accounts must be issued by the DoD PKI or an approved External Certificate Authority (ECA)."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_dc_000300_audit
         check_mode: no
         changed_when: no
 
       - name: "HIGH | WN16-DC-000300 | PATCH | PKI certificates associated with user accounts must be issued by the DoD PKI or an approved External Certificate Authority (ECA)."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_dc_000300
@@ -513,7 +513,7 @@
       - notest
 
 - name: "HIGH | WN16-SO-000020 | Local accounts with blank passwords must be restricted to prevent access from the network."
-  win_regedit:
+  ansible.windows.win_regedit:
       key: HKLM:\System\CurrentControlSet\Control\Lsa
       value: LimitBlankPasswordUse
       data: 1
@@ -529,7 +529,7 @@
 # odd one
 # https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-lsad/2a769a08-e023-459f-aebe-4fb3f595c0b7
 - name: "HIGH | WN16-SO-000250 | Anonymous SID/Name translation must not be allowed."
-  win_security_policy:
+  community.windows.win_security_policy:
       section: System Access
       key: LSAAnonymousNameLookup
       value: 0
@@ -542,7 +542,7 @@
       - CCI-000366
 
 - name: "HIGH | WN16-SO-000260 | Anonymous enumeration of Security Account Manager (SAM) accounts must not be allowed."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SYSTEM\CurrentControlSet\Control\Lsa
       state: present
       value: RestrictAnonymousSAM
@@ -560,7 +560,7 @@
 # emailed_disa.letterkenny.re.mbx.stig-customer-support-mailbox@mail.mil
 
 - name: "HIGH | WN16-SO-000270 | Anonymous enumeration of shares must not be allowed."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SYSTEM\CurrentControlSet\Control\Lsa
       state: present
       value: RestrictAnonymous
@@ -576,7 +576,7 @@
 # fails_openscap_borked_regkey_casesensitive
 
 - name: "HIGH | WN16-SO-000300 | Anonymous access to Named Pipes and Shares must be restricted."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\System\CurrentControlSet\Services\LanManServer\Parameters
       state: present
       value: restrictnullsessaccess
@@ -591,7 +591,7 @@
       - CI-001090
 
 - name: "HIGH | WN16-SO-000360 | Windows Server 2016 must be configured to prevent the storage of the LAN Manager hash of passwords."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SYSTEM\CurrentControlSet\Control\Lsa
       state: present
       value: NoLMHash
@@ -607,7 +607,7 @@
 # fails_openscap_borked_regkey_casesensitive
 
 - name: "HIGH | WN16-SO-000380 | The LAN Manager authentication level must be set to send NTLMv2 response only and to refuse LM and NTLM."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\System\CurrentControlSet\Control\Lsa
       state: present
       value: LmCompatibilityLevel
@@ -622,7 +622,7 @@
       - CCI-000366
 
 - name: "HIGH | WN16-UR-000030 | The Act as part of the operating system user right must not be assigned to any groups or accounts."
-  win_security_policy:
+  community.windows.win_security_policy:
       section: Privilege Rights
       key: SeTcbPrivilege
       value: ""
@@ -635,7 +635,7 @@
       - CCI-002235
 
 - name: "HIGH | WN16-UR-000090 | The Create a token object user right must not be assigned to any groups or accounts."
-  win_security_policy:
+  community.windows.win_security_policy:
       section: Privilege Rights
       key: SeCreateTokenPrivilege
       value: ""
@@ -652,7 +652,7 @@
 # emailed_disa.letterkenny.re.mbx.stig-customer-support-mailbox@mail.mil
 # SCC tool works
 - name: "HIGH | WN16-UR-000130 | The Debug programs user right must only be assigned to the Administrators group."
-  win_user_right:
+  ansible.windows.win_user_right:
       name: SeDebugPrivilege
       users: Administrators
       action: set

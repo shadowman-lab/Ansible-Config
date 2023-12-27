@@ -2,12 +2,12 @@
 - name: "LOW | WN16-00-000200 | Non-administrative accounts or groups must only have print permissions on printer shares."
   block:
       - name: "LOW | WN16-00-000200 | AUDIT | Non-administrative accounts or groups must only have print permissions on printer shares."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_00_000200_audit
         check_mode: no
         changed_when: no
       - name: "LOW | WN16-00-000200 | PATCH | Non-administrative accounts or groups must only have print permissions on printer shares."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_00_000200
@@ -19,12 +19,12 @@
 - name: "LOW | WN16-00-000450 | The time service must synchronize with an appropriate DoD time source."
   block:
       - name: "LOW | WN16-00-000450 | AUDIT | The time service must synchronize with an appropriate DoD time source."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_00_000450_audit
         check_mode: no
         changed_when: no
       - name: "LOW | WN16-00-000450 | PATCH | The time service must synchronize with an appropriate DoD time source."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_00_000450
@@ -36,12 +36,12 @@
 - name: "LOW | WN16-DC-000160 | The directory service must be configured to terminate LDAP-based network connections to the directory server after 5 minutes of inactivity."
   block:
       - name: "LOW | WN16-DC-000160 | AUDIT | The directory service must be configured to terminate LDAP-based network connections to the directory server after 5 minutes of inactivity."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_dc_000160_audit
         check_mode: no
         changed_when: no
       - name: "LOW | WN16-DC-000160 | PATCH | The directory service must be configured to terminate LDAP-based network connections to the directory server after 5 minutes of inactivity."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_dc_000160
@@ -51,7 +51,7 @@
       - notest
 
 - name: "LOW | WN16-CC-000040 | Internet Protocol version 6 (IPv6) source routing must be configured to the highest protection level to prevent IP source routing."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip6\Parameters
       state: present
       value: DisableIPSourceRouting
@@ -64,7 +64,7 @@
       - xccdf_mil.disa.stig_rule_SV-88151r1_rule
 
 - name: "LOW | WN16-CC-000050 | Source routing must be configured to the highest protection level to prevent Internet Protocol (IP) source routing."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters
       state: present
       value: DisableIPSourceRouting
@@ -77,7 +77,7 @@
       - xccdf_mil.disa.stig_rule_SV-88153r1_rule
 
 - name: "LOW | WN16-CC-000060 | Windows Server 2016 must be configured to prevent Internet Control Message Protocol (ICMP) redirects from overriding Open Shortest Path First (OSPF)-generated routes."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip\Parameters
       state: present
       value: EnableICMPRedirect
@@ -90,7 +90,7 @@
       - xccdf_mil.disa.stig_rule_SV-88155r1_rule
 
 - name: "LOW | WN16-CC-000070 | Windows Server 2016 must be configured to ignore NetBIOS name release requests except from WINS servers."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SYSTEM\CurrentControlSet\Services\Netbt\Parameters
       state: present
       value: NoNameReleaseOnDemand
@@ -103,7 +103,7 @@
       - xccdf_mil.disa.stig_rule_SV-88157r1_rule
 
 - name: "LOW | WN16-CC-000240 | The Application Compatibility Program Inventory must be prevented from collecting data and sending the information to Microsoft."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\AppCompat
       state: present
       value: DisableInventory
@@ -118,12 +118,12 @@
 - name: "LOW | WN16-CC-000350 | Turning off File Explorer heap termination on corruption must be disabled."
   block:
       - name: "LOW | WN16-CC-000350 | AUDIT | Turning off File Explorer heap termination on corruption must be disabled."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_cc_000350_audit
         check_mode: no
         changed_when: no
       - name: "LOW | WN16-CC-000350 | PATCH | Turning off File Explorer heap termination on corruption must be disabled."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_cc_000350
@@ -133,7 +133,7 @@
       - notest
 
 - name: "LOW | WN16-SO-000160 | The Windows dialog box title for the legal banner must be configured with the appropriate text."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
       state: present
       value: LegalNoticeCaption
@@ -149,12 +149,12 @@
 - name: "LOW | WN16-SO-000450 | The default permissions of global system objects must be strengthened."
   block:
       - name: "LOW | WN16-SO-000450 | AUDIT | The default permissions of global system objects must be strengthened."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_so_000450_audit
         check_mode: no
         changed_when: no
       - name: "LOW | WN16-SO-000450 | PATCH | The default permissions of global system objects must be strengthened."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_so_000450
@@ -166,12 +166,12 @@
 - name: "LOW | WN16-00-000470 | Secure Boot must be enabled on Windows Server 2016 systems."
   block:
       - name: "LOW | WN16-00-000470 | AUDIT | Secure Boot must be enabled on Windows Server 2016 systems."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_00_000470_audit
         check_mode: no
         changed_when: no
       - name: "LOW | WN16-00-000470 | PATCH | Secure Boot must be enabled on Windows Server 2016 systems."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_00_000470
@@ -183,12 +183,12 @@
 - name: "LOW | WN16-00-000480 | Windows 2016 systems must have Unified Extensible Firmware Interface (UEFI) firmware and be configured to run in UEFI mode, not Legacy BIOS."
   block:
       - name: "LOW | WN16-00-000480 | AUDIT | Windows 2016 systems must have Unified Extensible Firmware Interface (UEFI) firmware and be configured to run in UEFI mode, not Legacy BIOS."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_00_000480_audit
         check_mode: no
         changed_when: no
       - name: "LOW | WN16-00-000480 | PATCH | Windows 2016 systems must have Unified Extensible Firmware Interface (UEFI) firmware and be configured to run in UEFI mode, not Legacy BIOS."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_00_000480

@@ -6,14 +6,14 @@
 - name: "MEDIUM | WN16-00-000030 | Passwords for the built-in Administrator account must be changed at least every 60 days."
   block:
       - name: "MEDIUM | WN16-00-000030 | AUDIT - DOMAIN CONTROLLER | Passwords for the built-in Administrator account must be changed at least every 60 days."
-        win_shell: "Get-ADUser -Filter * -Property PasswordLastSet | Where SID -like S-1-5-21-*-500 | Where-Object {$_.PasswordLastSet -lt ((Get-Date).AddDays(-{{ wn16_00_000030_pass_age }}))} | Select Name,PasswordLastSet"
-        # win_shell: "Get-ADUser krbtgt -Property PasswordLastSet | Where-Object {$_.PasswordLastSet -lt ((Get-Date).AddDays(-{{ wn16_dc_000430_pass_age }}))} | Select-Object -ExpandProperty PasswordLastSet"
+        ansible.windows.win_shell: "Get-ADUser -Filter * -Property PasswordLastSet | Where SID -like S-1-5-21-*-500 | Where-Object {$_.PasswordLastSet -lt ((Get-Date).AddDays(-{{ wn16_00_000030_pass_age }}))} | Select Name,PasswordLastSet"
+        # ansible.windows.win_shell: "Get-ADUser krbtgt -Property PasswordLastSet | Where-Object {$_.PasswordLastSet -lt ((Get-Date).AddDays(-{{ wn16_dc_000430_pass_age }}))} | Select-Object -ExpandProperty PasswordLastSet"
         register: wn16_00_000030_audit_dc
         check_mode: no
         changed_when: wn16_00_000030_audit_dc.stdout != ""
         when: ansible_windows_domain_role == "Primary domain controller"
       - name: "MEDIUM | WN16-00-000030 | AUDIT - DOMAIN CONTROLLER | Passwords for the built-in Administrator account must be changed at least every 60 days."
-        debug:
+        ansible.builtin.debug:
             msg:
                 - "The following account appears to be the default admin account and the password does not meet the control specific age of {{ wn16_00_000030_pass_age }}"
                 - "{{ wn16_00_000030_audit_dc.stdout.split('\n') }}"
@@ -23,12 +23,12 @@
         changed_when: yes
 
       - name: "MEDIUM | WN16-00-000030 | AUDIT - DOMAIN MEMBERS OR STANDALONE | Passwords for the built-in Administrator account must be changed at least every 60 days."
-        win_shell: "Get-Localuser -Name * | Select * | Where SID -like S-1-5-21-*-500 | Where-Object {$_.PasswordLastSet -lt ((Get-Date).AddDays(-{{ wn16_00_000030_pass_age }}))} | Select Name,PasswordLastSet"
+        ansible.windows.win_shell: "Get-Localuser -Name * | Select * | Where SID -like S-1-5-21-*-500 | Where-Object {$_.PasswordLastSet -lt ((Get-Date).AddDays(-{{ wn16_00_000030_pass_age }}))} | Select Name,PasswordLastSet"
         register: wn16_00_000030_audit_dm_sa
         changed_when: wn16_00_000030_audit_dm_sa.stdout != ""
         when: not ansible_windows_domain_role == "Primary domain controller"
       - name: "MEDIUM | WN16-00-000030 | AUDIT - DOMAIN MEMBERS OR STANDALONE | Passwords for the built-in Administrator account must be changed at least every 60 days."
-        debug:
+        ansible.builtin.debug:
             msg:
                 - "The following account appears to be the default admin account and the password does not meet the control specific age of {{ wn16_00_000030_pass_age }}"
                 - "{{ wn16_00_000030_audit_dm_sa.stdout.split('\n') }}"
@@ -45,12 +45,12 @@
 - name: "MEDIUM | WN16-00-000050 | Members of the Backup Operators group must have separate accounts for backup duties and normal operational tasks."
   block:
       - name: "MEDIUM | WN16-00-000050 | AUDIT STAND-ALONE AND MEMBER SERVERS | Members of the Backup Operators group must have separate accounts for backup duties and normal operational tasks."
-        win_shell: Get-LocalGroupMember -Name 'Backup Operators'
+        ansible.windows.win_shell: Get-LocalGroupMember -Name 'Backup Operators'
         register: wn16_00_000050_audit
         check_mode: no
         changed_when: wn16_00_000050_audit.stdout != ""
       - name: "MEDIUM | WN16-00-000050 | AUDIT STAND-ALONE AND MEMBER SERVERS | Members of the Backup Operators group must have separate accounts for backup duties and normal operational tasks."
-        debug:
+        ansible.builtin.debug:
             msg:
                 - The accounts listed are members of the Backup Operators group
                 - "{{ wn16_00_000050_audit.stdout.split('\n') }}"
@@ -70,13 +70,13 @@
 - name: "MEDIUM | WN16-00-000060 | Manually managed application account passwords must be at least 15 characters in length."
   block:
       - name: "MEDIUM | WN16-00-000060 | AUDIT | Manually managed application account passwords must be at least 15 characters in length."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_00_000060_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-00-000060 | PATCH | Manually managed application account passwords must be at least 15 characters in length."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_00_000060
@@ -90,13 +90,13 @@
 - name: "MEDIUM | WN16-00-000070 | Manually managed application account passwords must be changed at least annually or when a system administrator with knowledge of the password leaves the organization."
   block:
       - name: "MEDIUM | WN16-00-000070 | AUDIT | Manually managed application account passwords must be changed at least annually or when a system administrator with knowledge of the password leaves the organization."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_00_000070_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-00-000070 | PATCH | Manually managed application account passwords must be changed at least annually or when a system administrator with knowledge of the password leaves the organization."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_00_000070
@@ -112,13 +112,13 @@
 - name: "MEDIUM | WN16-00-000080 | Shared user accounts must not be permitted on the system."
   block:
       - name: "MEDIUM | WN16-00-000080 | AUDIT | Shared user accounts must not be permitted on the system."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_00_000080_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-00-000080 | PATCH | Shared user accounts must not be permitted on the system."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_00_000080
@@ -132,13 +132,13 @@
 - name: "MEDIUM | WN16-00-000090 | Windows Server 2016 must employ a deny-all, permit-by-exception policy to allow the execution of authorized software programs."
   block:
       - name: "MEDIUM | WN16-00-000090 | AUDIT | Windows Server 2016 must employ a deny-all, permit-by-exception policy to allow the execution of authorized software programs."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_00_000090_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-00-000090 | PATCH | Windows Server 2016 must employ a deny-all, permit-by-exception policy to allow the execution of authorized software programs."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_00_000090
@@ -152,13 +152,13 @@
 - name: "MEDIUM | WN16-00-000100 | Windows Server 2016 domain-joined systems must have a Trusted Platform Module (TPM) enabled and ready for use."
   block:
       - name: "MEDIUM | WN16-00-000100 | AUDIT | Windows Server 2016 domain-joined systems must have a Trusted Platform Module (TPM) enabled and ready for use."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_00_000100_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-00-000100 | PATCH | Windows Server 2016 domain-joined systems must have a Trusted Platform Module (TPM) enabled and ready for use."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
         # Current hardware and virtual environments may not support virtualization-based security features, including Credential Guard, due to specific supporting requirements including a TPM, UEFI with Secure Boot, and the capability to run the Hyper-V feature within a virtual machine.
   when:
@@ -176,13 +176,13 @@
 - name: "MEDIUM | WN16-00-000140 | Servers must have a host-based intrusion detection or prevention system."
   block:
       - name: "MEDIUM | WN16-00-000140 | AUDIT | Servers must have a host-based intrusion detection or prevention system."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_00_000140_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-00-000140 | PATCH | Servers must have a host-based intrusion detection or prevention system."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_00_000140
@@ -198,13 +198,13 @@
 - name: "MEDIUM | WN16-00-000160 | Permissions for the system drive root directory usually C:\ must conform to minimum requirements."
   block:
       - name: "MEDIUM | WN16-00-000160 | AUDIT | Permissions for the system drive root directory usually C:\ must conform to minimum requirements."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_00_000160_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-00-000160 | PATCH | Permissions for the system drive root directory usually C:\ must conform to minimum requirements."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_00_000160
@@ -218,13 +218,13 @@
 - name: "MEDIUM | WN16-00-000170 | Permissions for program file directories must conform to minimum requirements."
   block:
       - name: "MEDIUM | WN16-00-000170 | AUDIT | Permissions for program file directories must conform to minimum requirements."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_00_000170_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-00-000170 | PATCH | Permissions for program file directories must conform to minimum requirements."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_00_000170
@@ -238,13 +238,13 @@
 - name: "MEDIUM | WN16-00-000180 | Permissions for the Windows installation directory must conform to minimum requirements."
   block:
       - name: "MEDIUM | WN16-00-000180 | AUDIT | Permissions for the Windows installation directory must conform to minimum requirements."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_00_000180_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-00-000180 | PATCH | Permissions for the Windows installation directory must conform to minimum requirements."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_00_000180
@@ -257,13 +257,13 @@
 - name: "MEDIUM | WN16-00-000190 | Default permissions for the HKEY_LOCAL_MACHINE registry hive must be maintained."
   block:
       - name: "MEDIUM | WN16-00-000190 | AUDIT | Default permissions for the HKEY_LOCAL_MACHINE registry hive must be maintained."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_00_000190_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-00-000190 | PATCH | Default permissions for the HKEY_LOCAL_MACHINE registry hive must be maintained."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_00_000190
@@ -277,13 +277,13 @@
 - name: "MEDIUM | WN16-00-000210 | Outdated or unused accounts must be removed from the system or disabled."
   block:
       - name: "MEDIUM | WN16-00-000210 | AUDIT | Outdated or unused accounts must be removed from the system or disabled."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_00_000210_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-00-000210 | PATCH | Outdated or unused accounts must be removed from the system or disabled."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_00_000210
@@ -296,14 +296,14 @@
 - name: "MEDIUM | WN16-00-000220 | Windows Server 2016 accounts must require passwords."
   block:
       - name: "MEDIUM | WN16-00-000220 | AUDIT - DOMAIN CONTROLLER | Windows Server 2016 accounts must require passwords."
-        win_shell: Get-Aduser -Filter "(Passwordnotrequired -eq 'True') -and (Enabled -eq 'True')" | Select Name,Passwordnotrequired,Enabled
+        ansible.windows.win_shell: Get-Aduser -Filter "(Passwordnotrequired -eq 'True') -and (Enabled -eq 'True')" | Select Name,Passwordnotrequired,Enabled
         register: wn16_00_000220_audit_dc
         check_mode: no
         changed_when: wn16_00_000220_audit_dc.stdout != ""
         when: ansible_windows_domain_role == "Primary domain controller"
 
       - name: "MEDIUM | WN16-00-000220 | AUDIT - DOMAIN CONTROLLER | Windows Server 2016 accounts must require passwords."
-        debug:
+        ansible.builtin.debug:
             msg:
                 - The accounts listed are do not require a password and are currently enabled
                 - "{{ wn16_00_000220_audit_dc.stdout.split('\n') }}"
@@ -313,14 +313,14 @@
         changed_when: yes
 
       - name: "MEDIUM | WN16-00-000220 | AUDIT - DOMAIN MEMBERS OR STANDALONE | Windows Server 2016 accounts must require passwords."
-        win_shell: Get-LocalUser | Where-Object {($_.PasswordRequired -ne 'True' -and $_.Enabled -eq 'True')} | Select Name,PasswordRequired,Enabled
+        ansible.windows.win_shell: Get-LocalUser | Where-Object {($_.PasswordRequired -ne 'True' -and $_.Enabled -eq 'True')} | Select Name,PasswordRequired,Enabled
         register: wn16_00_000220_audit_dm_sa
         check_mode: no
         changed_when: wn16_00_000220_audit_dm_sa.stdout != ""
         when: not ansible_windows_domain_role == "Primary domain controller"
 
       - name: "MEDIUM | WN16-00-000220 | AUDIT -DOMAIN MEMBERS OR STANDALONE | Windows Server 2016 accounts must require passwords."
-        debug:
+        ansible.builtin.debug:
             msg:
                 - The accounts listed are do not require a password and are currently enabled
                 - "{{ wn16_00_000220_audit_dm_sa.stdout.split('\n') }}"
@@ -337,13 +337,13 @@
 - name: "MEDIUM | WN16-00-000230 | Passwords must be configured to expire."
   block:
       - name: "MEDIUM | WN16-00-000230 | AUDIT | Passwords must be configured to expire."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_00_000230_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-00-000230 | PATCH | Passwords must be configured to expire."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_00_000230
@@ -356,13 +356,13 @@
 - name: "MEDIUM | WN16-00-000240 | System files must be monitored for unauthorized changes."
   block:
       - name: "MEDIUM | WN16-00-000240 | AUDIT | System files must be monitored for unauthorized changes."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_00_000240_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-00-000240 | PATCH | System files must be monitored for unauthorized changes."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_00_000240
@@ -376,7 +376,7 @@
 - name: "MEDIUM | WN16-00-000250 | Non-system-created file shares on a system must limit access to groups that require it."
   block:
       - name: "MEDIUM | WN16-00-000250 | AUDIT | Non-system-created file shares on a system must limit access to groups that require it."
-        win_shell: Get-SmbShare -special:$false
+        ansible.windows.win_shell: Get-SmbShare -special:$false
         register: wn16_00_000250_audit
         # failed_when: "'Get-SmbShare : No MSFT_SMBShare objects found with property 'Special' equal to 'False'' not in wn16_00_000250_audit.stdout"
         failed_when: "'No MSFT_SMBShare objects found' not in wn16_00_000250_audit.stderr"
@@ -385,7 +385,7 @@
         changed_when: no
 
       - name: "MEDIUM | WN16-00-000250 | AUDIT | Non-system-created file shares on a system must limit access to groups that require it."
-        debug:
+        ansible.builtin.debug:
             msg: "{{ wn16_00_000250_audit.stdout_lines }}"
         when: wn16_00_000250_audit is failed
   when:
@@ -400,7 +400,7 @@
 - name: "MEDIUM | WN16-00-000270 | Software certificate installation files must be removed from Windows Server 2016."
   block:
       - name: "MEDIUM | WN16-00-000270 | AUDIT | Software certificate installation files must be removed from Windows Server 2016."
-        win_find:
+        ansible.windows.win_find:
             paths: C:\
             patterns: ['*.p12', '*.pfx']
             hidden: true
@@ -412,7 +412,7 @@
         # do we need async; its very long running to search filesystems
 
       - name: "MEDIUM | WN16-00-000270 | AUDIT | Software certificate installation files must be removed from Windows Server 2016."
-        debug:
+        ansible.builtin.debug:
             msg: "{{ wn16_00_000270_audit.stdout_lines }}"
         when: wn16_00_000270_audit.stdout|default("") != ""
   when:
@@ -429,13 +429,13 @@
 - name: "MEDIUM | WN16-00-000280 | Systems requiring data at rest protections must employ cryptographic mechanisms to prevent unauthorized disclosure and modification of the information at rest."
   block:
       - name: "MEDIUM | WN16-00-000280 | AUDIT | Systems requiring data at rest protections must employ cryptographic mechanisms to prevent unauthorized disclosure and modification of the information at rest."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_00_000280_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-00-000280 | PATCH | Systems requiring data at rest protections must employ cryptographic mechanisms to prevent unauthorized disclosure and modification of the information at rest."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_00_000280
@@ -448,13 +448,13 @@
 - name: "MEDIUM | WN16-00-000290 | Protection methods such as TLS, encrypted VPNs, or IPsec must be implemented if the data owner has a strict requirement for ensuring data integrity and confidentiality is maintained at every step of the data transfer and handling process."
   block:
       - name: "MEDIUM | WN16-00-000290 | AUDIT | Protection methods such as TLS, encrypted VPNs, or IPsec must be implemented if the data owner has a strict requirement for ensuring data integrity and confidentiality is maintained at every step of the data transfer and handling process."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_00_000290_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-00-000290 | PATCH | Protection methods such as TLS, encrypted VPNs, or IPsec must be implemented if the data owner has a strict requirement for ensuring data integrity and confidentiality is maintained at every step of the data transfer and handling process."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_00_000290
@@ -467,13 +467,13 @@
 - name: "MEDIUM | WN16-00-000310 | A host-based firewall must be installed and enabled on the system."
   block:
       - name: "MEDIUM | WN16-00-000310 | AUDIT | A host-based firewall must be installed and enabled on the system."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_00_000310_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-00-000310 | PATCH | A host-based firewall must be installed and enabled on the system."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_00_000310
@@ -486,13 +486,13 @@
 - name: "MEDIUM | WN16-00-000320 | Windows Server 2016 must employ automated mechanisms to determine the state of system components with regard to flaw remediation using the following frequency: continuously, where Host Based Security System (HBSS) is used; 30 days, for any additional internal network scans not covered by HBSS; and annually, for external scans by Computer Network Defense Service Provider (CNDSP)."
   block:
       - name: "MEDIUM | WN16-00-000320 | AUDIT | Windows Server 2016 must employ automated mechanisms to determine the state of system components with regard to flaw remediation using the following frequency: continuously, where Host Based Security System (HBSS) is used; 30 days, for any additional internal network scans not covered by HBSS; and annually, for external scans by Computer Network Defense Service Provider (CNDSP)."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_00_000320_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-00-000320 | PATCH | Windows Server 2016 must employ automated mechanisms to determine the state of system components with regard to flaw remediation using the following frequency: continuously, where Host Based Security System (HBSS) is used; 30 days, for any additional internal network scans not covered by HBSS; and annually, for external scans by Computer Network Defense Service Provider (CNDSP)."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_00_000320
@@ -505,13 +505,13 @@
 - name: "MEDIUM | WN16-00-000330 | Windows Server 2016 must automatically remove or disable temporary user accounts after 72 hours."
   block:
       - name: "MEDIUM | WN16-00-000330 | AUDIT | Windows Server 2016 must automatically remove or disable temporary user accounts after 72 hours."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_00_000330_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-00-000330 | PATCH | Windows Server 2016 must automatically remove or disable temporary user accounts after 72 hours."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_00_000330
@@ -524,13 +524,13 @@
 - name: "MEDIUM | WN16-00-000340 | Windows Server 2016 must automatically remove or disable emergency accounts after the crisis is resolved or within 72 hours."
   block:
       - name: "MEDIUM | WN16-00-000340 | AUDIT | Windows Server 2016 must automatically remove or disable emergency accounts after the crisis is resolved or within 72 hours."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_00_000340_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-00-000340 | PATCH | Windows Server 2016 must automatically remove or disable emergency accounts after the crisis is resolved or within 72 hours."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_00_000340
@@ -541,7 +541,7 @@
       # how? prompt customer provided name list? scan against local account names for unknown ones?
 
 - name: "MEDIUM | WN16-00-000350 | The Fax Server role must not be installed."
-  win_feature:
+  ansible.windows.win_feature:
       name: Fax
       state: absent
   notify:
@@ -554,7 +554,7 @@
       - tested
 
 - name: "MEDIUM | WN16-00-000360 | The Microsoft FTP service must not be installed unless required."
-  win_feature:
+  ansible.windows.win_feature:
       name: Web-Ftp-Server
       state: absent
   notify:
@@ -567,7 +567,7 @@
       - tested
 
 - name: "MEDIUM | WN16-00-000370 | The Peer Name Resolution Protocol must not be installed."
-  win_feature:
+  ansible.windows.win_feature:
       name: PNRP
       state: absent
   notify:
@@ -580,7 +580,7 @@
       - tested
 
 - name: "MEDIUM | WN16-00-000380 | Simple TCP/IP Services must not be installed."
-  win_feature:
+  ansible.windows.win_feature:
       name: Simple-TCPIP
       state: absent
   when:
@@ -591,7 +591,7 @@
       - tested
 
 - name: "MEDIUM | WN16-00-000390 | The Telnet Client must not be installed."
-  win_feature:
+  ansible.windows.win_feature:
       name: Telnet-Client
       state: absent
   when:
@@ -602,7 +602,7 @@
       - tested
 
 - name: "MEDIUM | WN16-00-000400 | The TFTP Client must not be installed."
-  win_feature:
+  ansible.windows.win_feature:
       name: TFTP-Client
       state: absent
   when:
@@ -613,7 +613,7 @@
       - tested
 
 - name: "MEDIUM | WN16-00-000410 | The Server Message Block (SMB) v1 protocol must be uninstalled."
-  win_feature:
+  ansible.windows.win_feature:
       name: FS-SMB1
       state: absent
   when:
@@ -624,7 +624,7 @@
       - tested
 
 - name: "MEDIUM | WN16-00-000420 | Windows PowerShell 2.0 must not be installed."
-  win_feature:
+  ansible.windows.win_feature:
       name: PowerShell-V2
       state: absent
   when:
@@ -637,13 +637,13 @@
 - name: "MEDIUM | WN16-00-000430 | FTP servers must be configured to prevent anonymous logons."
   block:
       - name: "MEDIUM | WN16-00-000430 | AUDIT | FTP servers must be configured to prevent anonymous logons."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_00_000430_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-00-000430 | PATCH | FTP servers must be configured to prevent anonymous logons."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_00_000430
@@ -658,13 +658,13 @@
 - name: "MEDIUM | WN16-00-000440 | FTP servers must be configured to prevent access to the system drive."
   block:
       - name: "MEDIUM | WN16-00-000440 | AUDIT | FTP servers must be configured to prevent access to the system drive."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_00_000440_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-00-000440 | PATCH | FTP servers must be configured to prevent access to the system drive."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_00_000440
@@ -677,7 +677,7 @@
       - notest
 
 - name: "MEDIUM | WN16-AC-000020 | Windows Server 2016 must have the number of allowed bad logon attempts configured to three or less."
-  win_security_policy:
+  community.windows.win_security_policy:
       section: System Access
       key: LockoutBadCount
       value: "{{ wn16_ac_000020_lockoutbadcount }}"
@@ -691,13 +691,13 @@
 - name: "MEDIUM | WN16-AC-000030 | Windows Server 2016 must have the period of time before the bad logon counter is reset configured to 15 minutes or greater."
   block:
       - name: "MEDIUM | WN16-AC-000030 | AUDIT | Windows Server 2016 must have the period of time before the bad logon counter is reset configured to 15 minutes or greater."
-        assert:
+        ansible.builtin.assert:
             that: wn16_ac_000030_resetlockoutcount | int is version('15', '>=')
             fail_msg: "Windows Server 2016 must have the period of time before the bad logon counter is reset configured to 15 minutes or greater and variable wn16_ac_000030_resetlockoutcount is set to {{ wn16_ac_000030_resetlockoutcount }}"
         ignore_errors: yes
 
       - name: "MEDIUM | WN16-AC-000030 | PATCH | Windows Server 2016 must have the period of time before the bad logon counter is reset configured to 15 minutes or greater."
-        win_security_policy:
+        community.windows.win_security_policy:
             section: System Access
             key: ResetLockoutCount
             value: "{{ wn16_ac_000030_resetlockoutcount }}"
@@ -711,13 +711,13 @@
 - name: "MEDIUM | WN16-AC-000010 | Windows 2016 account lockout duration must be configured to 15 minutes or greater."
   block:
       - name: "MEDIUM | WN16-AC-000010 | AUDIT | Windows 2016 account lockout duration must be configured to 15 minutes or greater."
-        assert:
+        ansible.builtin.assert:
             that: wn16_ac_000010_lockoutduration | int is version('15', '<=')
             fail_msg: "Windows Server 2016 must have the period of time before the bad logon counter is reset configured to 15 minutes or greater and variable wn16_ac_000010_lockoutduration is set to {{ wn16_ac_000010_lockoutduration }}"
         ignore_errors: yes
 
       - name: "MEDIUM | WN16-AC-000010 | PATCH | Windows 2016 account lockout duration must be configured to 15 minutes or greater."
-        win_security_policy:
+        community.windows.win_security_policy:
             section: System Access
             key: LockoutDuration
             value: "{{ wn16_ac_000010_lockoutduration }}"
@@ -730,13 +730,13 @@
 - name: "MEDIUM | WN16-AC-000040 | Windows Server 2016 password history must be configured to 24 passwords remembered."
   block:
       - name: "MEDIUM | WN16-AC-000040 | AUDIT | Windows Server 2016 password history must be configured to 24 passwords remembered."
-        assert:
+        ansible.builtin.assert:
             that: wn16_ac_000040_passwordhistorysize | int is version('24', '>=')
             fail_msg: "Windows Server 2016 password history must be configured to 24 passwords remembered and variable wn16_ac_000040_passwordhistorysize is set to {{ wn16_ac_000040_passwordhistorysize }}"
         ignore_errors: yes
 
       - name: "MEDIUM | WN16-AC-000040 | PATCH | Windows Server 2016 password history must be configured to 24 passwords remembered."
-        win_security_policy:
+        community.windows.win_security_policy:
             section: System Access
             key: PasswordHistorySize
             value: "{{ wn16_ac_000040_passwordhistorysize }}"
@@ -749,13 +749,13 @@
 - name: "MEDIUM | WN16-AC-000050 | Windows Server 2016 maximum password age must be configured to 60 days or less."
   block:
       - name: "MEDIUM | WN16-AC-000050 |  AUDIT | Windows Server 2016 maximum password age must be configured to 60 days or less."
-        assert:
+        ansible.builtin.assert:
             that: wn16_ac_000050_maximumpasswordage | int is version('60', '<=')
             fail_msg: "Windows Server 2016 maximum password age must be configured to 60 days or less and variable wn16_ac_000050_maximumpasswordage is set to {{ wn16_ac_000050_maximumpasswordage }}"
         ignore_errors: yes
 
       - name: "MEDIUM | WN16-AC-000050 |  PATCH | Windows Server 2016 maximum password age must be configured to 60 days or less."
-        win_security_policy:
+        community.windows.win_security_policy:
             section: System Access
             key: MaximumPasswordAge
             value: "{{ wn16_ac_000050_maximumpasswordage }}"
@@ -768,13 +768,13 @@
 - name: "MEDIUM | WN16-AC-000060 | Windows Server 2016 minimum password age must be configured to at least one day."
   block:
       - name: "MEDIUM | WN16-AC-000060 | AUDIT | Windows Server 2016 minimum password age must be configured to at least one day."
-        assert:
+        ansible.builtin.assert:
             that: wn16_ac_000060_minimumpasswordage is version('1', '>=')
             fail_msg: "Windows Server 2016 minimum password age must be configured to at least one day and variable wn16_ac_000060_minimumpasswordage is set to {{ wn16_ac_000060_minimumpasswordage }}"
         ignore_errors: yes
 
       - name: "MEDIUM | WN16-AC-000060 | PATCH | Windows Server 2016 minimum password age must be configured to at least one day."
-        win_security_policy:
+        community.windows.win_security_policy:
             section: System Access
             key: MinimumPasswordAge
             value: "{{ wn16_ac_000060_minimumpasswordage }}"
@@ -787,13 +787,13 @@
 - name: "MEDIUM | WN16-AC-000070 | Windows Server 2016 minimum password length must be configured to 14 characters."
   block:
       - name: "MEDIUM | WN16-AC-000070 | AUDIT | Windows Server 2016 minimum password length must be configured to 14 characters."
-        assert:
+        ansible.builtin.assert:
             that: wn16_ac_000070_minimumpasswordlength is version('14', '>=')
             fail_msg: "Windows Server 2016 minimum password length must be configured to 14 characters and variable wn16_ac_000070_minimumpasswordlength is set to {{ wn16_ac_000070_minimumpasswordlength }} characters"
         ignore_errors: yes
 
       - name: "MEDIUM | WN16-AC-000070 | PATCH | Windows Server 2016 minimum password length must be configured to 14 characters."
-        win_security_policy:
+        community.windows.win_security_policy:
             section: System Access
             key: MinimumPasswordLength
             value: "{{ wn16_ac_000070_minimumpasswordlength }}"
@@ -804,7 +804,7 @@
       - SV-87973r2_rule
 
 - name: "MEDIUM | WN16-AC-000080 | Windows Server 2016 must have the built-in Windows password complexity policy enabled."
-  win_security_policy:
+  community.windows.win_security_policy:
       section: System Access
       key: PasswordComplexity
       value: 1
@@ -817,13 +817,13 @@
 - name: "MEDIUM | WN16-DC-000020 | Kerberos user logon restrictions must be enforced."
   block:
       - name: "MEDIUM | WN16-DC-000020 | AUDIT | Kerberos user logon restrictions must be enforced."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_dc_000020_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-DC-000020 | PATCH | Kerberos user logon restrictions must be enforced."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_dc_000020
@@ -834,13 +834,13 @@
 - name: "MEDIUM | WN16-DC-000030 | The Kerberos service ticket maximum lifetime must be limited to 600 minutes or less."
   block:
       - name: "MEDIUM | WN16-DC-000030 | AUDIT | The Kerberos service ticket maximum lifetime must be limited to 600 minutes or less."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_dc_000030_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-DC-000030 | PATCH | The Kerberos service ticket maximum lifetime must be limited to 600 minutes or less."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_dc_000030
@@ -851,13 +851,13 @@
 - name: "MEDIUM | WN16-DC-000040 | The Kerberos user ticket lifetime must be limited to 10 hours or less."
   block:
       - name: "MEDIUM | WN16-DC-000040 | AUDIT | The Kerberos user ticket lifetime must be limited to 10 hours or less."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_dc_000040_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-DC-000040 | PATCH | The Kerberos user ticket lifetime must be limited to 10 hours or less."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_dc_000040
@@ -868,13 +868,13 @@
 - name: "MEDIUM | WN16-DC-000050 | The Kerberos policy user ticket renewal maximum lifetime must be limited to seven days or less."
   block:
       - name: "MEDIUM | WN16-DC-000050 | AUDIT | The Kerberos policy user ticket renewal maximum lifetime must be limited to seven days or less."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_dc_000050_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-DC-000050 | PATCH | The Kerberos policy user ticket renewal maximum lifetime must be limited to seven days or less."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_dc_000050
@@ -885,13 +885,13 @@
 - name: "MEDIUM | WN16-DC-000060 | The computer clock synchronization tolerance must be limited to 5 minutes or less."
   block:
       - name: "MEDIUM | WN16-DC-000060 | AUDIT | The computer clock synchronization tolerance must be limited to 5 minutes or less."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_dc_000060_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-DC-000060 | PATCH | The computer clock synchronization tolerance must be limited to 5 minutes or less."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_dc_000060
@@ -902,13 +902,13 @@
 - name: "MEDIUM | WN16-DC-000120 | Data files owned by users must be on a different logical partition from the directory server data files."
   block:
       - name: "MEDIUM | WN16-DC-000120 | AUDIT | Data files owned by users must be on a different logical partition from the directory server data files."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_dc_000120_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-DC-000120 | PATCH | Data files owned by users must be on a different logical partition from the directory server data files."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_dc_000120
@@ -919,13 +919,13 @@
 - name: "MEDIUM | WN16-DC-000130 | Domain controllers must run on a machine dedicated to that function."
   block:
       - name: "MEDIUM | WN16-DC-000130 | AUDIT | Domain controllers must run on a machine dedicated to that function."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_dc_000130_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-DC-000130 | PATCH | Domain controllers must run on a machine dedicated to that function."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_dc_000130
@@ -936,13 +936,13 @@
 - name: "MEDIUM | WN16-DC-000140 | Separate, NSA-approved (Type 1) cryptography must be used to protect the directory data in transit for directory service implementations at a classified confidentiality level when replication data traverses a network cleared to a lower level than the data."
   block:
       - name: "MEDIUM | WN16-DC-000140 | AUDIT | Separate, NSA-approved (Type 1) cryptography must be used to protect the directory data in transit for directory service implementations at a classified confidentiality level when replication data traverses a network cleared to a lower level than the data."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_dc_000140_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-DC-000140 | PATCH | Separate, NSA-approved (Type 1) cryptography must be used to protect the directory data in transit for directory service implementations at a classified confidentiality level when replication data traverses a network cleared to a lower level than the data."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_dc_000140
@@ -953,13 +953,13 @@
 - name: "MEDIUM | WN16-DC-000170 | Active Directory Group Policy objects must be configured with proper audit settings."
   block:
       - name: "MEDIUM | WN16-DC-000170 | AUDIT | Active Directory Group Policy objects must be configured with proper audit settings."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_dc_000170_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-DC-000170 | PATCH | Active Directory Group Policy objects must be configured with proper audit settings."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_dc_000170
@@ -970,13 +970,13 @@
 - name: "MEDIUM | WN16-DC-000180 | The Active Directory Domain object must be configured with proper audit settings."
   block:
       - name: "MEDIUM | WN16-DC-000180 | AUDIT | The Active Directory Domain object must be configured with proper audit settings."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_dc_000180_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-DC-000180 | PATCH | The Active Directory Domain object must be configured with proper audit settings."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_dc_000180
@@ -987,13 +987,13 @@
 - name: "MEDIUM | WN16-DC-000190 | The Active Directory Infrastructure object must be configured with proper audit settings."
   block:
       - name: "MEDIUM | WN16-DC-000190 | AUDIT | The Active Directory Infrastructure object must be configured with proper audit settings."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_dc_000190_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-DC-000190 | PATCH | The Active Directory Infrastructure object must be configured with proper audit settings."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_dc_000190
@@ -1004,13 +1004,13 @@
 - name: "MEDIUM | WN16-DC-000200 | The Active Directory Domain Controllers Organizational Unit (OU) object must be configured with proper audit settings."
   block:
       - name: "MEDIUM | WN16-DC-000200 | AUDIT | The Active Directory Domain Controllers Organizational Unit (OU) object must be configured with proper audit settings."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_dc_000200_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-DC-000200 | PATCH | The Active Directory Domain Controllers Organizational Unit (OU) object must be configured with proper audit settings."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_dc_000200
@@ -1021,13 +1021,13 @@
 - name: "MEDIUM | WN16-DC-000210 | The Active Directory AdminSDHolder object must be configured with proper audit settings."
   block:
       - name: "MEDIUM | WN16-DC-000210 | AUDIT | The Active Directory AdminSDHolder object must be configured with proper audit settings."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_dc_000210_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-DC-000210 | PATCH | The Active Directory AdminSDHolder object must be configured with proper audit settings."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_dc_000210
@@ -1038,13 +1038,13 @@
 - name: "MEDIUM | WN16-DC-000220 | The Active Directory RID Manager$ object must be configured with proper audit settings."
   block:
       - name: "MEDIUM | WN16-DC-000220 | AUDIT | The Active Directory RID Manager$ object must be configured with proper audit settings."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_dc_000220_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-DC-000220 | PATCH | The Active Directory RID Manager$ object must be configured with proper audit settings."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_dc_000220
@@ -1055,13 +1055,13 @@
 - name: "MEDIUM | WN16-AU-000010 | Audit records must be backed up to a different system or media than the system being audited."
   block:
       - name: "MEDIUM | WN16-AU-000010 | AUDIT | Audit records must be backed up to a different system or media than the system being audited."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_au_000010_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-AU-000010 | PATCH | Audit records must be backed up to a different system or media than the system being audited."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_au_000010
@@ -1074,13 +1074,13 @@
 - name: "MEDIUM | WN16-AU-000020 | Windows Server 2016 must, at a minimum, off-load audit records of interconnected systems in real time and off-load standalone systems weekly."
   block:
       - name: "MEDIUM | WN16-AU-000020 | AUDIT | Windows Server 2016 must, at a minimum, off-load audit records of interconnected systems in real time and off-load standalone systems weekly."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_au_000020_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-AU-000020 | PATCH | Windows Server 2016 must, at a minimum, off-load audit records of interconnected systems in real time and off-load standalone systems weekly."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_au_000020
@@ -1094,13 +1094,13 @@
 - name: "MEDIUM | WN16-AU-000030 | Permissions for the Application event log must prevent access by non-privileged accounts."
   block:
       - name: "MEDIUM | WN16-AU-000030 | AUDIT | Permissions for the Application event log must prevent access by non-privileged accounts."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_au_000030_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-AU-000030 | PATCH | Permissions for the Application event log must prevent access by non-privileged accounts."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_au_000030
@@ -1113,13 +1113,13 @@
 - name: "MEDIUM | WN16-AU-000040 | Permissions for the Security event log must prevent access by non-privileged accounts."
   block:
       - name: "MEDIUM | WN16-AU-000040 | AUDIT | Permissions for the Security event log must prevent access by non-privileged accounts."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_au_000040_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-AU-000040 | PATCH | Permissions for the Security event log must prevent access by non-privileged accounts."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_au_000040
@@ -1131,13 +1131,13 @@
 - name: "MEDIUM | WN16-AU-000050 | Permissions for the System event log must prevent access by non-privileged accounts."
   block:
       - name: "MEDIUM | WN16-AU-000050 | AUDIT | Permissions for the System event log must prevent access by non-privileged accounts."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_au_000050_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-AU-000050 | PATCH | Permissions for the System event log must prevent access by non-privileged accounts."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_au_000050
@@ -1149,13 +1149,13 @@
 - name: "MEDIUM | WN16-AU-000060 | Event Viewer must be protected from unauthorized modification and deletion."
   block:
       - name: "MEDIUM | WN16-AU-000060 | AUDIT | Event Viewer must be protected from unauthorized modification and deletion."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_au_000060_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-AU-000060 | PATCH | Event Viewer must be protected from unauthorized modification and deletion."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_au_000060
@@ -1167,13 +1167,13 @@
 - name: "MEDIUM | WN16-AU-000070 | Windows Server 2016 must be configured to audit Account Logon - Credential Validation successes."
   block:
       - name: "MEDIUM | WN16-AU-000070 | AUDIT | Windows Server 2016 must be configured to audit Account Logon - Credential Validation successes."
-        win_shell: AuditPol /get /subcategory:"Credential Validation" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
+        ansible.windows.win_shell: AuditPol /get /subcategory:"Credential Validation" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
         register: wn16_au_000070_audit
         check_mode: no
 
         changed_when: "'Success' not in wn16_au_000070_audit.stdout"
       - name: "MEDIUM | WN16-AU-000070 | PATCH | Windows Server 2016 must be configured to audit Account Logon - Credential Validation successes."
-        win_shell: AuditPol /set /subcategory:"Credential Validation" /success:enable
+        ansible.windows.win_shell: AuditPol /set /subcategory:"Credential Validation" /success:enable
         when: "'Success' not in wn16_au_000070_audit.stdout"
   when:
       - wn16_au_000070
@@ -1184,13 +1184,13 @@
 - name: "MEDIUM | WN16-AU-000080 | Windows Server 2016 must be configured to audit Account Logon - Credential Validation failures."
   block:
       - name: "MEDIUM | WN16-AU-000080 | AUDIT | Windows Server 2016 must be configured to audit Account Logon - Credential Validation failures."
-        win_shell: AuditPol /get /subcategory:"Credential Validation" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
+        ansible.windows.win_shell: AuditPol /get /subcategory:"Credential Validation" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
         register: wn16_au_000080_audit
         check_mode: no
 
         changed_when: "'Failure' not in wn16_au_000080_audit.stdout"
       - name: "MEDIUM | WN16-AU-000080 | PATCH | Windows Server 2016 must be configured to audit Account Logon - Credential Validation failures."
-        win_shell: AuditPol /set /subcategory:"Credential Validation" /failure:enable
+        ansible.windows.win_shell: AuditPol /set /subcategory:"Credential Validation" /failure:enable
         when: "'Failure' not in wn16_au_000080_audit.stdout"
   when:
       - wn16_au_000080
@@ -1201,13 +1201,13 @@
 - name: "MEDIUM | WN16-DC-000230 | Windows Server 2016 must be configured to audit Account Management - Computer Account Management successes."
   block:
       - name: "MEDIUM | WN16-DC-000230 | AUDIT | Windows Server 2016 must be configured to audit Account Management - Computer Account Management successes."
-        win_shell: AuditPol /get /subcategory:"Computer Account Management" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
+        ansible.windows.win_shell: AuditPol /get /subcategory:"Computer Account Management" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
         register: wn16_dc_000230_audit
         check_mode: no
         changed_when: "'Success' not in wn16_dc_000230_audit.stdout"
 
       - name: "MEDIUM | WN16-DC-000230 | PATCH | Windows Server 2016 must be configured to audit Account Management - Computer Account Management successes."
-        win_shell: AuditPol /set /subcategory:"Computer Account Management" /success:enable
+        ansible.windows.win_shell: AuditPol /set /subcategory:"Computer Account Management" /success:enable
         when: "'Success' not in wn16_dc_000230_audit.stdout"
   when:
       - wn16_dc_000230
@@ -1219,13 +1219,13 @@
 - name: "MEDIUM | WN16-AU-000100 | Windows Server 2016 must be configured to audit Account Management - Other Account Management Events successes."
   block:
       - name: "MEDIUM | WN16-AU-000100 | AUDIT | Windows Server 2016 must be configured to audit Account Management - Other Account Management Events successes."
-        win_shell: AuditPol /get /subcategory:"Other Account Management Events" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
+        ansible.windows.win_shell: AuditPol /get /subcategory:"Other Account Management Events" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
         register: wn16_au_000100_audit
         check_mode: no
         changed_when: "'Success' not in wn16_au_000100_audit.stdout"
 
       - name: "MEDIUM | WN16-AU-000100 | PATCH | Windows Server 2016 must be configured to audit Account Management - Other Account Management Events successes."
-        win_shell: AuditPol /set /subcategory:"Other Account Management Events" /success:enable
+        ansible.windows.win_shell: AuditPol /set /subcategory:"Other Account Management Events" /success:enable
         when: "'Success' not in wn16_au_000100_audit.stdout"
   when:
       - wn16_au_000100
@@ -1236,13 +1236,13 @@
 - name: "MEDIUM | WN16-AU-000120 | Windows Server 2016 must be configured to audit Account Management - Security Group Management successes."
   block:
       - name: "MEDIUM | WN16-AU-000120 | AUDIT | Windows Server 2016 must be configured to audit Account Management - Security Group Management successes."
-        win_shell: AuditPol /get /subcategory:"Security Group Management" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
+        ansible.windows.win_shell: AuditPol /get /subcategory:"Security Group Management" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
         register: wn16_au_000120_audit
         check_mode: no
         changed_when: "'Success' not in wn16_au_000120_audit.stdout"
 
       - name: "MEDIUM | WN16-AU-000120 | PATCH | Windows Server 2016 must be configured to audit Account Management - Security Group Management successes."
-        win_shell: AuditPol /set /subcategory:"Security Group Management" /success:enable
+        ansible.windows.win_shell: AuditPol /set /subcategory:"Security Group Management" /success:enable
         when: "'Success' not in wn16_au_000120_audit.stdout"
   when:
       - wn16_au_000120
@@ -1253,13 +1253,13 @@
 - name: "MEDIUM | WN16-AU-000140 | Windows Server 2016 must be configured to audit Account Management - User Account Management successes."
   block:
       - name: "MEDIUM | WN16-AU-000140 | AUDIT | Windows Server 2016 must be configured to audit Account Management - User Account Management successes."
-        win_shell: AuditPol /get /subcategory:"User Account Management" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
+        ansible.windows.win_shell: AuditPol /get /subcategory:"User Account Management" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
         register: wn16_au_000140_audit
         check_mode: no
         changed_when: "'Success' not in wn16_au_000140_audit.stdout"
 
       - name: "MEDIUM | WN16-AU-000140 | PATCH | Windows Server 2016 must be configured to audit Account Management - User Account Management successes."
-        win_shell: AuditPol /set /subcategory:"User Account Management" /success:enable
+        ansible.windows.win_shell: AuditPol /set /subcategory:"User Account Management" /success:enable
         when: "'Success' not in wn16_au_000140_audit.stdout"
   when:
       - wn16_au_000140
@@ -1270,13 +1270,13 @@
 - name: "MEDIUM | WN16-AU-000150 | Windows Server 2016 must be configured to audit Account Management - User Account Management failures."
   block:
       - name: "MEDIUM | WN16-AU-000150 | AUDIT | Windows Server 2016 must be configured to audit Account Management - User Account Management failures."
-        win_shell: AuditPol /get /subcategory:"User Account Management" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
+        ansible.windows.win_shell: AuditPol /get /subcategory:"User Account Management" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
         register: wn16_au_000150_audit
         check_mode: no
         changed_when: "'Failure' not in wn16_au_000150_audit.stdout"
 
       - name: "MEDIUM | WN16-AU-000150 | PATCH | Windows Server 2016 must be configured to audit Account Management - User Account Management failures."
-        win_shell: AuditPol /set /subcategory:"User Account Management" /failure:enable
+        ansible.windows.win_shell: AuditPol /set /subcategory:"User Account Management" /failure:enable
         when: "'Failure' not in wn16_au_000150_audit.stdout"
   when:
       - wn16_au_000150
@@ -1287,13 +1287,13 @@
 - name: "MEDIUM | WN16-AU-000160 | Windows Server 2016 must be configured to audit Detailed Tracking - Plug and Play Events successes."
   block:
       - name: "MEDIUM | WN16-AU-000160 | AUDIT | Windows Server 2016 must be configured to audit Detailed Tracking - Plug and Play Events successes."
-        win_shell: AuditPol /get /subcategory:"Plug and Play Events" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
+        ansible.windows.win_shell: AuditPol /get /subcategory:"Plug and Play Events" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
         register: wn16_au_000160_audit
         check_mode: no
         changed_when: "'Success' not in wn16_au_000160_audit.stdout"
 
       - name: "MEDIUM | WN16-AU-000160 | PATCH | Windows Server 2016 must be configured to audit Detailed Tracking - Plug and Play Events successes."
-        win_shell: AuditPol /set /subcategory:"Plug and Play Events" /success:enable
+        ansible.windows.win_shell: AuditPol /set /subcategory:"Plug and Play Events" /success:enable
         when: "'Success' not in wn16_au_000160_audit.stdout"
   when:
       - wn16_au_000160
@@ -1304,13 +1304,13 @@
 - name: "MEDIUM | WN16-AU-000170 | Windows Server 2016 must be configured to audit Detailed Tracking - Process Creation successes."
   block:
       - name: "MEDIUM | WN16-AU-000170 | AUDIT | Windows Server 2016 must be configured to audit Detailed Tracking - Process Creation successes."
-        win_shell: AuditPol /get /subcategory:"Process Creation" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
+        ansible.windows.win_shell: AuditPol /get /subcategory:"Process Creation" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
         register: wn16_au_000170_audit
         check_mode: no
         changed_when: "'Success' not in wn16_au_000170_audit.stdout"
 
       - name: "MEDIUM | WN16-AU-000170 | PATCH | Windows Server 2016 must be configured to audit Detailed Tracking - Process Creation successes."
-        win_shell: AuditPol /set /subcategory:"Process Creation" /success:enable
+        ansible.windows.win_shell: AuditPol /set /subcategory:"Process Creation" /success:enable
         when: "'Success' not in wn16_au_000170_audit.stdout"
   when:
       - wn16_au_000170
@@ -1321,13 +1321,13 @@
 - name: "MEDIUM | WN16-DC-000240 | Windows Server 2016 must be configured to audit DS Access - Directory Service Access successes."
   block:
       - name: "MEDIUM | WN16-DC-000240 | AUDIT | Windows Server 2016 must be configured to audit DS Access - Directory Service Access successes."
-        win_shell: AuditPol /get /subcategory:"Directory Service Access" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
+        ansible.windows.win_shell: AuditPol /get /subcategory:"Directory Service Access" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
         register: wn16_dc_000240_audit
         check_mode: no
         changed_when: "'Success' not in wn16_dc_000240_audit.stdout"
 
       - name: "MEDIUM | WN16-DC-000240 | PATCH | Windows Server 2016 must be configured to audit DS Access - Directory Service Access successes."
-        win_shell: AuditPol /set /subcategory:"Directory Service Access" /success:enable
+        ansible.windows.win_shell: AuditPol /set /subcategory:"Directory Service Access" /success:enable
         when: "'Success' not in wn16_dc_000240_audit.stdout"
   when:
       - wn16_dc_000240
@@ -1339,13 +1339,13 @@
 - name: "MEDIUM | WN16-DC-000250 | Windows Server 2016 must be configured to audit DS Access - Directory Service Access failures."
   block:
       - name: "MEDIUM | WN16-DC-000250 | AUDIT | Windows Server 2016 must be configured to audit DS Access - Directory Service Access failures."
-        win_shell: AuditPol /get /subcategory:"Directory Service Access" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
+        ansible.windows.win_shell: AuditPol /get /subcategory:"Directory Service Access" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
         register: wn16_dc_000250_audit
         check_mode: no
         changed_when: "'Failure' not in wn16_dc_000250_audit.stdout"
 
       - name: "MEDIUM | WN16-DC-000250 | PATCH | Windows Server 2016 must be configured to audit DS Access - Directory Service Access failures."
-        win_shell: AuditPol /set /subcategory:"Directory Service Access" /failure:enable
+        ansible.windows.win_shell: AuditPol /set /subcategory:"Directory Service Access" /failure:enable
         when: "'Failure' not in wn16_dc_000250_audit.stdout"
   when:
       - wn16_dc_000250
@@ -1357,13 +1357,13 @@
 - name: "MEDIUM | WN16-DC-000260 | Windows Server 2016 must be configured to audit DS Access - Directory Service Changes successes."
   block:
       - name: "MEDIUM | WN16-DC-000260 | AUDIT | Windows Server 2016 must be configured to audit DS Access - Directory Service Changes successes."
-        win_shell: AuditPol /get /subcategory:"Directory Service Changes" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
+        ansible.windows.win_shell: AuditPol /get /subcategory:"Directory Service Changes" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
         register: wn16_dc_000260_audit
         check_mode: no
         changed_when: "'Success' not in wn16_dc_000260_audit.stdout"
 
       - name: "MEDIUM | WN16-DC-000260 | PATCH | Windows Server 2016 must be configured to audit DS Access - Directory Service Changes successes."
-        win_shell: AuditPol /set /subcategory:"Directory Service Changes" /success:enable
+        ansible.windows.win_shell: AuditPol /set /subcategory:"Directory Service Changes" /success:enable
         when: "'Success' not in wn16_dc_000260_audit.stdout"
   when:
       - wn16_dc_000260
@@ -1375,13 +1375,13 @@
 - name: "MEDIUM | WN16-DC-000270 | Windows Server 2016 must be configured to audit DS Access - Directory Service Changes failures."
   block:
       - name: "MEDIUM | WN16-DC-000270 | AUDIT | Windows Server 2016 must be configured to audit DS Access - Directory Service Changes failures."
-        win_shell: AuditPol /get /subcategory:"Directory Service Changes" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
+        ansible.windows.win_shell: AuditPol /get /subcategory:"Directory Service Changes" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
         register: wn16_dc_000270_audit
         check_mode: no
         changed_when: "'Failure' not in wn16_dc_000270_audit.stdout"
 
       - name: "MEDIUM | WN16-DC-000270 | PATCH | Windows Server 2016 must be configured to audit DS Access - Directory Service Changes failures."
-        win_shell: AuditPol /set /subcategory:"Directory Service Changes" /failure:enable
+        ansible.windows.win_shell: AuditPol /set /subcategory:"Directory Service Changes" /failure:enable
         when: "'Failure' not in wn16_dc_000270_audit.stdout"
   when:
       - wn16_dc_000270
@@ -1393,13 +1393,13 @@
 - name: "MEDIUM | WN16-AU-000220 | Windows Server 2016 must be configured to audit Logon/Logoff - Account Lockout successes."
   block:
       - name: "MEDIUM | WN16-AU-000220 | AUDIT | Windows Server 2016 must be configured to audit Logon/Logoff - Account Lockout successes."
-        win_shell: AuditPol /get /subcategory:"Account Lockout" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
+        ansible.windows.win_shell: AuditPol /get /subcategory:"Account Lockout" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
         register: wn16_au_000220_audit
         check_mode: no
         changed_when: "'Success' not in wn16_au_000220_audit.stdout"
 
       - name: "MEDIUM | WN16-AU-000220 | PATCH | Windows Server 2016 must be configured to audit Logon/Logoff - Account Lockout successes."
-        win_shell: AuditPol /set /subcategory:"Account Lockout" /success:enable
+        ansible.windows.win_shell: AuditPol /set /subcategory:"Account Lockout" /success:enable
         when: "'Success' not in wn16_au_000220_audit.stdout"
   when:
       - wn16_au_000220
@@ -1410,13 +1410,13 @@
 - name: "MEDIUM | WN16-AU-000230 | Windows Server 2016 must be configured to audit Logon/Logoff - Account Lockout failures."
   block:
       - name: "MEDIUM | WN16-AU-000230 | AUDIT | Windows Server 2016 must be configured to audit Logon/Logoff - Account Lockout failures."
-        win_shell: AuditPol /get /subcategory:"Account Lockout" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
+        ansible.windows.win_shell: AuditPol /get /subcategory:"Account Lockout" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
         register: wn16_au_000230_audit
         check_mode: no
         changed_when: "'Failure' not in wn16_au_000230_audit.stdout"
 
       - name: "MEDIUM | WN16-AU-000230 | PATCH | Windows Server 2016 must be configured to audit Logon/Logoff - Account Lockout failures."
-        win_shell: AuditPol /set /subcategory:"Account Lockout" /failure:enable
+        ansible.windows.win_shell: AuditPol /set /subcategory:"Account Lockout" /failure:enable
         changed_when: "'Failure' not in wn16_au_000230_audit.stdout"
   when:
       - wn16_au_000230
@@ -1427,13 +1427,13 @@
 - name: "MEDIUM | WN16-AU-000240 | Windows Server 2016 must be configured to audit Logon/Logoff - Group Membership successes."
   block:
       - name: "MEDIUM | WN16-AU-000240 | AUDIT | Windows Server 2016 must be configured to audit Logon/Logoff - Group Membership successes."
-        win_shell: AuditPol /get /subcategory:"Group Membership" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
+        ansible.windows.win_shell: AuditPol /get /subcategory:"Group Membership" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
         register: wn16_au_000240_audit
         check_mode: no
         changed_when: "'Success' not in wn16_au_000240_audit.stdout"
 
       - name: "MEDIUM | WN16-AU-000240 | PATCH | Windows Server 2016 must be configured to audit Logon/Logoff - Group Membership successes."
-        win_shell: AuditPol /set /subcategory:"Group Membership" /success:enable
+        ansible.windows.win_shell: AuditPol /set /subcategory:"Group Membership" /success:enable
         changed_when: "'Success' not in wn16_au_000240_audit.stdout"
   when:
       - wn16_au_000240
@@ -1444,13 +1444,13 @@
 - name: "MEDIUM | WN16-AU-000250 | Windows Server 2016 must be configured to audit Logon/Logoff - Logoff successes."
   block:
       - name: "MEDIUM | WN16-AU-000250 | AUDIT | Windows Server 2016 must be configured to audit Logon/Logoff - Logoff successes."
-        win_shell: AuditPol /get /subcategory:"Logoff" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
+        ansible.windows.win_shell: AuditPol /get /subcategory:"Logoff" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
         register: wn16_au_000250_audit
         check_mode: no
         changed_when: "'Success' not in wn16_au_000250_audit.stdout"
 
       - name: "MEDIUM | WN16-AU-000250 | PATCH | Windows Server 2016 must be configured to audit Logon/Logoff - Logoff successes."
-        win_shell: AuditPol /set /subcategory:"Logoff" /success:enable
+        ansible.windows.win_shell: AuditPol /set /subcategory:"Logoff" /success:enable
         changed_when: "'Success' not in wn16_au_000250_audit.stdout"
   when:
       - wn16_au_000250
@@ -1461,13 +1461,13 @@
 - name: "MEDIUM | WN16-AU-000260 | Windows Server 2016 must be configured to audit Logon/Logoff - Logon successes."
   block:
       - name: "MEDIUM | WN16-AU-000260 | AUDIT | Windows Server 2016 must be configured to audit Logon/Logoff - Logon successes."
-        win_shell: AuditPol /get /subcategory:"Logon" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
+        ansible.windows.win_shell: AuditPol /get /subcategory:"Logon" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
         register: wn16_au_000260_audit
         check_mode: no
         changed_when: "'Success' not in wn16_au_000260_audit.stdout"
 
       - name: "MEDIUM | WN16-AU-000260 | PATCH | Windows Server 2016 must be configured to audit Logon/Logoff - Logon successes."
-        win_shell: AuditPol /set /subcategory:"Logon" /success:enable
+        ansible.windows.win_shell: AuditPol /set /subcategory:"Logon" /success:enable
         changed_when: "'Success' not in wn16_au_000260_audit.stdout"
   when:
       - wn16_au_000260
@@ -1478,13 +1478,13 @@
 - name: "MEDIUM | WN16-AU-000270 | Windows Server 2016 must be configured to audit Logon/Logoff - Logon failures."
   block:
       - name: "MEDIUM | WN16-AU-000270 | AUDIT | Windows Server 2016 must be configured to audit Logon/Logoff - Logon failures."
-        win_shell: AuditPol /get /subcategory:"Logon" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
+        ansible.windows.win_shell: AuditPol /get /subcategory:"Logon" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
         register: wn16_au_000270_audit
         check_mode: no
         changed_when: "'Failure' not in wn16_au_000270_audit.stdout"
 
       - name: "MEDIUM | WN16-AU-000270 | PATCH | Windows Server 2016 must be configured to audit Logon/Logoff - Logon failures."
-        win_shell: AuditPol /set /subcategory:"Logon" /failure:enable
+        ansible.windows.win_shell: AuditPol /set /subcategory:"Logon" /failure:enable
         when: "'Failure' not in wn16_au_000270_audit.stdout"
   when:
       - wn16_au_000270
@@ -1495,13 +1495,13 @@
 - name: "MEDIUM | WN16-AU-000280 | Windows Server 2016 must be configured to audit Logon/Logoff - Special Logon successes."
   block:
       - name: "MEDIUM | WN16-AU-000280 | AUDIT | Windows Server 2016 must be configured to audit Logon/Logoff - Special Logon successes."
-        win_shell: AuditPol /get /subcategory:"Special Logon" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
+        ansible.windows.win_shell: AuditPol /get /subcategory:"Special Logon" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
         register: wn16_au_000280_audit
         check_mode: no
         changed_when: "'Success' not in wn16_au_000280_audit.stdout"
 
       - name: "MEDIUM | WN16-AU-000280 | PATCH | Windows Server 2016 must be configured to audit Logon/Logoff - Special Logon successes."
-        win_shell: AuditPol /set /subcategory:"Special Logon" /success:enable
+        ansible.windows.win_shell: AuditPol /set /subcategory:"Special Logon" /success:enable
         when: "'Success' not in wn16_au_000280_audit.stdout"
   when:
       - wn16_au_000280
@@ -1512,13 +1512,13 @@
 - name: "MEDIUM | WN16-AU-000290 | Windows Server 2016 must be configured to audit Object Access - Removable Storage successes."
   block:
       - name: "MEDIUM | WN16-AU-000290 | AUDIT | Windows Server 2016 must be configured to audit Object Access - Removable Storage successes."
-        win_shell: AuditPol /get /subcategory:"Removable Storage" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
+        ansible.windows.win_shell: AuditPol /get /subcategory:"Removable Storage" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
         register: wn16_au_000290_audit
         check_mode: no
         changed_when: "'Success' not in wn16_au_000290_audit.stdout"
 
       - name: "MEDIUM | WN16-AU-000290 | PATCH | Windows Server 2016 must be configured to audit Object Access - Removable Storage successes."
-        win_shell: AuditPol /set /subcategory:"Removable Storage" /success:enable
+        ansible.windows.win_shell: AuditPol /set /subcategory:"Removable Storage" /success:enable
         when: "'Success' not in wn16_au_000290_audit.stdout"
   when:
       - wn16_au_000290
@@ -1529,13 +1529,13 @@
 - name: "MEDIUM | WN16-AU-000300 | Windows Server 2016 must be configured to audit Object Access - Removable Storage failures."
   block:
       - name: "MEDIUM | WN16-AU-000300 | AUDIT | Windows Server 2016 must be configured to audit Object Access - Removable Storage failures."
-        win_shell: AuditPol /get /subcategory:"Removable Storage" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
+        ansible.windows.win_shell: AuditPol /get /subcategory:"Removable Storage" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
         register: wn16_au_000300_audit
         check_mode: no
         changed_when: "'Failure' not in wn16_au_000300_audit.stdout"
 
       - name: "MEDIUM | WN16-AU-000300 | PATCH | Windows Server 2016 must be configured to audit Object Access - Removable Storage failures."
-        win_shell: AuditPol /set /subcategory:"Removable Storage" /failure:enable
+        ansible.windows.win_shell: AuditPol /set /subcategory:"Removable Storage" /failure:enable
         when: "'Failure' not in wn16_au_000300_audit.stdout"
   when:
       - wn16_au_000300
@@ -1546,13 +1546,13 @@
 - name: "MEDIUM | WN16-AU-000310 | Windows Server 2016 must be configured to audit Policy Change - Audit Policy Change successes."
   block:
       - name: "MEDIUM | WN16-AU-000310 | AUDIT | Windows Server 2016 must be configured to audit Policy Change - Audit Policy Change successes."
-        win_shell: AuditPol /get /subcategory:"Audit Policy Change" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
+        ansible.windows.win_shell: AuditPol /get /subcategory:"Audit Policy Change" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
         register: wn16_au_000310_audit
         check_mode: no
         changed_when: "'Success' not in wn16_au_000310_audit.stdout"
 
       - name: "MEDIUM | WN16-AU-000310 | PATCH | Windows Server 2016 must be configured to audit Policy Change - Audit Policy Change successes."
-        win_shell: AuditPol /set /subcategory:"Audit Policy Change" /success:enable
+        ansible.windows.win_shell: AuditPol /set /subcategory:"Audit Policy Change" /success:enable
         when: "'Success' not in wn16_au_000310_audit.stdout"
   when:
       - wn16_au_000310
@@ -1563,13 +1563,13 @@
 - name: "MEDIUM | WN16-AU-000320 | Windows Server 2016 must be configured to audit Policy Change - Audit Policy Change failures."
   block:
       - name: "MEDIUM | WN16-AU-000320 | AUDIT | Windows Server 2016 must be configured to audit Policy Change - Audit Policy Change failures."
-        win_shell: AuditPol /get /subcategory:"Audit Policy Change" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
+        ansible.windows.win_shell: AuditPol /get /subcategory:"Audit Policy Change" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
         register: wn16_au_000320_audit
         check_mode: no
         changed_when: "'Failure' not in wn16_au_000320_audit.stdout"
 
       - name: "MEDIUM | WN16-AU-000320 | PATCH | Windows Server 2016 must be configured to audit Policy Change - Audit Policy Change failures."
-        win_shell: AuditPol /set /subcategory:"Audit Policy Change" /failure:enable
+        ansible.windows.win_shell: AuditPol /set /subcategory:"Audit Policy Change" /failure:enable
         when: "'Failure' not in wn16_au_000320_audit.stdout"
   when:
       - wn16_au_000320
@@ -1580,13 +1580,13 @@
 - name: "MEDIUM | WN16-AU-000330 | Windows Server 2016 must be configured to audit Policy Change - Authentication Policy Change successes."
   block:
       - name: "MEDIUM | WN16-AU-000330 | AUDIT | Windows Server 2016 must be configured to audit Policy Change - Authentication Policy Change successes."
-        win_shell: AuditPol /get /subcategory:"Authentication Policy Change" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
+        ansible.windows.win_shell: AuditPol /get /subcategory:"Authentication Policy Change" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
         register: wn16_au_000330_audit
         check_mode: no
         changed_when: "'Success' not in wn16_au_000330_audit.stdout"
 
       - name: "MEDIUM | WN16-AU-000330 | PATCH | Windows Server 2016 must be configured to audit Policy Change - Authentication Policy Change successes."
-        win_shell: AuditPol /set /subcategory:"Authentication Policy Change" /success:enable
+        ansible.windows.win_shell: AuditPol /set /subcategory:"Authentication Policy Change" /success:enable
         when: "'Success' not in wn16_au_000330_audit.stdout"
   when:
       - wn16_au_000330
@@ -1597,13 +1597,13 @@
 - name: "MEDIUM | WN16-AU-000340 | Windows Server 2016 must be configured to audit Policy Change - Authorization Policy Change successes."
   block:
       - name: "MEDIUM | WN16-AU-000340 | AUDIT | Windows Server 2016 must be configured to audit Policy Change - Authorization Policy Change successes."
-        win_shell: AuditPol /get /subcategory:"Authorization Policy Change" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
+        ansible.windows.win_shell: AuditPol /get /subcategory:"Authorization Policy Change" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
         register: wn16_au_000340_audit
         check_mode: no
         changed_when: "'Success' not in wn16_au_000340_audit.stdout"
 
       - name: "MEDIUM | WN16-AU-000340 | PATCH | Windows Server 2016 must be configured to audit Policy Change - Authorization Policy Change successes."
-        win_shell: AuditPol /set /subcategory:"Authorization Policy Change" /success:enable
+        ansible.windows.win_shell: AuditPol /set /subcategory:"Authorization Policy Change" /success:enable
         when: "'Success' not in wn16_au_000340_audit.stdout"
   when:
       - wn16_au_000340
@@ -1614,13 +1614,13 @@
 - name: "MEDIUM | WN16-AU-000350 | Windows Server 2016 must be configured to audit Privilege Use - Sensitive Privilege Use successes."
   block:
       - name: "MEDIUM | WN16-AU-000350 | AUDIT | Windows Server 2016 must be configured to audit Privilege Use - Sensitive Privilege Use successes."
-        win_shell: AuditPol /get /subcategory:"Sensitive Privilege Use" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
+        ansible.windows.win_shell: AuditPol /get /subcategory:"Sensitive Privilege Use" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
         register: wn16_au_000350_audit
         check_mode: no
         changed_when: "'Success' not in wn16_au_000350_audit.stdout"
 
       - name: "MEDIUM | WN16-AU-000350 | PATCH | Windows Server 2016 must be configured to audit Privilege Use - Sensitive Privilege Use successes."
-        win_shell: AuditPol /set /subcategory:"Sensitive Privilege Use" /success:enable
+        ansible.windows.win_shell: AuditPol /set /subcategory:"Sensitive Privilege Use" /success:enable
         when: "'Success' not in wn16_au_000350_audit.stdout"
   when:
       - wn16_au_000350
@@ -1631,13 +1631,13 @@
 - name: "MEDIUM | WN16-AU-000360 | Windows Server 2016 must be configured to audit Privilege Use - Sensitive Privilege Use failures."
   block:
       - name: "MEDIUM | WN16-AU-000360 | AUDIT | Windows Server 2016 must be configured to audit Privilege Use - Sensitive Privilege Use failures."
-        win_shell: AuditPol /get /subcategory:"Sensitive Privilege Use" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
+        ansible.windows.win_shell: AuditPol /get /subcategory:"Sensitive Privilege Use" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
         register: wn16_au_000360_audit
         check_mode: no
         changed_when: "'Failure' not in wn16_au_000360_audit.stdout"
 
       - name: "MEDIUM | WN16-AU-000360 | PATCH | Windows Server 2016 must be configured to audit Privilege Use - Sensitive Privilege Use failures."
-        win_shell: AuditPol /set /subcategory:"Sensitive Privilege Use" /failure:enable
+        ansible.windows.win_shell: AuditPol /set /subcategory:"Sensitive Privilege Use" /failure:enable
         when: "'Failure' not in wn16_au_000360_audit.stdout"
   when:
       - wn16_au_000360
@@ -1648,13 +1648,13 @@
 - name: "MEDIUM | WN16-AU-000370 | Windows Server 2016 must be configured to audit System - IPsec Driver successes."
   block:
       - name: "MEDIUM | WN16-AU-000370 | AUDIT | Windows Server 2016 must be configured to audit System - IPsec Driver successes."
-        win_shell: AuditPol /get /subcategory:"IPsec Driver" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
+        ansible.windows.win_shell: AuditPol /get /subcategory:"IPsec Driver" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
         register: wn16_au_000370_audit
         check_mode: no
         changed_when: "'Success' not in wn16_au_000370_audit.stdout"
 
       - name: "MEDIUM | WN16-AU-000370 | PATCH | Windows Server 2016 must be configured to audit System - IPsec Driver successes."
-        win_shell: AuditPol /set /subcategory:"IPsec Driver" /success:enable
+        ansible.windows.win_shell: AuditPol /set /subcategory:"IPsec Driver" /success:enable
         when: "'Success' not in wn16_au_000370_audit.stdout"
   when:
       - wn16_au_000370
@@ -1666,15 +1666,15 @@
 - name: "MEDIUM | WN16-AU-000380 | Windows Server 2016 must be configured to audit System - IPsec Driver failures."
   block:
       - name: "MEDIUM | WN16-AU-000380 | AUDIT | Windows Server 2016 must be configured to audit System - IPsec Driver failures."
-        win_shell: AuditPol /get /subcategory:"IPsec Driver" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
+        ansible.windows.win_shell: AuditPol /get /subcategory:"IPsec Driver" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
         register: wn16_au_000380_audit
         check_mode: no
         changed_when: "'Failure' not in wn16_au_000380_audit.stdout"
-      - debug:
+      - ansible.builtin.debug:
             var: wn16_au_000380_audit
 
       - name: "MEDIUM | WN16-AU-000380 | PATCH | Windows Server 2016 must be configured to audit System - IPsec Driver failures."
-        win_shell: AuditPol /set /subcategory:"IPsec Driver" /failure:enable
+        ansible.windows.win_shell: AuditPol /set /subcategory:"IPsec Driver" /failure:enable
         when: "'Failure' not in wn16_au_000380_audit.stdout"
   when:
       - wn16_au_000380
@@ -1686,13 +1686,13 @@
 - name: "MEDIUM | WN16-AU-000390 | Windows Server 2016 must be configured to audit System - Other System Events successes."
   block:
       - name: "MEDIUM | WN16-AU-000390 | AUDIT | Windows Server 2016 must be configured to audit System - Other System Events successes."
-        win_shell: AuditPol /get /subcategory:"Other System Events" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
+        ansible.windows.win_shell: AuditPol /get /subcategory:"Other System Events" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
         register: wn16_au_000390_audit
         check_mode: no
         changed_when: "'Success' not in wn16_au_000390_audit.stdout"
 
       - name: "MEDIUM | WN16-AU-000390 | PATCH | Windows Server 2016 must be configured to audit System - Other System Events successes."
-        win_shell: AuditPol /set /subcategory:"Other System Events" /success:enable
+        ansible.windows.win_shell: AuditPol /set /subcategory:"Other System Events" /success:enable
         when: "'Success' not in wn16_au_000390_audit.stdout"
   when:
       - wn16_au_000390
@@ -1704,13 +1704,13 @@
 - name: "MEDIUM | WN16-AU-000400 | Windows Server 2016 must be configured to audit System - Other System Events failures."
   block:
       - name: "MEDIUM | WN16-AU-000400 | AUDIT | Windows Server 2016 must be configured to audit System - Other System Events failures."
-        win_shell: AuditPol /get /subcategory:"Other System Events" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
+        ansible.windows.win_shell: AuditPol /get /subcategory:"Other System Events" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
         register: wn16_au_000400_audit
         check_mode: no
         changed_when: "'Failure' not in wn16_au_000400_audit.stdout"
 
       - name: "MEDIUM | WN16-AU-000400 | PATCH | Windows Server 2016 must be configured to audit System - Other System Events failures."
-        win_shell: AuditPol /set /subcategory:"Other System Events" /failure:enable
+        ansible.windows.win_shell: AuditPol /set /subcategory:"Other System Events" /failure:enable
         check_mode: no
         when: "'Failure' not in wn16_au_000400_audit.stdout"
   when:
@@ -1723,13 +1723,13 @@
 - name: "MEDIUM | WN16-AU-000410 | Windows Server 2016 must be configured to audit System - Security State Change successes."
   block:
       - name: "MEDIUM | WN16-AU-000410 | AUDIT | Windows Server 2016 must be configured to audit System - Security State Change successes."
-        win_shell: AuditPol /get /subcategory:"Security State Change" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
+        ansible.windows.win_shell: AuditPol /get /subcategory:"Security State Change" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
         register: wn16_au_000410_audit
         check_mode: no
         changed_when: "'Success' not in wn16_au_000410_audit.stdout"
 
       - name: "MEDIUM | WN16-AU-000410 | PATCH | Windows Server 2016 must be configured to audit System - Security State Change successes."
-        win_shell: AuditPol /set /subcategory:"Security State Change" /success:enable
+        ansible.windows.win_shell: AuditPol /set /subcategory:"Security State Change" /success:enable
         check_mode: no
         when: "'Success' not in wn16_au_000410_audit.stdout"
   when:
@@ -1742,13 +1742,13 @@
 - name: "MEDIUM | WN16-AU-000420 | Windows Server 2016 must be configured to audit System - Security System Extension successes."
   block:
       - name: "MEDIUM | WN16-AU-000420 | AUDIT | Windows Server 2016 must be configured to audit System - Security System Extension successes."
-        win_shell: AuditPol /get /subcategory:"Security System Extension" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
+        ansible.windows.win_shell: AuditPol /get /subcategory:"Security System Extension" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
         register: wn16_au_000420_audit
         check_mode: no
         changed_when: "'Success' not in wn16_au_000420_audit.stdout"
 
       - name: "MEDIUM | WN16-AU-000420 | PATCH | Windows Server 2016 must be configured to audit System - Security System Extension successes."
-        win_shell: AuditPol /set /subcategory:"Security System Extension" /success:enable
+        ansible.windows.win_shell: AuditPol /set /subcategory:"Security System Extension" /success:enable
         check_mode: no
         when: "'Success' not in wn16_au_000420_audit.stdout"
   when:
@@ -1759,7 +1759,7 @@
       - tested
 
 - name: "MEDIUM | WN16-CC-000280 | Administrator accounts must not be enumerated during elevation."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\CredUI
       state: present
       value: EnumerateAdministrators
@@ -1775,13 +1775,13 @@
 - name: "MEDIUM | WN16-AU-000440 | Windows Server 2016 must be configured to audit System - System Integrity successes."
   block:
       - name: "MEDIUM | WN16-AU-000440 | AUDIT | Windows Server 2016 must be configured to audit System - System Integrity successes."
-        win_shell: AuditPol /get /subcategory:"System Integrity" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
+        ansible.windows.win_shell: AuditPol /get /subcategory:"System Integrity" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
         register: wn16_au_000440_audit
         check_mode: no
         changed_when: "'Success' not in wn16_au_000440_audit.stdout"
 
       - name: "MEDIUM | WN16-AU-000440 | PATCH | Windows Server 2016 must be configured to audit System - System Integrity successes."
-        win_shell: AuditPol /set /subcategory:"System Integrity" /success:enable
+        ansible.windows.win_shell: AuditPol /set /subcategory:"System Integrity" /success:enable
         check_mode: no
         when: "'Success' not in wn16_au_000440_audit.stdout"
   when:
@@ -1794,13 +1794,13 @@
 - name: "MEDIUM | WN16-AU-000450 | Windows Server 2016 must be configured to audit System - System Integrity failures."
   block:
       - name: "MEDIUM | WN16-AU-000450 | AUDIT | Windows Server 2016 must be configured to audit System - System Integrity failures."
-        win_shell: AuditPol /get /subcategory:"System Integrity" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
+        ansible.windows.win_shell: AuditPol /get /subcategory:"System Integrity" -r | ConvertFrom-Csv | Select-Object -expand "Inclusion Setting"
         register: wn16_au_000450_audit
         check_mode: no
         changed_when: "'Failure' not in wn16_au_000450_audit.stdout"
 
       - name: "MEDIUM | WN16-AU-000450 | PATCH | Windows Server 2016 must be configured to audit System - System Integrity failures."
-        win_shell: AuditPol /set /subcategory:"System Integrity" /failure:enable
+        ansible.windows.win_shell: AuditPol /set /subcategory:"System Integrity" /failure:enable
         check_mode: no
         when: "'Failure' not in wn16_au_000450_audit.stdout"
   when:
@@ -1812,7 +1812,7 @@
 
 # some versions may be core/no gui, may need a prelim to detect?
 - name: "MEDIUM | WN16-CC-000010 | The display of slide shows on the lock screen must be disabled."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\Personalization
       state: present
       value: NoLockScreenSlideshow
@@ -1826,7 +1826,7 @@
       - tested
 
 - name: "MEDIUM | WN16-MS-000020 | Local administrator accounts must have their privileged token filtered to prevent elevated privileges from being used over the network on domain systems."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
       state: present
       value: LocalAccountTokenFilterPolicy
@@ -1840,7 +1840,7 @@
       - xccdf_mil.disa.stig_rule_SV-88147r1_rule
 
 - name: "MEDIUM | WN16-CC-000030 | WDigest Authentication must be disabled on Windows Server 2016."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\Wdigest
       state: present
       value: UseLogonCredential
@@ -1854,7 +1854,7 @@
       - tested
 
 - name: "MEDIUM | WN16-CC-000080 | Insecure logons to an SMB server must be disabled."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\LanmanWorkstation
       state: present
       value: AllowInsecureGuestAuth
@@ -1870,7 +1870,7 @@
 
 # verify if this applies to DC or only MS?
 - name: "MEDIUM | WN16-CC-000090 | Hardened UNC paths must be defined to require mutual authentication and integrity for at least the SYSVOL and NETLOGON shares."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\NetworkProvider\HardenedPaths
       state: present
       value: "{{ item }}"
@@ -1887,7 +1887,7 @@
       - xccdf_mil.disa.stig_rule_SV-88161r1_rule
 
 - name: "MEDIUM | WN16-CC-000100 | Command line data must be included in process creation events."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Audit
       state: present
       value: ProcessCreationIncludeCmdLine_Enabled
@@ -1903,13 +1903,13 @@
 - name: "MEDIUM | WN16-CC-000110 | Windows Server 2016 virtualization-based security must be enabled with the platform security level configured to Secure Boot or Secure Boot with DMA Protection."
   block:
       - name: "MEDIUM | WN16-CC-000110 | AUDIT | Windows Server 2016 virtualization-based security must be enabled with the platform security level configured to Secure Boot or Secure Boot with DMA Protection."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_cc_000110_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-CC-000110 | PATCH | Windows Server 2016 virtualization-based security must be enabled with the platform security level configured to Secure Boot or Secure Boot with DMA Protection."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_cc_000110
@@ -1921,7 +1921,7 @@
       - notest
 
 - name: "MEDIUM | WN16-CC-000140 | Early Launch Antimalware, Boot-Start Driver Initialization Policy must prevent boot drivers identified as bad."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SYSTEM\CurrentControlSet\Policies\EarlyLaunch
       state: present
       value: DriverLoadPolicy
@@ -1935,7 +1935,7 @@
       - tested
 
 - name: "MEDIUM | WN16-CC-000150 | Group Policy objects must be reprocessed even if they have not changed."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\Group Policy\{35378EAC-683F-11D2-A89A-00C04FBBCFA2}
       state: present
       value: NoGPOListChanges
@@ -1949,7 +1949,7 @@
       - tested
 
 - name: "MEDIUM | WN16-CC-000160 | Downloading print driver packages over HTTP must be prevented."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Printers
       state: present
       value: DisableWebPnPDownload
@@ -1963,7 +1963,7 @@
       - tested
 
 - name: "MEDIUM | WN16-CC-000170 | Printing over HTTP must be prevented."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Printers
       state: present
       value: DisableHTTPPrinting
@@ -1977,7 +1977,7 @@
       - tested
 
 - name: "MEDIUM | WN16-CC-000180 | The network selection user interface (UI) must not be displayed on the logon screen."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\System
       state: present
       value: DontDisplayNetworkSelectionUI
@@ -1991,7 +1991,7 @@
       - tested
 
 - name: "MEDIUM | WN16-MS-000030 | Local users on domain-joined computers must not be enumerated."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\System
       state: present
       value: EnumerateLocalUsers
@@ -2006,7 +2006,7 @@
       - tested
 
 - name: "MEDIUM | WN16-CC-000210 | Users must be prompted to authenticate when the system wakes from sleep (on battery)."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Policies\Microsoft\Power\PowerSettings\0e796bdb-100d-47d6-a2d5-f7d2daa51f51
       state: present
       value: DCSettingIndex
@@ -2020,7 +2020,7 @@
       - tested
 
 - name: "MEDIUM | WN16-CC-000220 | Users must be prompted to authenticate when the system wakes from sleep (plugged in)."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Policies\Microsoft\Power\PowerSettings\0e796bdb-100d-47d6-a2d5-f7d2daa51f51
       state: present
       value: ACSettingIndex
@@ -2034,7 +2034,7 @@
       - tested
 
 - name: "MEDIUM | WN16-MS-000040 | Unauthenticated Remote Procedure Call (RPC) clients must be restricted from connecting to the RPC server."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Rpc
       state: present
       value: RestrictRemoteClients
@@ -2048,7 +2048,7 @@
       - tested
 
 - name: "MEDIUM | WN16-CC-000290 | Windows Telemetry must be configured to Security or Basic."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\DataCollection
       state: present
       value: AllowTelemetry
@@ -2064,14 +2064,14 @@
 - name: "MEDIUM | WN16-CC-000300 | The Application event log size must be configured to 32768 KB or greater."
   block:
       - name: "MEDIUM | WN16-CC-000300 | AUDIT | The Application event log size must be configured to 32768 KB or greater."
-        win_reg_stat:
+        ansible.windows.win_reg_stat:
             path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\Application
             name: MaxSize
         register: wn16_cc_000300_audit
         changed_when: no
 
       - name: "MEDIUM | WN16-CC-000300 | PATCH | The Application event log size must be configured to 32768 KB or greater."
-        win_regedit:
+        ansible.windows.win_regedit:
             path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\Application
             state: present
             value: MaxSize
@@ -2088,13 +2088,13 @@
 - name: "MEDIUM | WN16-CC-000310 | The Security event log size must be configured to 196608 KB or greater."
   block:
       - name: "MEDIUM | WN16-CC-000310 | AUDIT | The Security event log size must be configured to 196608 KB or greater."
-        win_reg_stat:
+        ansible.windows.win_reg_stat:
             path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\Security
             name: MaxSize
         register: wn16_cc_000310_audit
         changed_when: no
       - name: "MEDIUM | WN16-CC-000310 | PATCH | The Security event log size must be configured to 196608 KB or greater."
-        win_regedit:
+        ansible.windows.win_regedit:
             path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\Security
             state: present
             value: MaxSize
@@ -2111,14 +2111,14 @@
 - name: "MEDIUM | WN16-CC-000320 | The System event log size must be configured to 32768 KB or greater."
   block:
       - name: "MEDIUM | WN16-CC-000320 | AUDIT | The System event log size must be configured to 32768 KB or greater."
-        win_reg_stat:
+        ansible.windows.win_reg_stat:
             path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\System
             name: MaxSize
         register: wn16_cc_000320_audit
         changed_when: no
 
       - name: "MEDIUM | WN16-CC-000320 | PATCH | The System event log size must be configured to 32768 KB or greater."
-        win_regedit:
+        ansible.windows.win_regedit:
             path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\EventLog\System
             state: present
             value: MaxSize
@@ -2133,7 +2133,7 @@
       - tested
 
 - name: "MEDIUM | WN16-CC-000330 | Windows Server 2016 Windows SmartScreen must be enabled."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\System
       state: present
       value: EnableSmartScreen
@@ -2147,7 +2147,7 @@
       - tested
 
 - name: "MEDIUM | WN16-CC-000340 | Explorer Data Execution Prevention must be enabled."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\Explorer
       state: present
       value: NoDataExecutionPrevention
@@ -2161,7 +2161,7 @@
       - tested
 
 - name: "MEDIUM | WN16-CC-000360 | File Explorer shell protocol must run in protected mode."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer
       state: present
       value: PreXPSP2ShellProtocolBehavior
@@ -2175,7 +2175,7 @@
       - tested
 
 - name: "MEDIUM | WN16-CC-000370 | Passwords must not be saved in the Remote Desktop Client."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services
       state: present
       value: DisablePasswordSaving
@@ -2189,7 +2189,7 @@
       - tested
 
 - name: "MEDIUM | WN16-CC-000380 | Local drives must be prevented from sharing with Remote Desktop Session Hosts."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services
       state: present
       value: fDisableCdm
@@ -2203,7 +2203,7 @@
       - tested
 
 - name: "MEDIUM | WN16-CC-000390 | Remote Desktop Services must always prompt a client for passwords upon connection."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services
       state: present
       value: fPromptForPassword
@@ -2217,7 +2217,7 @@
       - tested
 
 - name: "MEDIUM | WN16-CC-000400 | The Remote Desktop Session Host must require secure Remote Procedure Call (RPC) communications."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services
       state: present
       value: fEncryptRPCTraffic
@@ -2231,7 +2231,7 @@
       - tested
 
 - name: "MEDIUM | WN16-CC-000410 | Remote Desktop Services must be configured with the client connection encryption set to High Level."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Policies\Microsoft\Windows NT\Terminal Services
       state: present
       value: MinEncryptionLevel
@@ -2245,7 +2245,7 @@
       - tested
 
 - name: "MEDIUM | WN16-CC-000420 | Attachments must be prevented from being downloaded from RSS feeds."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Policies\Microsoft\Internet Explorer\Feeds
       state: present
       value: DisableEnclosureDownload
@@ -2259,7 +2259,7 @@
       - tested
 
 - name: "MEDIUM | WN16-CC-000421 | The Windows Explorer Preview pane must be disabled for Windows Server 2016."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKCU:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Explorer
       state: present
       value: NoPreviewPane
@@ -2272,7 +2272,7 @@
       - xccdf_mil.disa.stig_rule_SV-224950r569186_rule
 
 - name: "MEDIUM | WN16-CC-000430 | Basic authentication for RSS feeds over HTTP must not be used."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Policies\Microsoft\Internet Explorer\Feeds
       state: present
       value: AllowBasicAuthInClear
@@ -2286,7 +2286,7 @@
       - tested
 
 - name: "MEDIUM | WN16-CC-000440 | Indexing of encrypted files must be turned off."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\Windows Search
       state: present
       value: AllowIndexingEncryptedStoresOrItems
@@ -2300,7 +2300,7 @@
       - tested
 
 - name: "MEDIUM | WN16-CC-000450 | Users must be prevented from changing installation options."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\Installer
       state: present
       value: EnableUserControl
@@ -2314,7 +2314,7 @@
       - tested
 
 - name: "MEDIUM | WN16-CC-000470 | Users must be notified if a web-based program attempts to install software."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\Installer
       state: present
       value: SafeForScripting
@@ -2328,7 +2328,7 @@
       - tested
 
 - name: "MEDIUM | WN16-CC-000480 | Automatically signing in the last interactive user after a system-initiated restart must be disabled."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
       state: present
       value: DisableAutomaticRestartSignOn
@@ -2342,7 +2342,7 @@
       - tested
 
 - name: "MEDIUM | WN16-CC-000490 | PowerShell script block logging must be enabled."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\PowerShell\ScriptBlockLogging
       state: present
       value: EnableScriptBlockLogging
@@ -2356,7 +2356,7 @@
       - tested
 
 - name: "MEDIUM | WN16-CC-000510 | The Windows Remote Management (WinRM) client must not allow unencrypted traffic."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client
       state: present
       value: AllowUnencryptedTraffic
@@ -2371,7 +2371,7 @@
       - tested
 
 - name: "MEDIUM | WN16-CC-000520 | The Windows Remote Management (WinRM) client must not use Digest authentication."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Client
       state: present
       value: AllowDigest
@@ -2385,7 +2385,7 @@
       - tested
 
 - name: "MEDIUM | WN16-CC-000540 | The Windows Remote Management (WinRM) service must not allow unencrypted traffic."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service
       state: present
       value: AllowUnencryptedTraffic
@@ -2400,7 +2400,7 @@
       - tested
 
 - name: "MEDIUM | WN16-CC-000550 | The Windows Remote Management (WinRM) service must not store RunAs credentials."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Policies\Microsoft\Windows\WinRM\Service
       state: present
       value: DisableRunAs
@@ -2418,13 +2418,13 @@
 - name: "MEDIUM | WN16-PK-000010 | The DoD Root CA certificates must be installed in the Trusted Root Store."
   block:
       - name: "MEDIUM | WN16-PK-000010 | AUDIT | The DoD Root CA certificates must be installed in the Trusted Root Store."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_pk_000010_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-PK-000010 | PATCH | The DoD Root CA certificates must be installed in the Trusted Root Store."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_pk_000010
@@ -2437,13 +2437,13 @@
 - name: "MEDIUM | WN16-PK-000020 | The DoD Interoperability Root CA cross-certificates must be installed in the Untrusted Certificates Store on unclassified systems."
   block:
       - name: "MEDIUM | WN16-PK-000020 | AUDIT | The DoD Interoperability Root CA cross-certificates must be installed in the Untrusted Certificates Store on unclassified systems."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_pk_000020_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-PK-000020 | PATCH | The DoD Interoperability Root CA cross-certificates must be installed in the Untrusted Certificates Store on unclassified systems."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_pk_000020
@@ -2455,14 +2455,14 @@
 - name: "MEDIUM | WN16-PK-000030 | The US DoD CCEB Interoperability Root CA cross-certificates must be installed in the Untrusted Certificates Store on unclassified systems."
   block:
       - name: "MEDIUM | WN16-PK-000030 | AUDIT | The US DoD CCEB Interoperability Root CA cross-certificates must be installed in the Untrusted Certificates Store on unclassified systems."
-        win_shell: Get-ChildItem -Path Cert:Localmachine\disallowed | Where Issuer -Like "*CCEB Interoperability*" | FL Subject, Issuer, Thumbprint, NotAfter
+        ansible.windows.win_shell: Get-ChildItem -Path Cert:Localmachine\disallowed | Where Issuer -Like "*CCEB Interoperability*" | FL Subject, Issuer, Thumbprint, NotAfter
         register: wn16_pk_000030_audit
         check_mode: no
         changed_when: no
         failed_when: no
 
       - name: "MEDIUM | WN16-PK-000030 | PATCH | The US DoD CCEB Interoperability Root CA cross-certificates must be installed in the Untrusted Certificates Store on unclassified systems."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_pk_000030
@@ -2475,13 +2475,13 @@
 - name: "MEDIUM | WN16-DC-000280 | Domain controllers must have a PKI server certificate."
   block:
       - name: "MEDIUM | WN16-DC-000280 | AUDIT | Domain controllers must have a PKI server certificate."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_dc_000280_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-DC-000280 | PATCH | Domain controllers must have a PKI server certificate."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_dc_000280
@@ -2493,13 +2493,13 @@
 - name: "MEDIUM | WN16-DC-000310 | Active Directory user accounts, including administrators, must be configured to require the use of a Common Access Card (CAC), Personal Identity Verification (PIV)-compliant hardware token, or Alternate Logon Token (ALT) for user authentication."
   block:
       - name: "MEDIUM | WN16-DC-000310 | AUDIT | Active Directory user accounts, including administrators, must be configured to require the use of a Common Access Card (CAC), Personal Identity Verification (PIV)-compliant hardware token, or Alternate Logon Token (ALT) for user authentication."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_dc_000310_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-DC-000310 | PATCH | Active Directory user accounts, including administrators, must be configured to require the use of a Common Access Card (CAC), Personal Identity Verification (PIV)-compliant hardware token, or Alternate Logon Token (ALT) for user authentication."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_dc_000310
@@ -2510,7 +2510,7 @@
       - notest
 
 - name: "MEDIUM | WN16-SO-000030 | Windows Server 2016 built-in administrator account must be renamed."
-  win_security_policy:
+  community.windows.win_security_policy:
       section: System Access
       key: NewAdministratorName
       value: "{{ wn16_so_000030_newadministratorname }}"
@@ -2522,7 +2522,7 @@
       - SV-88287r2
 
 - name: "MEDIUM | WN16-SO-000040 | Windows Server 2016 built-in guest account must be renamed."
-  win_security_policy:
+  community.windows.win_security_policy:
       section: System Access
       key: NewGuestName
       value: "{{ wn16_so_000040_newguestname }}"
@@ -2533,7 +2533,7 @@
       - SV-88289r2
 
 - name: "MEDIUM | WN16-SO-000050 | Audit policy using subcategories must be enabled."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\
       state: present
       value: SCENoApplyLegacyAuditPolicy
@@ -2546,7 +2546,7 @@
       - xccdf_mil.disa.stig_rule_SV-88291r1_rule
 
 - name: "MEDIUM | WN16-DC-000320 | Domain controllers must require LDAP access signing."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SYSTEM\CurrentControlSet\Services\NTDS\Parameters
       state: present
       value: LDAPServerIntegrity
@@ -2560,7 +2560,7 @@
       - SV-88293r1_rule
 
 - name: "MEDIUM | WN16-DC-000330 | Domain controllers must be configured to allow reset of machine account passwords."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters
       state: present
       value: RefusePasswordChange
@@ -2574,7 +2574,7 @@
       - SV-88295r1_rule
 
 - name: "MEDIUM | WN16-SO-000080 | The setting Domain member: Digitally encrypt or sign secure channel data (always) must be configured to Enabled."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters
       state: present
       value: RequireSignOrSeal
@@ -2588,7 +2588,7 @@
       - SV-88297r1
 
 - name: "MEDIUM | WN16-SO-000090 | The setting Domain member: Digitally encrypt secure channel data (when possible) must be configured to enabled."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters
       state: present
       value: SealSecureChannel
@@ -2602,7 +2602,7 @@
       - SV-88299r1
 
 - name: "MEDIUM | WN16-SO-000100 | The setting Domain member: Digitally sign secure channel data (when possible) must be configured to Enabled."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters
       state: present
       value: SignSecureChannel
@@ -2616,7 +2616,7 @@
       - SV-88301r1
 
 - name: "MEDIUM | WN16-SO-000110 | The computer account password must not be prevented from being reset."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters
       state: present
       value: DisablePasswordChange
@@ -2629,7 +2629,7 @@
       - SV-88303r1
 
 - name: "MEDIUM | WN16-SO-000120 | The maximum age for machine account passwords must be configured to 30 days or less."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters
       state: present
       value: MaximumPasswordAge
@@ -2642,7 +2642,7 @@
       - SV-88305r1
 
 - name: "MEDIUM | WN16-SO-000130 | Windows Server 2016 must be configured to require a strong session key."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SYSTEM\CurrentControlSet\Services\Netlogon\Parameters
       state: present
       value: RequireStrongKey
@@ -2655,7 +2655,7 @@
       - SV-88307r1
 
 - name: "MEDIUM | WN16-SO-000140 | The machine inactivity limit must be set to 15 minutes, locking the system with the screen saver."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
       state: present
       value: InactivityTimeoutSecs
@@ -2668,7 +2668,7 @@
       - xccdf_mil.disa.stig_rule_SV-88309r2_rule
 
 - name: "MEDIUM | WN16-SO-000150 | The required legal notice must be configured to display before console logon."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
       state: present
       value: LegalNoticeText
@@ -2682,7 +2682,7 @@
       - borked_regkey_casesensitive
 
 - name: "MEDIUM | WN16-MS-000050 | Caching of logon credentials must be limited."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon
       state: present
       value: CachedLogonsCount
@@ -2696,7 +2696,7 @@
       - xccdf_mil.disa.stig_rule_SV-88315r1_rule
 
 - name: "MEDIUM | WN16-SO-000190 | The setting Microsoft network client: Digitally sign communications (always) must be configured to Enabled."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters
       state: present
       value: RequireSecuritySignature
@@ -2709,7 +2709,7 @@
       - xccdf_mil.disa.stig_rule_SV-88317r1_rule
 
 - name: "MEDIUM | WN16-SO-000200 | The setting Microsoft network client: Digitally sign communications (if server agrees) must be configured to Enabled."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters
       state: present
       value: EnableSecuritySignature
@@ -2722,7 +2722,7 @@
       - xccdf_mil.disa.stig_rule_SV-88319r1_rule
 
 - name: "MEDIUM | WN16-SO-000210 | Unencrypted passwords must not be sent to third-party Server Message Block (SMB) servers."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SYSTEM\CurrentControlSet\Services\LanmanWorkstation\Parameters
       state: present
       value: EnablePlainTextPassword
@@ -2735,7 +2735,7 @@
       - xccdf_mil.disa.stig_rule_SV-88321r1_rule
 
 - name: "MEDIUM | WN16-SO-000230 | The setting Microsoft network server: Digitally sign communications (always) must be configured to Enabled."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters
       state: present
       value: RequireSecuritySignature
@@ -2749,7 +2749,7 @@
       - borked_regkey_casesensitive
 
 - name: "MEDIUM | WN16-SO-000240 | The setting Microsoft network server: Digitally sign communications (if client agrees) must be configured to Enabled."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SYSTEM\CurrentControlSet\Services\LanManServer\Parameters
       state: present
       value: EnableSecuritySignature
@@ -2763,7 +2763,7 @@
       - borked_regkey_casesensitive
 
 - name: "MEDIUM | WN16-SO-000290 | Windows Server 2016 must be configured to prevent anonymous users from having the same permissions as the Everyone group."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SYSTEM\CurrentControlSet\Control\Lsa
       state: present
       value: EveryoneIncludesAnonymous
@@ -2777,7 +2777,7 @@
       - borked_regkey_casesensitive
 
 - name: "MEDIUM | WN16-MS-000310 | Remote calls to the Security Account Manager (SAM) must be restricted to Administrators."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SYSTEM\CurrentControlSet\Control\Lsa
       state: present
       value: RestrictRemoteSAM
@@ -2790,7 +2790,7 @@
       - xccdf_mil.disa.stig_rule_SV-88341r2_rule
 
 - name: "MEDIUM | WN16-SO-000320 | Services using Local System that use Negotiate when reverting to NTLM authentication must use the computer identity instead of authenticating anonymously."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SYSTEM\CurrentControlSet\Control\Lsa
       state: present
       value: UseMachineId
@@ -2803,7 +2803,7 @@
       - xccdf_mil.disa.stig_rule_SV-88343r1_rule
 
 - name: "MEDIUM | WN16-SO-000330 | NTLM must be prevented from falling back to a Null session."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0
       state: present
       value: allownullsessionfallback
@@ -2816,7 +2816,7 @@
       - xccdf_mil.disa.stig_rule_SV-88345r1_rule
 
 - name: "MEDIUM | WN16-SO-000340 | PKU2U authentication using online identities must be prevented."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\pku2u
       state: present
       value: AllowOnlineID
@@ -2829,7 +2829,7 @@
       - xccdf_mil.disa.stig_rule_SV-88347r1_rule
 
 - name: "MEDIUM | WN16-SO-000350 | Kerberos encryption types must be configured to prevent the use of DES and RC4 encryption suites."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System\Kerberos\Parameters
       state: present
       value: SupportedEncryptionTypes
@@ -2842,7 +2842,7 @@
       - xccdf_mil.disa.stig_rule_SV-88349r2_rule
 
 - name: "MEDIUM | WN16-SO-000390 | Windows Server 2016 must be configured to at least negotiate signing for LDAP client signing."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SYSTEM\CurrentControlSet\Services\LDAP
       state: present
       value: LDAPClientIntegrity
@@ -2856,7 +2856,7 @@
       - borked_regkey_casesensitive
 
 - name: "MEDIUM | WN16-SO-000400 | Session security for NTLM SSP-based clients must be configured to require NTLMv2 session security and 128-bit encryption."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0
       state: present
       value: NTLMMinClientSec
@@ -2870,7 +2870,7 @@
       - borked_regkey_casesensitive
 
 - name: "MEDIUM | WN16-SO-000410 | Session security for NTLM SSP-based servers must be configured to require NTLMv2 session security and 128-bit encryption."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\MSV1_0
       state: present
       value: NTLMMinServerSec
@@ -2884,7 +2884,7 @@
       - borked_regkey_casesensitive
 
 - name: "MEDIUM | WN16-SO-000420 | Users must be required to enter a password to access private keys stored on the computer."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Policies\Microsoft\Cryptography
       state: present
       value: ForceKeyProtection
@@ -2897,7 +2897,7 @@
       - xccdf_mil.disa.stig_rule_SV-88363r1_rule
 
 - name: "MEDIUM | WN16-SO-000430 | Windows Server 2016 must be configured to use FIPS-compliant algorithms for encryption, hashing, and signing."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SYSTEM\CurrentControlSet\Control\Lsa\FIPSAlgorithmPolicy
       state: present
       value: Enabled
@@ -2910,7 +2910,7 @@
       - xccdf_mil.disa.stig_rule_SV-88365r1_rule
 
 - name: "MEDIUM | WN16-SO-000460 | User Account Control approval mode for the built-in Administrator must be enabled."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
       state: present
       value: FilterAdministratorToken
@@ -2925,7 +2925,7 @@
       # - exclusions for server core? think its NA there
 
 - name: "MEDIUM | WN16-SO-000470 | UIAccess applications must not be allowed to prompt for elevation without using the secure desktop."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
       state: present
       value: EnableUIADesktopToggle
@@ -2938,7 +2938,7 @@
       - xccdf_mil.disa.stig_rule_SV-88373r1_rule
 
 - name: "MEDIUM | WN16-SO-000480 | User Account Control must, at a minimum, prompt administrators for consent on the secure desktop."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
       state: present
       value: ConsentPromptBehaviorAdmin
@@ -2951,7 +2951,7 @@
       - xccdf_mil.disa.stig_rule_SV-88375r1_rule
 
 - name: "MEDIUM | WN16-SO-000490 | User Account Control must automatically deny standard user requests for elevation."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
       state: present
       value: ConsentPromptBehaviorUser
@@ -2964,7 +2964,7 @@
       - xccdf_mil.disa.stig_rule_SV-88377r1_rule
 
 - name: "MEDIUM | WN16-SO-000500 | User Account Control must be configured to detect application installations and prompt for elevation."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
       state: present
       value: EnableInstallerDetection
@@ -2977,7 +2977,7 @@
       - SV-88379r1
 
 - name: "MEDIUM | WN16-SO-000510 | User Account Control must only elevate UIAccess applications that are installed in secure locations."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
       state: present
       value: EnableSecureUIAPaths
@@ -2990,7 +2990,7 @@
       - SV-88381r1
 
 - name: "MEDIUM | WN16-SO-000520 | User Account Control must run all administrators in Admin Approval Mode, enabling UAC."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
       state: present
       value: EnableLUA
@@ -3003,7 +3003,7 @@
       - SV-88383r1
 
 - name: "MEDIUM | WN16-SO-000530 | User Account Control must virtualize file and registry write failures to per-user locations."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System
       state: present
       value: EnableVirtualization
@@ -3016,7 +3016,7 @@
       - SV-88385r1
 
 - name: "MEDIUM | WN16-UC-000030 | Zone information must be preserved when saving attachments."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\Attachments
       state: present
       value: SaveZoneInformation
@@ -3029,7 +3029,7 @@
       - SV-88391r1_rule
 
 - name: "MEDIUM | WN16-UR-000010 | The Access Credential Manager as a trusted caller user right must not be assigned to any groups or accounts."
-  win_security_policy:
+  community.windows.win_security_policy:
       section: Privilege Rights
       key: SeTrustedCredManAccessPrivilege
       value: ""
@@ -3040,7 +3040,7 @@
       - SV-88393r2
 
 - name: "MEDIUM | WN16-DC-000340 | The Access this computer from the network user right must only be assigned to the Administrators, Authenticated Users, and Enterprise Domain Controllers groups on domain controllers."
-  win_user_right:
+  ansible.windows.win_user_right:
       name: SeNetworkLogonRight
       users:
           - Administrators
@@ -3055,7 +3055,7 @@
       - SV-88395r3_rule
 
 - name: "MEDIUM | WN16-MS-000340 | The Access this computer from the network user right must only be assigned to the Administrators and Authenticated Users groups on member servers."
-  win_user_right:
+  ansible.windows.win_user_right:
       name: SeNetworkLogonRight
       users:
           - Administrators
@@ -3068,7 +3068,7 @@
       - SV-88397r3
 
 - name: "MEDIUM | WN16-DC-000350 | The Add workstations to domain user right must only be assigned to the Administrators group."
-  win_user_right:
+  ansible.windows.win_user_right:
       name: SeMachineAccountPrivilege
       users: Administrators
       action: set
@@ -3080,7 +3080,7 @@
       - SV-88401r2_rule
 
 - name: "MEDIUM | WN16-UR-000050 | The Allow log on locally user right must only be assigned to the Administrators group."
-  win_user_right:
+  ansible.windows.win_user_right:
       name: SeInteractiveLogonRight
       users: Administrators
       action: set
@@ -3091,7 +3091,7 @@
       - SV-88403r2
 
 - name: "MEDIUM | WN16-DC-000360 | The Allow log on through Remote Desktop Services user right must only be assigned to the Administrators group."
-  win_user_right:
+  ansible.windows.win_user_right:
       name: SeRemoteInteractiveLogonRight
       users: Administrators
       action: set
@@ -3103,7 +3103,7 @@
       - SV-88405r2
 
 - name: "MEDIUM | WN16-UR-000070 | The Back up files and directories user right must only be assigned to the Administrators group."
-  win_user_right:
+  ansible.windows.win_user_right:
       name: SeBackupPrivilege
       users: Administrators
       action: set
@@ -3115,7 +3115,7 @@
       - borked_passes_when_empty
 
 - name: "MEDIUM | WN16-UR-000080 | The Create a pagefile user right must only be assigned to the Administrators group."
-  win_user_right:
+  ansible.windows.win_user_right:
       name: SeCreatePagefilePrivilege
       users: Administrators
       action: set
@@ -3127,7 +3127,7 @@
       - borked_passes_when_empty
 
 - name: "MEDIUM | WN16-UR-000100 | The Create global objects user right must only be assigned to Administrators, Service, Local Service, and Network Service."
-  win_user_right:
+  ansible.windows.win_user_right:
       name: SeCreateGlobalPrivilege
       users:
           - Administrators
@@ -3142,7 +3142,7 @@
       - SV-88413r2
 
 - name: "MEDIUM | WN16-UR-000110 | The Create permanent shared objects user right must not be assigned to any groups or accounts."
-  win_security_policy:
+  community.windows.win_security_policy:
       section: Privilege Rights
       key: SeCreatePermanentPrivilege
       value: ""
@@ -3153,7 +3153,7 @@
       - SV-88415r2
 
 - name: "MEDIUM | WN16-UR-000120 | The Create symbolic links user right must only be assigned to the Administrators group."
-  win_user_right:
+  ansible.windows.win_user_right:
       name: SeCreateSymbolicLinkPrivilege
       users: Administrators
       action: set
@@ -3164,7 +3164,7 @@
       - SV-88417r2
 
 - name: "MEDIUM | WN16-DC-000370 | The Deny access to this computer from the network user right on domain controllers must be configured to prevent unauthenticated access."
-  win_user_right:
+  ansible.windows.win_user_right:
       name: SeDenyNetworkLogonRight
       users: Guests
       action: set
@@ -3178,7 +3178,7 @@
 - name: "MEDIUM | WN16-MS-000370 | The Deny access to this computer from the network user right on member servers must be configured to prevent access from highly privileged domain accounts and local accounts on domain systems, and from unauthenticated access on all systems."
   block:
       - name: "MEDIUM | WN16-MS-000370 | AUDIT | The Deny access to this computer from the network user right on member servers must be configured to prevent access from highly privileged domain accounts and local accounts on domain systems, and from unauthenticated access on all systems."
-        win_user_right:
+        ansible.windows.win_user_right:
             name: SeDenyNetworkLogonRight
             users:
                 - Guests
@@ -3190,7 +3190,7 @@
         when: ansible_windows_domain_role == "Member server"
 
       - name: "MEDIUM | WN16-MS-000370 | PATCH | The Deny access to this computer from the network user right on member servers must be configured to prevent access from highly privileged domain accounts and local accounts on domain systems, and from unauthenticated access on all systems."
-        win_user_right:
+        ansible.windows.win_user_right:
             name: SeDenyNetworkLogonRight
             users: Guests
             action: set
@@ -3203,7 +3203,7 @@
       - borked_if_ansible_svc_is_admin_domain_member_fails_after
 
 - name: "MEDIUM | WN16-DC-000380 | The Deny log on as a batch job user right on domain controllers must be configured to prevent unauthenticated access."
-  win_user_right:
+  ansible.windows.win_user_right:
       name: SeDenyBatchLogonRight
       users: Guests
       action: set
@@ -3217,7 +3217,7 @@
 - name: "MEDIUM | WN16-MS-000380 | The Deny log on as a batch job user right on member servers must be configured to prevent access from highly privileged domain accounts on domain systems and from unauthenticated access on all systems."
   block:
       - name: "MEDIUM | WN16-MS-000380 | DOMAIN MEMBER | The Deny log on as a batch job user right on member servers must be configured to prevent access from highly privileged domain accounts on domain systems and from unauthenticated access on all systems."
-        win_user_right:
+        ansible.windows.win_user_right:
             name: SeDenyBatchLogonRight
             users:
                 - Enterprise Admins
@@ -3227,7 +3227,7 @@
         when: ansible_windows_domain_role == "Member server"
 
       - name: "MEDIUM | WN16-MS-000380 | STAND-ALONE | The Deny log on as a batch job user right on member servers must be configured to prevent access from highly privileged domain accounts on domain systems and from unauthenticated access on all systems."
-        win_user_right:
+        ansible.windows.win_user_right:
             name: SeDenyBatchLogonRight
             users:
                 - Guests
@@ -3240,7 +3240,7 @@
       - SV-88427r2
 
 - name: "MEDIUM | WN16-DC-000390 | The Deny log on as a service user right must be configured to include no accounts or groups (blank) on domain controllers."
-  win_security_policy:
+  community.windows.win_security_policy:
       section: Privilege Rights
       key: SeDenyServiceLogonRight
       value: ""
@@ -3252,7 +3252,7 @@
       - SV-88429r2
 
 - name: "MEDIUM | WN16-MS-000390 | The Deny log on as a service user right on member servers must be configured to prevent access from highly privileged domain accounts on domain systems. No other groups or accounts must be assigned this right."
-  win_user_right:
+  ansible.windows.win_user_right:
       name: SeDenyServiceLogonRight
       users:
           - Enterprise Admins
@@ -3266,7 +3266,7 @@
       - SV-88431r2
 
 - name: "MEDIUM | WN16-DC-000400 | The Deny log on locally user right on domain controllers must be configured to prevent unauthenticated access."
-  win_user_right:
+  ansible.windows.win_user_right:
       name: SeDenyInteractiveLogonRight
       users: Guests
       action: set
@@ -3280,7 +3280,7 @@
 - name: "MEDIUM | WN16-MS-000400 | The Deny log on locally user right on member servers must be configured to prevent access from highly privileged domain accounts on domain systems and from unauthenticated access on all systems."
   block:
       - name: "MEDIUM | WN16-MS-000400 | DOMAIN MEMBER | The Deny log on locally user right on member servers must be configured to prevent access from highly privileged domain accounts on domain systems and from unauthenticated access on all systems."
-        win_user_right:
+        ansible.windows.win_user_right:
             name: SeDenyInteractiveLogonRight
             users:
                 - Guests
@@ -3290,7 +3290,7 @@
         when: ansible_windows_domain_role == "Member server"
 
       - name: "MEDIUM | WN16-MS-000400 | STAND-ALONE | The Deny log on locally user right on member servers must be configured to prevent access from highly privileged domain accounts on domain systems and from unauthenticated access on all systems."
-        win_user_right:
+        ansible.windows.win_user_right:
             name: SeDenyInteractiveLogonRight
             users:
                 - Guests
@@ -3303,7 +3303,7 @@
       - SV-88435r3
 
 - name: "MEDIUM | WN16-DC-000410 | The Deny log on through Remote Desktop Services user right on domain controllers must be configured to prevent unauthenticated access."
-  win_user_right:
+  ansible.windows.win_user_right:
       name: SeDenyRemoteInteractiveLogonRight
       users: Guests
       action: set
@@ -3317,7 +3317,7 @@
 - name: "MEDIUM | WN16-MS-000410 | The Deny log on through Remote Desktop Services user right on member servers must be configured to prevent access from highly privileged domain accounts and all local accounts on domain systems and from unauthenticated access on all systems."
   block:
       - name: "MEDIUM | WN16-MS-000410 | DOMAIN MEMBER | The Deny log on through Remote Desktop Services user right on member servers must be configured to prevent access from highly privileged domain accounts and all local accounts on domain systems and from unauthenticated access on all systems."
-        win_user_right:
+        ansible.windows.win_user_right:
             name: SeDenyRemoteInteractiveLogonRight
             users:
                 - Guests
@@ -3328,7 +3328,7 @@
         when: ansible_windows_domain_role == "Member server"
 
       - name: "MEDIUM | WN16-MS-000410 | STAND-ALONE | The Deny log on through Remote Desktop Services user right on member servers must be configured to prevent access from highly privileged domain accounts and all local accounts on domain systems and from unauthenticated access on all systems."
-        win_user_right:
+        ansible.windows.win_user_right:
             name: SeDenyRemoteInteractiveLogonRight
             users:
                 - Guests
@@ -3341,7 +3341,7 @@
       - SV-88439r3
 
 - name: "MEDIUM | WN16-DC-000420 | The Enable computer and user accounts to be trusted for delegation user right must only be assigned to the Administrators group on domain controllers."
-  win_user_right:
+  ansible.windows.win_user_right:
       name: SeEnableDelegationPrivilege
       users: Administrators
       action: set
@@ -3353,7 +3353,7 @@
       - SV-88441r2
 
 - name: "MEDIUM | WN16-MS-000420 | The Enable computer and user accounts to be trusted for delegation user right must not be assigned to any groups or accounts on member servers."
-  win_security_policy:
+  community.windows.win_security_policy:
       section: Privilege Rights
       key: SeEnableDelegationPrivilege
       value: ""
@@ -3364,7 +3364,7 @@
       - SV-88443r2
 
 - name: "MEDIUM | WN16-UR-000200 | The Force shutdown from a remote system user right must only be assigned to the Administrators group."
-  win_user_right:
+  ansible.windows.win_user_right:
       name: SeRemoteShutdownPrivilege
       users: Administrators
       action: set
@@ -3376,7 +3376,7 @@
       - borked_passes_when_empty
 
 - name: "MEDIUM | WN16-UR-000210 | The Generate security audits user right must only be assigned to Local Service and Network Service."
-  win_user_right:
+  ansible.windows.win_user_right:
       name: SeAuditPrivilege
       users:
           - Local Service
@@ -3389,7 +3389,7 @@
       - SV-88447r2
 
 - name: "MEDIUM | WN16-UR-000220 | The Impersonate a client after authentication user right must only be assigned to Administrators, Service, Local Service, and Network Service."
-  win_user_right:
+  ansible.windows.win_user_right:
       name: SeImpersonatePrivilege
       users:
           - Administrators
@@ -3404,7 +3404,7 @@
       - xccdf_mil.disa.stig_rule_SV-88449r2_rule
 
 - name: "MEDIUM | WN16-UR-000230 | The Increase scheduling priority user right must only be assigned to the Administrators group."
-  win_user_right:
+  ansible.windows.win_user_right:
       name: SeIncreaseBasePriorityPrivilege
       users: Administrators
       action: set
@@ -3416,7 +3416,7 @@
       - borked_passes_when_empty
 
 - name: "MEDIUM | WN16-UR-000240 | The Load and unload device drivers user right must only be assigned to the Administrators group."
-  win_user_right:
+  ansible.windows.win_user_right:
       name: SeLoadDriverPrivilege
       users: Administrators
       action: set
@@ -3428,7 +3428,7 @@
       - borked_passes_when_empty
 
 - name: "MEDIUM | WN16-UR-000250 | The Lock pages in memory user right must not be assigned to any groups or accounts."
-  win_security_policy:
+  community.windows.win_security_policy:
       section: Privilege Rights
       key: SeLockMemoryPrivilege
       value: ""
@@ -3439,7 +3439,7 @@
       - SV-88455r2_rule
 
 - name: "MEDIUM | WN16-UR-000260 | The Manage auditing and security log user right must only be assigned to the Administrators group."
-  win_user_right:
+  ansible.windows.win_user_right:
       name: SeSecurityPrivilege
       users: Administrators
       action: set
@@ -3450,7 +3450,7 @@
       - SV-88457r2_rule
 
 - name: "MEDIUM | WN16-UR-000270 | The Modify firmware environment values user right must only be assigned to the Administrators group."
-  win_user_right:
+  ansible.windows.win_user_right:
       name: SeSystemEnvironmentPrivilege
       users: Administrators
       action: set
@@ -3461,7 +3461,7 @@
       - SV-88459r2_rule
 
 - name: "MEDIUM | WN16-UR-000280 | The Perform volume maintenance tasks user right must only be assigned to the Administrators group."
-  win_user_right:
+  ansible.windows.win_user_right:
       name: SeManageVolumePrivilege
       users: Administrators
       action: set
@@ -3472,7 +3472,7 @@
       - SV-88461r2_rule
 
 - name: "MEDIUM | WN16-UR-000290 | The Profile single process user right must only be assigned to the Administrators group."
-  win_user_right:
+  ansible.windows.win_user_right:
       name: SeProfileSingleProcessPrivilege
       users: Administrators
       action: set
@@ -3483,7 +3483,7 @@
       - SV-88463r2
 
 - name: "MEDIUM | WN16-UR-000300 | The Restore files and directories user right must only be assigned to the Administrators group."
-  win_user_right:
+  ansible.windows.win_user_right:
       name: SeRestorePrivilege
       users: Administrators
       action: set
@@ -3494,7 +3494,7 @@
       - SV-88465r2_rule
 
 - name: "MEDIUM | WN16-UR-000310 | The Take ownership of files or other objects user right must only be assigned to the Administrators group."
-  win_user_right:
+  ansible.windows.win_user_right:
       name: SeTakeOwnershipPrivilege
       users: Administrators
       action: set
@@ -3505,7 +3505,7 @@
       - SV-88467r2_rule
 
 - name: "MEDIUM | WN16-SO-000180 | The Smart Card removal option must be configured to Force Logoff or Lock Workstation."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon
       state: present
       value: scremoveoption
@@ -3518,7 +3518,7 @@
       - xccdf_mil.disa.stig_rule_SV-88473r1_rule
 
 - name: "MEDIUM | WN16-SO-000010 | Windows Server 2016 built-in guest account must be disabled."
-  win_security_policy:
+  community.windows.win_security_policy:
       section: System Access
       key: EnableGuestAccount
       value: 0
@@ -3529,7 +3529,7 @@
       - SV-88475r2
 
 - name: "MEDIUM | WN16-00-000411 | The Server Message Block (SMB) v1 protocol must be disabled on the SMB server."
-  win_regedit:
+  ansible.windows.win_regedit:
       path: HKLM:\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters
       state: present
       value: SMB1
@@ -3544,14 +3544,14 @@
 - name: "MEDIUM | WN16-00-000412 | The Server Message Block (SMB) v1 protocol must be disabled on the SMB client."
   block:
       - name: "MEDIUM | WN16-00-000412 | The Server Message Block (SMB) v1 protocol must be disabled on the SMB client - mrxsmb10."
-        win_regedit:
+        ansible.windows.win_regedit:
             path: HKLM:\SYSTEM\CurrentControlSet\Services\mrxsmb10
             state: present
             value: Start
             data: 4
             datatype: dword
       - name: "MEDIUM | WN16-00-000412 | The Server Message Block (SMB) v1 protocol must be disabled on the SMB client - LanmanWorkstation."
-        win_regedit:
+        ansible.windows.win_regedit:
             path: HKLM:\SYSTEM\CurrentControlSet\Services\LanmanWorkstation
             state: present
             value: DependOnService
@@ -3567,13 +3567,13 @@
 - name: "MEDIUM | WN16-00-000460 | Orphaned security identifiers (SIDs) must be removed from user rights on Windows 2016."
   block:
       - name: "MEDIUM | WN16-00-000460 | AUDIT | Orphaned security identifiers (SIDs) must be removed from user rights on Windows 2016."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         register: wn16_00_000460_audit
         check_mode: no
         changed_when: no
 
       - name: "MEDIUM | WN16-00-000460 | PATCH | Orphaned security identifiers (SIDs) must be removed from user rights on Windows 2016."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_00_000460
@@ -3586,7 +3586,7 @@
       # https://www.stigviewer.com/stig/windows_server_2016/2019-01-16/finding/V-78127
 
 - name: "MEDIUM | WN16-AU-000285 | Windows 2016 must be configured to audit Object Access - Other Object Access Events successes."
-  win_audit_policy_system:
+  community.windows.win_audit_policy_system:
       subcategory: Other Object Access Events
       audit_type: success, failure
   when:
@@ -3596,7 +3596,7 @@
       - xccdf_mil.disa.stig_rule_SV-101009r1_rule
 
 - name: "MEDIUM | WN16-AU-000286 | Windows 2016 must be configured to audit Object Access - Other Object Access Events failures."
-  win_audit_policy_system:
+  community.windows.win_audit_policy_system:
       subcategory: Other Object Access Events
       audit_type: success, failure
   when:
@@ -3608,7 +3608,7 @@
 - name: "MEDIUM | WN16-DC-000430 | The password for the krbtgt account on a domain must be reset at least every 180 days."
   block:
       - name: "MEDIUM | WN16-DC-000430 | AUDIT | The password for the krbtgt account on a domain must be reset at least every 180 days."
-        win_shell: "Get-ADUser krbtgt -Property PasswordLastSet | Where-Object {$_.PasswordLastSet -lt ((Get-Date).AddDays(-{{ wn16_dc_000430_pass_age }}))} | Select-Object -ExpandProperty PasswordLastSet"
+        ansible.windows.win_shell: "Get-ADUser krbtgt -Property PasswordLastSet | Where-Object {$_.PasswordLastSet -lt ((Get-Date).AddDays(-{{ wn16_dc_000430_pass_age }}))} | Select-Object -ExpandProperty PasswordLastSet"
         register: wn16_dc_000430_audit
         check_mode: no
         changed_when: wn16_dc_000430_audit.stdout != ""
@@ -3616,7 +3616,7 @@
       ## this seems highly prone to breakage? its a DC acct, has replicate. if you screw it up, it could stop kerberos tickets and break auth things
       ## https://www.kjctech.net/do-you-need-to-update-krbtgt-account-password/
       - name: "MEDIUM | WN16-DC-000430 | PATCH | The password for the krbtgt account on a domain must be reset at least every 180 days."
-        win_shell: echo true
+        ansible.windows.win_shell: echo true
         changed_when: no
   when:
       - wn16_dc_000430
@@ -3629,11 +3629,11 @@
 - name: "MEDIUM | WN16-00-000300 | The roles and features required by the system must be documented."
   block:
       - name: "MEDIUM | WN16-00-000300 | AUDIT | The roles and features required by the system must be documented."
-        win_shell: Get-WindowsFeature | Where InstallState -Eq Installed
+        ansible.windows.win_shell: Get-WindowsFeature | Where InstallState -Eq Installed
         register: wn16_00_000300_audit
         check_mode: no
         changed_when: no
-      - debug:
+      - ansible.builtin.debug:
             var: wn16_00_000300_audit.stdout_lines
   when:
       - wn16_00_000300

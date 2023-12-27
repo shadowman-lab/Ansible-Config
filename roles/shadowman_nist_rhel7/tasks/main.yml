@@ -38,7 +38,7 @@
 ###############################################################################
 
 - name: Ensure dracut-fips is installed
-  package:
+  ansible.builtin.package:
     name: dracut-fips
     state: present
   when:
@@ -63,7 +63,7 @@
     - package_dracut-fips_installed
 
 - name: check prelink binary installed
-  stat:
+  ansible.builtin.stat:
     path: /usr/sbin/prelink
   register: prelink_exists
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
@@ -87,7 +87,7 @@
     - restrict_strategy
 
 - name: disable prelink
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /etc/sysconfig/prelink
     regexp: ^#?PRELINKING
     line: PRELINKING=no
@@ -114,7 +114,7 @@
     - restrict_strategy
 
 - name: revert prelinking binaries
-  command: /usr/sbin/prelink -ua
+  ansible.builtin.command: /usr/sbin/prelink -ua
   when:
     - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
     - prelink_exists.stat.exists
@@ -138,7 +138,7 @@
     - restrict_strategy
 
 - name: Check if system supports AES-NI
-  command: grep -q -m1 -o aes /proc/cpuinfo
+  ansible.builtin.command: grep -q -m1 -o aes /proc/cpuinfo
   failed_when: aesni_supported.rc > 1
   register: aesni_supported
   check_mode: false
@@ -163,7 +163,7 @@
     - restrict_strategy
 
 - name: Ensure dracut-fips-aesni is installed
-  package:
+  ansible.builtin.package:
     name: dracut-fips-aesni
     state: present
   when:
@@ -190,7 +190,7 @@
     - restrict_strategy
 
 - name: install dracut-fips
-  package:
+  ansible.builtin.package:
     name: dracut-fips
     state: present
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
@@ -214,7 +214,7 @@
     - restrict_strategy
 
 - name: Rebuild initramfs
-  command: dracut -f
+  ansible.builtin.command: dracut -f
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
   tags:
     - CCE-80359-3
@@ -236,7 +236,7 @@
     - restrict_strategy
 
 - name: check fips argument exists
-  command: grep 'GRUB_CMDLINE_LINUX.*fips=' /etc/default/grub
+  ansible.builtin.command: grep 'GRUB_CMDLINE_LINUX.*fips=' /etc/default/grub
   failed_when: false
   register: fipsargcheck
   check_mode: false
@@ -261,7 +261,7 @@
     - restrict_strategy
 
 - name: replace existing fips argument
-  replace:
+  ansible.builtin.replace:
     path: /etc/default/grub
     regexp: fips=.
     replace: fips=1
@@ -288,7 +288,7 @@
     - restrict_strategy
 
 - name: add fips argument
-  replace:
+  ansible.builtin.replace:
     path: /etc/default/grub
     regexp: (GRUB_CMDLINE_LINUX=.*)"
     replace: \1 fips=1"
@@ -315,7 +315,7 @@
     - restrict_strategy
 
 - name: get boot device uuid
-  command: findmnt --noheadings --output uuid --target /boot
+  ansible.builtin.command: findmnt --noheadings --output uuid --target /boot
   register: bootuuid
   check_mode: false
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
@@ -339,7 +339,7 @@
     - restrict_strategy
 
 - name: check boot argument exists
-  command: grep 'GRUB_CMDLINE_LINUX.*boot=' /etc/default/grub
+  ansible.builtin.command: grep 'GRUB_CMDLINE_LINUX.*boot=' /etc/default/grub
   failed_when: false
   register: bootargcheck
   check_mode: false
@@ -364,7 +364,7 @@
     - restrict_strategy
 
 - name: replace existing boot argument
-  replace:
+  ansible.builtin.replace:
     path: /etc/default/grub
     regexp: boot=\w*-\w*-\w*-\w*-\w*
     replace: boot={{ bootuuid.stdout }}
@@ -391,7 +391,7 @@
     - restrict_strategy
 
 - name: add boot argument
-  replace:
+  ansible.builtin.replace:
     path: /etc/default/grub
     regexp: (GRUB_CMDLINE_LINUX=.*)"
     replace: \1 boot=UUID={{ bootuuid.stdout }}"
@@ -418,7 +418,7 @@
     - restrict_strategy
 
 - name: update bootloader menu
-  command: /sbin/grubby --update-kernel=ALL --args="fips=1 boot=UUID={{ bootuuid.stdout
+  ansible.builtin.command: /sbin/grubby --update-kernel=ALL --args="fips=1 boot=UUID={{ bootuuid.stdout
     }}"
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
   tags:
@@ -441,7 +441,7 @@
     - restrict_strategy
 
 - name: Gather the package facts
-  package_facts:
+  ansible.builtin.package_facts:
     manager: auto
   tags:
     - CCE-26989-4
@@ -466,7 +466,7 @@
     - unknown_strategy
 
 - name: Check existence of yum on Fedora
-  stat:
+  ansible.builtin.stat:
     path: /etc/yum.conf
   register: yum_config_file
   check_mode: false
@@ -496,7 +496,7 @@
     - unknown_strategy
 
 - name: Ensure GPG check is globally activated (yum)
-  ini_file:
+  community.general.ini_file:
     dest: /etc/yum.conf
     section: main
     option: gpgcheck
@@ -530,7 +530,7 @@
     - unknown_strategy
 
 - name: Ensure GPG check is globally activated (dnf)
-  ini_file:
+  community.general.ini_file:
     dest: /etc/dnf/dnf.conf
     section: main
     option: gpgcheck
@@ -563,7 +563,7 @@
     - unknown_strategy
 
 - name: Gather the package facts
-  package_facts:
+  ansible.builtin.package_facts:
     manager: auto
   tags:
     - CCE-80347-8
@@ -583,7 +583,7 @@
     - unknown_strategy
 
 - name: Check existence of yum on Fedora
-  stat:
+  ansible.builtin.stat:
     path: /etc/yum.conf
   register: yum_config_file
   check_mode: false
@@ -608,7 +608,7 @@
     - unknown_strategy
 
 - name: Ensure GPG check Enabled for Local Packages (Yum)
-  ini_file:
+  community.general.ini_file:
     dest: /etc/yum.conf
     section: main
     option: localpkg_gpgcheck
@@ -636,7 +636,7 @@
     - unknown_strategy
 
 - name: Ensure GPG check Enabled for Local Packages (DNF)
-  ini_file:
+  community.general.ini_file:
     dest: /etc/dnf/dnf.conf
     section: main
     option: localpkg_gpgcheck
@@ -663,7 +663,7 @@
     - unknown_strategy
 
 - name: Grep for yum repo section names
-  shell: |
+  ansible.builtin.shell: |
     set -o pipefail
     grep -HEr '^\[.+\]' -r /etc/yum.repos.d/
   register: repo_grep_results
@@ -692,7 +692,7 @@
     - no_reboot_needed
 
 - name: Set gpgcheck=1 for each yum repo
-  ini_file:
+  community.general.ini_file:
     path: '{{ item[0] }}'
     section: '{{ item[1] }}'
     option: gpgcheck
@@ -722,7 +722,7 @@
     - no_reboot_needed
 
 - name: Read permission of GPG key directory
-  stat:
+  ansible.builtin.stat:
     path: /etc/pki/rpm-gpg/
   register: gpg_key_directory_permission
   check_mode: false
@@ -744,7 +744,7 @@
     - restrict_strategy
 
 - name: Read signatures in GPG key
-  command: gpg --with-fingerprint --with-colons "/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release"
+  ansible.builtin.command: gpg --with-fingerprint --with-colons "/etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release"
   changed_when: false
   register: gpg_fingerprints
   check_mode: false
@@ -766,7 +766,7 @@
     - restrict_strategy
 
 - name: Set Fact - Installed GPG Fingerprints
-  set_fact:
+  ansible.builtin.set_fact:
     gpg_installed_fingerprints: |-
       {{ gpg_fingerprints.stdout | regex_findall('^pub.*
       (?:^fpr[:]*)([0-9A-Fa-f]*)', '\1') | list }}
@@ -788,7 +788,7 @@
     - restrict_strategy
 
 - name: Set Fact - Valid fingerprints
-  set_fact:
+  ansible.builtin.set_fact:
     gpg_valid_fingerprints: ("567E347AD0044ADE55BA8A5F199E2F91FD431D51" "43A6E49C4A38F4BE9ABF2A5345689C882FA658E0")
   tags:
     - CCE-26957-1
@@ -808,7 +808,7 @@
     - restrict_strategy
 
 - name: Import RedHat GPG key
-  rpm_key:
+  ansible.builtin.rpm_key:
     state: present
     key: /etc/pki/rpm-gpg/RPM-GPG-KEY-redhat-release
   when:
@@ -835,7 +835,7 @@
     - restrict_strategy
 
 - name: Gather the package facts
-  package_facts:
+  ansible.builtin.package_facts:
     manager: auto
   tags:
     - CCE-82030-8
@@ -854,7 +854,7 @@
 
 
 - name: Do not allow users to reuse recent passwords - system-auth (change)
-  replace:
+  ansible.builtin.replace:
     dest: /etc/pam.d/system-auth
     regexp: ^(password\s+sufficient\s+pam_unix\.so\s.*remember\s*=\s*)(\S+)(.*)$
     replace: \g<1>{{ var_password_pam_unix_remember }}\g<3>
@@ -875,7 +875,7 @@
     - no_reboot_needed
 
 - name: Do not allow users to reuse recent passwords - system-auth (add)
-  replace:
+  ansible.builtin.replace:
     dest: /etc/pam.d/system-auth
     regexp: ^password\s+sufficient\s+pam_unix\.so\s(?!.*remember\s*=\s*).*$
     replace: \g<0> remember={{ var_password_pam_unix_remember }}
@@ -896,7 +896,7 @@
     - no_reboot_needed
 
 - name: Gather the package facts
-  package_facts:
+  ansible.builtin.package_facts:
     manager: auto
   tags:
     - CCE-27350-8
@@ -915,7 +915,7 @@
 
 
 - name: Add auth pam_faillock preauth deny before pam_unix.so
-  pamd:
+  community.general.pamd:
     name: '{{ item }}'
     type: auth
     control: sufficient
@@ -946,7 +946,7 @@
     - restrict_strategy
 
 - name: Add deny argument to auth pam_faillock preauth
-  pamd:
+  community.general.pamd:
     name: '{{ item }}'
     type: auth
     control: required
@@ -974,7 +974,7 @@
     - restrict_strategy
 
 - name: Add auth pam_faillock authfail deny after pam_unix.so
-  pamd:
+  community.general.pamd:
     name: '{{ item }}'
     type: auth
     control: sufficient
@@ -1004,7 +1004,7 @@
     - restrict_strategy
 
 - name: Add deny argument to auth pam_faillock authfail
-  pamd:
+  community.general.pamd:
     name: '{{ item }}'
     type: auth
     new_type: auth
@@ -1032,7 +1032,7 @@
     - restrict_strategy
 
 - name: Add account pam_faillock before pam_unix.so
-  pamd:
+  community.general.pamd:
     name: '{{ item }}'
     type: account
     control: required
@@ -1061,7 +1061,7 @@
     - restrict_strategy
 
 - name: Gather the package facts
-  package_facts:
+  ansible.builtin.package_facts:
     manager: auto
   tags:
     - CCE-27297-1
@@ -1077,7 +1077,7 @@
 
 
 - name: Add auth pam_faillock preauth fail_interval before pam_unix.so
-  pamd:
+  community.general.pamd:
     name: '{{ item }}'
     type: auth
     control: sufficient
@@ -1105,7 +1105,7 @@
     - restrict_strategy
 
 - name: Add fail_interval argument to auth pam_faillock preauth
-  pamd:
+  community.general.pamd:
     name: '{{ item }}'
     type: auth
     control: required
@@ -1130,7 +1130,7 @@
     - restrict_strategy
 
 - name: Add auth pam_faillock aufthfail fail_interval after pam_unix.so
-  pamd:
+  community.general.pamd:
     name: '{{ item }}'
     type: auth
     control: sufficient
@@ -1158,7 +1158,7 @@
     - restrict_strategy
 
 - name: Add fail_interval argument to auth pam_faillock authfail
-  pamd:
+  community.general.pamd:
     name: '{{ item }}'
     type: auth
     control: '[default=die]'
@@ -1183,7 +1183,7 @@
     - restrict_strategy
 
 - name: Add account pam_faillock before pam_unix.so
-  pamd:
+  community.general.pamd:
     name: '{{ item }}'
     type: account
     control: required
@@ -1209,7 +1209,7 @@
     - restrict_strategy
 
 - name: Gather the package facts
-  package_facts:
+  ansible.builtin.package_facts:
     manager: auto
   tags:
     - CCE-26884-7
@@ -1228,7 +1228,7 @@
 
 
 - name: Add auth pam_faillock preauth unlock_time before pam_unix.so
-  pamd:
+  community.general.pamd:
     name: '{{ item }}'
     type: auth
     control: sufficient
@@ -1259,7 +1259,7 @@
     - restrict_strategy
 
 - name: Add unlock_time argument to pam_faillock preauth
-  pamd:
+  community.general.pamd:
     name: '{{ item }}'
     type: auth
     control: required
@@ -1287,7 +1287,7 @@
     - restrict_strategy
 
 - name: Add auth pam_faillock authfail unlock_interval after pam_unix.so
-  pamd:
+  community.general.pamd:
     name: '{{ item }}'
     type: auth
     control: sufficient
@@ -1318,7 +1318,7 @@
     - restrict_strategy
 
 - name: Add unlock_time argument to auth pam_faillock authfail
-  pamd:
+  community.general.pamd:
     name: '{{ item }}'
     type: auth
     control: '[default=die]'
@@ -1346,7 +1346,7 @@
     - restrict_strategy
 
 - name: Add account pam_faillock before pam_unix.so
-  pamd:
+  community.general.pamd:
     name: '{{ item }}'
     type: account
     control: required
@@ -1375,7 +1375,7 @@
     - restrict_strategy
 
 - name: Gather the package facts
-  package_facts:
+  ansible.builtin.package_facts:
     manager: auto
   tags:
     - CCE-27214-6
@@ -1394,7 +1394,7 @@
 
 
 - name: Ensure PAM variable dcredit is set accordingly
-  lineinfile:
+  ansible.builtin.lineinfile:
     create: true
     dest: /etc/security/pwquality.conf
     regexp: ^#?\s*dcredit
@@ -1416,7 +1416,7 @@
     - restrict_strategy
 
 - name: Gather the package facts
-  package_facts:
+  ansible.builtin.package_facts:
     manager: auto
   tags:
     - CCE-82020-9
@@ -1435,7 +1435,7 @@
 
 
 - name: Ensure PAM variable difok is set accordingly
-  lineinfile:
+  ansible.builtin.lineinfile:
     create: true
     dest: /etc/security/pwquality.conf
     regexp: ^#?\s*difok
@@ -1457,7 +1457,7 @@
     - restrict_strategy
 
 - name: Gather the package facts
-  package_facts:
+  ansible.builtin.package_facts:
     manager: auto
   tags:
     - CCE-27345-8
@@ -1476,7 +1476,7 @@
 
 
 - name: Ensure PAM variable lcredit is set accordingly
-  lineinfile:
+  ansible.builtin.lineinfile:
     create: true
     dest: /etc/security/pwquality.conf
     regexp: ^#?\s*lcredit
@@ -1498,7 +1498,7 @@
     - restrict_strategy
 
 - name: Gather the package facts
-  package_facts:
+  ansible.builtin.package_facts:
     manager: auto
   tags:
     - CCE-27512-3
@@ -1516,7 +1516,7 @@
 
 
 - name: Ensure PAM variable maxclassrepeat is set accordingly
-  lineinfile:
+  ansible.builtin.lineinfile:
     create: true
     dest: /etc/security/pwquality.conf
     regexp: ^#?\s*maxclassrepeat
@@ -1537,7 +1537,7 @@
     - restrict_strategy
 
 - name: Gather the package facts
-  package_facts:
+  ansible.builtin.package_facts:
     manager: auto
   tags:
     - CCE-82055-5
@@ -1554,7 +1554,7 @@
 
 
 - name: Ensure PAM variable maxrepeat is set accordingly
-  lineinfile:
+  ansible.builtin.lineinfile:
     create: true
     dest: /etc/security/pwquality.conf
     regexp: ^#?\s*maxrepeat
@@ -1574,7 +1574,7 @@
     - restrict_strategy
 
 - name: Gather the package facts
-  package_facts:
+  ansible.builtin.package_facts:
     manager: auto
   tags:
     - CCE-27293-0
@@ -1594,7 +1594,7 @@
 
 
 - name: Ensure PAM variable minlen is set accordingly
-  lineinfile:
+  ansible.builtin.lineinfile:
     create: true
     dest: /etc/security/pwquality.conf
     regexp: ^#?\s*minlen
@@ -1617,7 +1617,7 @@
     - restrict_strategy
 
 - name: Gather the package facts
-  package_facts:
+  ansible.builtin.package_facts:
     manager: auto
   tags:
     - CCE-27360-7
@@ -1635,7 +1635,7 @@
 
 
 - name: Ensure PAM variable ocredit is set accordingly
-  lineinfile:
+  ansible.builtin.lineinfile:
     create: true
     dest: /etc/security/pwquality.conf
     regexp: ^#?\s*ocredit
@@ -1656,7 +1656,7 @@
     - restrict_strategy
 
 - name: Gather the package facts
-  package_facts:
+  ansible.builtin.package_facts:
     manager: auto
   tags:
     - CCE-27200-5
@@ -1675,7 +1675,7 @@
 
 
 - name: Ensure PAM variable ucredit is set accordingly
-  lineinfile:
+  ansible.builtin.lineinfile:
     create: true
     dest: /etc/security/pwquality.conf
     regexp: ^#?\s*ucredit
@@ -1700,10 +1700,10 @@
   block:
 
     - name: Gather the service facts
-      service_facts: null
+      ansible.builtin.service_facts: null
 
     - name: Disable service debug-shell
-      systemd:
+      ansible.builtin.systemd:
         name: debug-shell.service
         enabled: 'no'
         state: stopped
@@ -1721,7 +1721,7 @@
     - service_debug-shell_disabled
 
 - name: Unit Socket Exists - debug-shell.socket
-  command: systemctl list-unit-files debug-shell.socket
+  ansible.builtin.command: systemctl list-unit-files debug-shell.socket
   register: socket_file_exists
   changed_when: false
   ignore_errors: true
@@ -1738,7 +1738,7 @@
     - service_debug-shell_disabled
 
 - name: Disable socket debug-shell
-  systemd:
+  ansible.builtin.systemd:
     name: debug-shell.socket
     enabled: 'no'
     state: stopped
@@ -1757,7 +1757,7 @@
     - service_debug-shell_disabled
 
 - name: Gather the package facts
-  package_facts:
+  ansible.builtin.package_facts:
     manager: auto
   tags:
     - CCE-80449-2
@@ -1773,7 +1773,7 @@
     - no_reboot_needed
 
 - name: Disable Ctrl-Alt-Del Burst Action
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /etc/systemd/system.conf
     state: present
     regexp: ^CtrlAltDelBurstAction
@@ -1794,7 +1794,7 @@
     - no_reboot_needed
 
 - name: Disable Ctrl-Alt-Del Reboot Activation
-  systemd:
+  ansible.builtin.systemd:
     name: ctrl-alt-del.target
     force: true
     masked: true
@@ -1814,7 +1814,7 @@
     - no_reboot_needed
 
 - name: Gather the package facts
-  package_facts:
+  ansible.builtin.package_facts:
     manager: auto
   tags:
     - CCE-27335-9
@@ -1830,7 +1830,7 @@
     - restrict_strategy
 
 - name: Verify that Interactive Boot is Disabled in /etc/default/grub
-  replace:
+  ansible.builtin.replace:
     dest: /etc/default/grub
     regexp: systemd.confirm_spawn=(1|yes|true|on)
     replace: systemd.confirm_spawn=no
@@ -1849,7 +1849,7 @@
     - restrict_strategy
 
 - name: Verify that Interactive Boot is Disabled (runtime)
-  command: /sbin/grubby --update-kernel=ALL --remove-args="systemd.confirm_spawn"
+  ansible.builtin.command: /sbin/grubby --update-kernel=ALL --remove-args="systemd.confirm_spawn"
   when: '"grub2-common" in ansible_facts.packages'
   tags:
     - CCE-27335-9
@@ -1865,7 +1865,7 @@
     - restrict_strategy
 
 - name: require single user mode password
-  lineinfile:
+  ansible.builtin.lineinfile:
     create: true
     dest: /usr/lib/systemd/system/rescue.service
     regexp: ^#?ExecStart=
@@ -1888,7 +1888,7 @@
     - restrict_strategy
 
 - name: Ensure screen is installed
-  package:
+  ansible.builtin.package:
     name: screen
     state: present
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
@@ -1904,7 +1904,7 @@
     - package_screen_installed
 
 - name: Gather the package facts
-  package_facts:
+  ansible.builtin.package_facts:
     manager: auto
   tags:
     - CCE-82049-8
@@ -1922,7 +1922,7 @@
 
 
 - name: Set Password Minimum Length in login.defs
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /etc/login.defs
     regexp: ^PASS_MIN_LEN *[0-9]*
     state: present
@@ -1944,7 +1944,7 @@
     - restrict_strategy
 
 - name: Prevent Log In to Accounts With Empty Password - system-auth
-  replace:
+  ansible.builtin.replace:
     dest: /etc/pam.d/system-auth
     regexp: nullok
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
@@ -1966,7 +1966,7 @@
     - no_reboot_needed
 
 - name: Prevent Log In to Accounts With Empty Password - password-auth
-  replace:
+  ansible.builtin.replace:
     dest: /etc/pam.d/password-auth
     regexp: nullok
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
@@ -1988,7 +1988,7 @@
     - no_reboot_needed
 
 - name: Restrict Virtual Console Root Logins
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /etc/securetty
     regexp: ^vc
     state: absent
@@ -2006,7 +2006,7 @@
     - securetty_root_login_console_only
 
 - name: Gather the package facts
-  package_facts:
+  ansible.builtin.package_facts:
     manager: auto
   tags:
     - CCE-82041-5
@@ -2023,7 +2023,7 @@
 
 
 - name: Find /etc/security/limits.d files containing maxlogins configuration
-  find:
+  ansible.builtin.find:
     paths: /etc/security/limits.d
     contains: ^[\s]*\*[\s]+(?:(?:hard)|(?:-))[\s]+maxlogins
     patterns: '*.conf'
@@ -2044,7 +2044,7 @@
 
 - name: Limit the Number of Concurrent Login Sessions Allowed Per User in files from
     limits.d
-  replace:
+  ansible.builtin.replace:
     dest: '{{ item.path }}'
     regexp: ^#?\*.*maxlogins.*
     replace: '*          hard    maxlogins     {{ var_accounts_max_concurrent_login_sessions
@@ -2066,7 +2066,7 @@
     - restrict_strategy
 
 - name: Limit the Number of Concurrent Login Sessions Allowed Per User
-  lineinfile:
+  ansible.builtin.lineinfile:
     state: present
     dest: /etc/security/limits.conf
     insertbefore: ^# End of file
@@ -2093,7 +2093,7 @@
 
 
 - name: Set user umask in /etc/bashrc
-  replace:
+  ansible.builtin.replace:
     path: /etc/bashrc
     regexp: umask.*
     replace: umask {{ var_accounts_user_umask }}
@@ -2111,7 +2111,7 @@
 
 
 - name: Set user umask in /etc/csh.cshrc
-  replace:
+  ansible.builtin.replace:
     path: /etc/csh.cshrc
     regexp: umask.*
     replace: umask {{ var_accounts_user_umask }}
@@ -2129,7 +2129,7 @@
 
 
 - name: Set user umask in /etc/profile
-  replace:
+  ansible.builtin.replace:
     path: /etc/profile
     regexp: umask.*
     replace: umask {{ var_accounts_user_umask }}
@@ -2145,7 +2145,7 @@
     - unknown_severity
 
 - name: Gather the package facts
-  package_facts:
+  ansible.builtin.package_facts:
     manager: auto
   tags:
     - CCE-27407-6
@@ -2175,15 +2175,14 @@
   block:
 
     - name: Gather the package facts
-      package_facts:
+      ansible.builtin.package_facts:
         manager: auto
 
     - name: Enable service auditd
-      service:
+      ansible.builtin.service:
         name: auditd
         enabled: 'yes'
         state: started
-        masked: 'no'
       when:
         - '"audit" in ansible_facts.packages'
   when:
@@ -2214,7 +2213,7 @@
     - service_auditd_enabled
 
 - name: Gather the package facts
-  package_facts:
+  ansible.builtin.package_facts:
     manager: auto
   tags:
     - CCE-27212-0
@@ -2234,7 +2233,7 @@
     - restrict_strategy
 
 - name: check audit argument exists
-  command: grep 'GRUB_CMDLINE_LINUX.*audit=' /etc/default/grub
+  ansible.builtin.command: grep 'GRUB_CMDLINE_LINUX.*audit=' /etc/default/grub
   failed_when: false
   register: argcheck
   check_mode: false
@@ -2259,7 +2258,7 @@
     - restrict_strategy
 
 - name: replace existing audit argument
-  replace:
+  ansible.builtin.replace:
     path: /etc/default/grub
     regexp: audit=\w+
     replace: audit=1
@@ -2285,7 +2284,7 @@
     - restrict_strategy
 
 - name: add audit argument
-  replace:
+  ansible.builtin.replace:
     path: /etc/default/grub
     regexp: (GRUB_CMDLINE_LINUX=.*)"
     replace: \1 audit=1"
@@ -2311,7 +2310,7 @@
     - restrict_strategy
 
 - name: update bootloader menu
-  command: /sbin/grubby --update-kernel=ALL --args="audit=1"
+  ansible.builtin.command: /sbin/grubby --update-kernel=ALL --args="audit=1"
   when:
     - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
     - '"grub2-common" in ansible_facts.packages'
@@ -2333,7 +2332,7 @@
     - restrict_strategy
 
 - name: Gather the package facts
-  package_facts:
+  ansible.builtin.package_facts:
     manager: auto
   tags:
     - CCE-82156-1
@@ -2346,7 +2345,7 @@
     - restrict_strategy
 
 - name: check audit_backlog_limit argument exists
-  command: grep 'GRUB_CMDLINE_LINUX.*audit_backlog_limit=' /etc/default/grub
+  ansible.builtin.command: grep 'GRUB_CMDLINE_LINUX.*audit_backlog_limit=' /etc/default/grub
   failed_when: false
   register: argcheck
   check_mode: false
@@ -2364,7 +2363,7 @@
     - restrict_strategy
 
 - name: replace existing audit_backlog_limit argument
-  replace:
+  ansible.builtin.replace:
     path: /etc/default/grub
     regexp: audit_backlog_limit=\w+
     replace: audit_backlog_limit=8192
@@ -2383,7 +2382,7 @@
     - restrict_strategy
 
 - name: add audit_backlog_limit argument
-  replace:
+  ansible.builtin.replace:
     path: /etc/default/grub
     regexp: (GRUB_CMDLINE_LINUX=.*)"
     replace: \1 audit_backlog_limit=8192"
@@ -2402,7 +2401,7 @@
     - restrict_strategy
 
 - name: update bootloader menu
-  command: /sbin/grubby --update-kernel=ALL --args="audit_backlog_limit=8192"
+  ansible.builtin.command: /sbin/grubby --update-kernel=ALL --args="audit_backlog_limit=8192"
   when:
     - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
     - '"grub2-common" in ansible_facts.packages'
@@ -2417,7 +2416,7 @@
     - restrict_strategy
 
 - name: Gather the package facts
-  package_facts:
+  ansible.builtin.package_facts:
     manager: auto
   tags:
     - CCE-27331-8
@@ -2433,7 +2432,7 @@
 
 
 - name: Configure auditd Flush Priority
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /etc/audit/auditd.conf
     regexp: ^\s*flush\s*=\s*.*$
     line: flush = {{ var_auditd_flush }}
@@ -2453,7 +2452,7 @@
     - restrict_strategy
 
 - name: Gather the package facts
-  package_facts:
+  ansible.builtin.package_facts:
     manager: auto
   tags:
     - CCE-82159-5
@@ -2466,7 +2465,7 @@
     - restrict_strategy
 
 - name: check vsyscall argument exists
-  command: grep 'GRUB_CMDLINE_LINUX.*vsyscall=' /etc/default/grub
+  ansible.builtin.command: grep 'GRUB_CMDLINE_LINUX.*vsyscall=' /etc/default/grub
   failed_when: false
   register: argcheck
   check_mode: false
@@ -2484,7 +2483,7 @@
     - restrict_strategy
 
 - name: replace existing vsyscall argument
-  replace:
+  ansible.builtin.replace:
     path: /etc/default/grub
     regexp: vsyscall=\w+
     replace: vsyscall=none
@@ -2503,7 +2502,7 @@
     - restrict_strategy
 
 - name: add vsyscall argument
-  replace:
+  ansible.builtin.replace:
     path: /etc/default/grub
     regexp: (GRUB_CMDLINE_LINUX=.*)"
     replace: \1 vsyscall=none"
@@ -2522,7 +2521,7 @@
     - restrict_strategy
 
 - name: update bootloader menu
-  command: /sbin/grubby --update-kernel=ALL --args="vsyscall=none"
+  ansible.builtin.command: /sbin/grubby --update-kernel=ALL --args="vsyscall=none"
   when:
     - '"grub2-common" in ansible_facts.packages'
     - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
@@ -2540,15 +2539,14 @@
   block:
 
     - name: Gather the package facts
-      package_facts:
+      ansible.builtin.package_facts:
         manager: auto
 
     - name: Enable service firewalld
-      service:
+      ansible.builtin.service:
         name: firewalld
         enabled: 'yes'
         state: started
-        masked: 'no'
       when:
         - '"firewalld" in ansible_facts.packages'
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
@@ -2572,7 +2570,7 @@
 
 
 - name: Ensure sysctl net.ipv6.conf.all.accept_ra is set
-  sysctl:
+  ansible.posix.sysctl:
     name: net.ipv6.conf.all.accept_ra
     value: '{{ sysctl_net_ipv6_conf_all_accept_ra_value }}'
     state: present
@@ -2594,7 +2592,7 @@
 
 
 - name: Ensure sysctl net.ipv6.conf.all.accept_redirects is set
-  sysctl:
+  ansible.posix.sysctl:
     name: net.ipv6.conf.all.accept_redirects
     value: '{{ sysctl_net_ipv6_conf_all_accept_redirects_value }}'
     state: present
@@ -2618,7 +2616,7 @@
 
 
 - name: Ensure sysctl net.ipv6.conf.all.accept_source_route is set
-  sysctl:
+  ansible.posix.sysctl:
     name: net.ipv6.conf.all.accept_source_route
     value: '{{ sysctl_net_ipv6_conf_all_accept_source_route_value }}'
     state: present
@@ -2641,7 +2639,7 @@
 
 
 - name: Ensure sysctl net.ipv6.conf.default.accept_ra is set
-  sysctl:
+  ansible.posix.sysctl:
     name: net.ipv6.conf.default.accept_ra
     value: '{{ sysctl_net_ipv6_conf_default_accept_ra_value }}'
     state: present
@@ -2663,7 +2661,7 @@
 
 
 - name: Ensure sysctl net.ipv6.conf.default.accept_redirects is set
-  sysctl:
+  ansible.posix.sysctl:
     name: net.ipv6.conf.default.accept_redirects
     value: '{{ sysctl_net_ipv6_conf_default_accept_redirects_value }}'
     state: present
@@ -2685,7 +2683,7 @@
 
 
 - name: Ensure sysctl net.ipv6.conf.default.accept_source_route is set
-  sysctl:
+  ansible.posix.sysctl:
     name: net.ipv6.conf.default.accept_source_route
     value: '{{ sysctl_net_ipv6_conf_default_accept_source_route_value }}'
     state: present
@@ -2709,7 +2707,7 @@
 
 
 - name: Ensure sysctl net.ipv4.conf.all.accept_redirects is set
-  sysctl:
+  ansible.posix.sysctl:
     name: net.ipv4.conf.all.accept_redirects
     value: '{{ sysctl_net_ipv4_conf_all_accept_redirects_value }}'
     state: present
@@ -2734,7 +2732,7 @@
 
 
 - name: Ensure sysctl net.ipv4.conf.all.accept_source_route is set
-  sysctl:
+  ansible.posix.sysctl:
     name: net.ipv4.conf.all.accept_source_route
     value: '{{ sysctl_net_ipv4_conf_all_accept_source_route_value }}'
     state: present
@@ -2759,7 +2757,7 @@
 
 
 - name: Ensure sysctl net.ipv4.conf.all.log_martians is set
-  sysctl:
+  ansible.posix.sysctl:
     name: net.ipv4.conf.all.log_martians
     value: '{{ sysctl_net_ipv4_conf_all_log_martians_value }}'
     state: present
@@ -2781,7 +2779,7 @@
 
 
 - name: Ensure sysctl net.ipv4.conf.all.rp_filter is set
-  sysctl:
+  ansible.posix.sysctl:
     name: net.ipv4.conf.all.rp_filter
     value: '{{ sysctl_net_ipv4_conf_all_rp_filter_value }}'
     state: present
@@ -2805,7 +2803,7 @@
 
 
 - name: Ensure sysctl net.ipv4.conf.all.secure_redirects is set
-  sysctl:
+  ansible.posix.sysctl:
     name: net.ipv4.conf.all.secure_redirects
     value: '{{ sysctl_net_ipv4_conf_all_secure_redirects_value }}'
     state: present
@@ -2828,7 +2826,7 @@
 
 
 - name: Ensure sysctl net.ipv4.conf.default.accept_redirects is set
-  sysctl:
+  ansible.posix.sysctl:
     name: net.ipv4.conf.default.accept_redirects
     value: '{{ sysctl_net_ipv4_conf_default_accept_redirects_value }}'
     state: present
@@ -2853,7 +2851,7 @@
 
 
 - name: Ensure sysctl net.ipv4.conf.default.accept_source_route is set
-  sysctl:
+  ansible.posix.sysctl:
     name: net.ipv4.conf.default.accept_source_route
     value: '{{ sysctl_net_ipv4_conf_default_accept_source_route_value }}'
     state: present
@@ -2878,7 +2876,7 @@
 
 
 - name: Ensure sysctl net.ipv4.conf.default.log_martians is set
-  sysctl:
+  ansible.posix.sysctl:
     name: net.ipv4.conf.default.log_martians
     value: '{{ sysctl_net_ipv4_conf_default_log_martians_value }}'
     state: present
@@ -2900,7 +2898,7 @@
 
 
 - name: Ensure sysctl net.ipv4.conf.default.rp_filter is set
-  sysctl:
+  ansible.posix.sysctl:
     name: net.ipv4.conf.default.rp_filter
     value: '{{ sysctl_net_ipv4_conf_default_rp_filter_value }}'
     state: present
@@ -2924,7 +2922,7 @@
 
 
 - name: Ensure sysctl net.ipv4.conf.default.secure_redirects is set
-  sysctl:
+  ansible.posix.sysctl:
     name: net.ipv4.conf.default.secure_redirects
     value: '{{ sysctl_net_ipv4_conf_default_secure_redirects_value }}'
     state: present
@@ -2947,7 +2945,7 @@
 
 
 - name: Ensure sysctl net.ipv4.icmp_echo_ignore_broadcasts is set
-  sysctl:
+  ansible.posix.sysctl:
     name: net.ipv4.icmp_echo_ignore_broadcasts
     value: '{{ sysctl_net_ipv4_icmp_echo_ignore_broadcasts_value }}'
     state: present
@@ -2971,7 +2969,7 @@
 
 
 - name: Ensure sysctl net.ipv4.icmp_ignore_bogus_error_responses is set
-  sysctl:
+  ansible.posix.sysctl:
     name: net.ipv4.icmp_ignore_bogus_error_responses
     value: '{{ sysctl_net_ipv4_icmp_ignore_bogus_error_responses_value }}'
     state: present
@@ -2993,7 +2991,7 @@
 
 
 - name: Ensure sysctl net.ipv4.tcp_syncookies is set
-  sysctl:
+  ansible.posix.sysctl:
     name: net.ipv4.tcp_syncookies
     value: '{{ sysctl_net_ipv4_tcp_syncookies_value }}'
     state: present
@@ -3017,7 +3015,7 @@
     - sysctl_net_ipv4_tcp_syncookies
 
 - name: Ensure sysctl net.ipv4.conf.all.send_redirects is set to 0
-  sysctl:
+  ansible.posix.sysctl:
     name: net.ipv4.conf.all.send_redirects
     value: '0'
     state: present
@@ -3041,7 +3039,7 @@
     - sysctl_net_ipv4_conf_all_send_redirects
 
 - name: Ensure sysctl net.ipv4.conf.default.send_redirects is set to 0
-  sysctl:
+  ansible.posix.sysctl:
     name: net.ipv4.conf.default.send_redirects
     value: '0'
     state: present
@@ -3065,7 +3063,7 @@
     - sysctl_net_ipv4_conf_default_send_redirects
 
 - name: Ensure sysctl net.ipv4.ip_forward is set to 0
-  sysctl:
+  ansible.posix.sysctl:
     name: net.ipv4.ip_forward
     value: '0'
     state: present
@@ -3088,7 +3086,7 @@
     - sysctl_net_ipv4_ip_forward
 
 - name: Ensure kernel module 'dccp' is disabled
-  lineinfile:
+  ansible.builtin.lineinfile:
     create: true
     dest: /etc/modprobe.d/dccp.conf
     regexp: dccp
@@ -3110,7 +3108,7 @@
     - reboot_required
 
 - name: Ensure kernel module 'sctp' is disabled
-  lineinfile:
+  ansible.builtin.lineinfile:
     create: true
     dest: /etc/modprobe.d/sctp.conf
     regexp: sctp
@@ -3131,7 +3129,7 @@
     - reboot_required
 
 - name: Ensure kernel module 'bluetooth' is disabled
-  lineinfile:
+  ansible.builtin.lineinfile:
     create: true
     dest: /etc/modprobe.d/bluetooth.conf
     regexp: bluetooth
@@ -3155,7 +3153,7 @@
     - reboot_required
 
 - name: Ensure sysctl fs.protected_hardlinks is set to 1
-  sysctl:
+  ansible.posix.sysctl:
     name: fs.protected_hardlinks
     value: '1'
     state: present
@@ -3173,7 +3171,7 @@
     - sysctl_fs_protected_hardlinks
 
 - name: Ensure sysctl fs.protected_symlinks is set to 1
-  sysctl:
+  ansible.posix.sysctl:
     name: fs.protected_symlinks
     value: '1'
     state: present
@@ -3194,10 +3192,10 @@
   block:
 
     - name: Gather the service facts
-      service_facts: null
+      ansible.builtin.service_facts: null
 
     - name: Disable service autofs
-      systemd:
+      ansible.builtin.systemd:
         name: autofs.service
         enabled: 'no'
         state: stopped
@@ -3220,7 +3218,7 @@
     - service_autofs_disabled
 
 - name: Unit Socket Exists - autofs.socket
-  command: systemctl list-unit-files autofs.socket
+  ansible.builtin.command: systemctl list-unit-files autofs.socket
   register: socket_file_exists
   changed_when: false
   ignore_errors: true
@@ -3242,7 +3240,7 @@
     - service_autofs_disabled
 
 - name: Disable socket autofs
-  systemd:
+  ansible.builtin.systemd:
     name: autofs.socket
     enabled: 'no'
     state: stopped
@@ -3266,7 +3264,7 @@
     - service_autofs_disabled
 
 - name: Ensure kernel module 'cramfs' is disabled
-  lineinfile:
+  ansible.builtin.lineinfile:
     create: true
     dest: /etc/modprobe.d/cramfs.conf
     regexp: cramfs
@@ -3286,7 +3284,7 @@
     - reboot_required
 
 - name: Ensure kernel module 'usb-storage' is disabled
-  lineinfile:
+  ansible.builtin.lineinfile:
     create: true
     dest: /etc/modprobe.d/usb-storage.conf
     regexp: usb-storage
@@ -3308,7 +3306,7 @@
     - reboot_required
 
 - name: Check information associated to mountpoint
-  command: findmnt  '/dev/shm'
+  ansible.builtin.command: findmnt  '/dev/shm'
   register: device_name
   failed_when: device_name.rc > 1
   changed_when: false
@@ -3331,7 +3329,7 @@
     - no_reboot_needed
 
 - name: Create mount_info dictionary variable
-  set_fact:
+  ansible.builtin.set_fact:
     mount_info: '{{ mount_info|default({})|combine({item.0: item.1}) }}'
   with_together:
     - '{{ device_name.stdout_lines[0].split() | list | lower }}'
@@ -3357,7 +3355,7 @@
     - no_reboot_needed
 
 - name: If /dev/shm not mounted, craft mount_info manually
-  set_fact:
+  ansible.builtin.set_fact:
     mount_info: '{{ mount_info|default({})|combine({item.0: item.1}) }}'
   with_together:
     - - target
@@ -3389,7 +3387,7 @@
     - no_reboot_needed
 
 - name: Make sure nodev option is part of the to /dev/shm options
-  set_fact:
+  ansible.builtin.set_fact:
     mount_info: '{{ mount_info | combine( {''options'':''''~mount_info.options~'',nodev''
       }) }}'
   when:
@@ -3412,7 +3410,7 @@
     - no_reboot_needed
 
 - name: Ensure /dev/shm is mounted with nodev option
-  mount:
+  ansible.posix.mount:
     path: /dev/shm
     src: '{{ mount_info.source }}'
     opts: '{{ mount_info.options }}'
@@ -3439,7 +3437,7 @@
     - no_reboot_needed
 
 - name: Check information associated to mountpoint
-  command: findmnt  '/dev/shm'
+  ansible.builtin.command: findmnt  '/dev/shm'
   register: device_name
   failed_when: device_name.rc > 1
   changed_when: false
@@ -3462,7 +3460,7 @@
     - no_reboot_needed
 
 - name: Create mount_info dictionary variable
-  set_fact:
+  ansible.builtin.set_fact:
     mount_info: '{{ mount_info|default({})|combine({item.0: item.1}) }}'
   with_together:
     - '{{ device_name.stdout_lines[0].split() | list | lower }}'
@@ -3488,7 +3486,7 @@
     - no_reboot_needed
 
 - name: If /dev/shm not mounted, craft mount_info manually
-  set_fact:
+  ansible.builtin.set_fact:
     mount_info: '{{ mount_info|default({})|combine({item.0: item.1}) }}'
   with_together:
     - - target
@@ -3520,7 +3518,7 @@
     - no_reboot_needed
 
 - name: Make sure noexec option is part of the to /dev/shm options
-  set_fact:
+  ansible.builtin.set_fact:
     mount_info: '{{ mount_info | combine( {''options'':''''~mount_info.options~'',noexec''
       }) }}'
   when:
@@ -3543,7 +3541,7 @@
     - no_reboot_needed
 
 - name: Ensure /dev/shm is mounted with noexec option
-  mount:
+  ansible.posix.mount:
     path: /dev/shm
     src: '{{ mount_info.source }}'
     opts: '{{ mount_info.options }}'
@@ -3570,7 +3568,7 @@
     - no_reboot_needed
 
 - name: Check information associated to mountpoint
-  command: findmnt  '/dev/shm'
+  ansible.builtin.command: findmnt  '/dev/shm'
   register: device_name
   failed_when: device_name.rc > 1
   changed_when: false
@@ -3593,7 +3591,7 @@
     - no_reboot_needed
 
 - name: Create mount_info dictionary variable
-  set_fact:
+  ansible.builtin.set_fact:
     mount_info: '{{ mount_info|default({})|combine({item.0: item.1}) }}'
   with_together:
     - '{{ device_name.stdout_lines[0].split() | list | lower }}'
@@ -3619,7 +3617,7 @@
     - no_reboot_needed
 
 - name: If /dev/shm not mounted, craft mount_info manually
-  set_fact:
+  ansible.builtin.set_fact:
     mount_info: '{{ mount_info|default({})|combine({item.0: item.1}) }}'
   with_together:
     - - target
@@ -3651,7 +3649,7 @@
     - no_reboot_needed
 
 - name: Make sure nosuid option is part of the to /dev/shm options
-  set_fact:
+  ansible.builtin.set_fact:
     mount_info: '{{ mount_info | combine( {''options'':''''~mount_info.options~'',nosuid''
       }) }}'
   when:
@@ -3674,7 +3672,7 @@
     - no_reboot_needed
 
 - name: Ensure /dev/shm is mounted with nosuid option
-  mount:
+  ansible.posix.mount:
     path: /dev/shm
     src: '{{ mount_info.source }}'
     opts: '{{ mount_info.options }}'
@@ -3701,7 +3699,7 @@
     - no_reboot_needed
 
 - name: Check information associated to mountpoint
-  command: findmnt --fstab '/home'
+  ansible.builtin.command: findmnt --fstab '/home'
   register: device_name
   failed_when: device_name.rc > 1
   changed_when: false
@@ -3717,7 +3715,7 @@
     - unknown_severity
 
 - name: Create mount_info dictionary variable
-  set_fact:
+  ansible.builtin.set_fact:
     mount_info: '{{ mount_info|default({})|combine({item.0: item.1}) }}'
   with_together:
     - '{{ device_name.stdout_lines[0].split() | list | lower }}'
@@ -3736,7 +3734,7 @@
     - unknown_severity
 
 - name: If /home not mounted, craft mount_info manually
-  set_fact:
+  ansible.builtin.set_fact:
     mount_info: '{{ mount_info|default({})|combine({item.0: item.1}) }}'
   with_together:
     - - target
@@ -3761,7 +3759,7 @@
     - unknown_severity
 
 - name: Make sure nodev option is part of the to /home options
-  set_fact:
+  ansible.builtin.set_fact:
     mount_info: '{{ mount_info | combine( {''options'':''''~mount_info.options~'',nodev''
       }) }}'
   when:
@@ -3777,7 +3775,7 @@
     - unknown_severity
 
 - name: Ensure /home is mounted with nodev option
-  mount:
+  ansible.posix.mount:
     path: /home
     src: '{{ mount_info.source }}'
     opts: '{{ mount_info.options }}'
@@ -3797,7 +3795,7 @@
     - unknown_severity
 
 - name: Check information associated to mountpoint
-  command: findmnt --fstab '/home'
+  ansible.builtin.command: findmnt --fstab '/home'
   register: device_name
   failed_when: device_name.rc > 1
   changed_when: false
@@ -3820,7 +3818,7 @@
     - no_reboot_needed
 
 - name: Create mount_info dictionary variable
-  set_fact:
+  ansible.builtin.set_fact:
     mount_info: '{{ mount_info|default({})|combine({item.0: item.1}) }}'
   with_together:
     - '{{ device_name.stdout_lines[0].split() | list | lower }}'
@@ -3846,7 +3844,7 @@
     - no_reboot_needed
 
 - name: If /home not mounted, craft mount_info manually
-  set_fact:
+  ansible.builtin.set_fact:
     mount_info: '{{ mount_info|default({})|combine({item.0: item.1}) }}'
   with_together:
     - - target
@@ -3878,7 +3876,7 @@
     - no_reboot_needed
 
 - name: Make sure nosuid option is part of the to /home options
-  set_fact:
+  ansible.builtin.set_fact:
     mount_info: '{{ mount_info | combine( {''options'':''''~mount_info.options~'',nosuid''
       }) }}'
   when:
@@ -3901,7 +3899,7 @@
     - no_reboot_needed
 
 - name: Ensure /home is mounted with nosuid option
-  mount:
+  ansible.posix.mount:
     path: /home
     src: '{{ mount_info.source }}'
     opts: '{{ mount_info.options }}'
@@ -3928,7 +3926,7 @@
     - no_reboot_needed
 
 - name: Check information associated to mountpoint
-  command: findmnt --fstab '/tmp'
+  ansible.builtin.command: findmnt --fstab '/tmp'
   register: device_name
   failed_when: device_name.rc > 1
   changed_when: false
@@ -3950,7 +3948,7 @@
     - no_reboot_needed
 
 - name: Create mount_info dictionary variable
-  set_fact:
+  ansible.builtin.set_fact:
     mount_info: '{{ mount_info|default({})|combine({item.0: item.1}) }}'
   with_together:
     - '{{ device_name.stdout_lines[0].split() | list | lower }}'
@@ -3975,7 +3973,7 @@
     - no_reboot_needed
 
 - name: If /tmp not mounted, craft mount_info manually
-  set_fact:
+  ansible.builtin.set_fact:
     mount_info: '{{ mount_info|default({})|combine({item.0: item.1}) }}'
   with_together:
     - - target
@@ -4006,7 +4004,7 @@
     - no_reboot_needed
 
 - name: Make sure nodev option is part of the to /tmp options
-  set_fact:
+  ansible.builtin.set_fact:
     mount_info: '{{ mount_info | combine( {''options'':''''~mount_info.options~'',nodev''
       }) }}'
   when:
@@ -4028,7 +4026,7 @@
     - no_reboot_needed
 
 - name: Ensure /tmp is mounted with nodev option
-  mount:
+  ansible.posix.mount:
     path: /tmp
     src: '{{ mount_info.source }}'
     opts: '{{ mount_info.options }}'
@@ -4054,7 +4052,7 @@
     - no_reboot_needed
 
 - name: Check information associated to mountpoint
-  command: findmnt --fstab '/tmp'
+  ansible.builtin.command: findmnt --fstab '/tmp'
   register: device_name
   failed_when: device_name.rc > 1
   changed_when: false
@@ -4076,7 +4074,7 @@
     - no_reboot_needed
 
 - name: Create mount_info dictionary variable
-  set_fact:
+  ansible.builtin.set_fact:
     mount_info: '{{ mount_info|default({})|combine({item.0: item.1}) }}'
   with_together:
     - '{{ device_name.stdout_lines[0].split() | list | lower }}'
@@ -4101,7 +4099,7 @@
     - no_reboot_needed
 
 - name: If /tmp not mounted, craft mount_info manually
-  set_fact:
+  ansible.builtin.set_fact:
     mount_info: '{{ mount_info|default({})|combine({item.0: item.1}) }}'
   with_together:
     - - target
@@ -4132,7 +4130,7 @@
     - no_reboot_needed
 
 - name: Make sure noexec option is part of the to /tmp options
-  set_fact:
+  ansible.builtin.set_fact:
     mount_info: '{{ mount_info | combine( {''options'':''''~mount_info.options~'',noexec''
       }) }}'
   when:
@@ -4154,7 +4152,7 @@
     - no_reboot_needed
 
 - name: Ensure /tmp is mounted with noexec option
-  mount:
+  ansible.posix.mount:
     path: /tmp
     src: '{{ mount_info.source }}'
     opts: '{{ mount_info.options }}'
@@ -4180,7 +4178,7 @@
     - no_reboot_needed
 
 - name: Check information associated to mountpoint
-  command: findmnt --fstab '/tmp'
+  ansible.builtin.command: findmnt --fstab '/tmp'
   register: device_name
   failed_when: device_name.rc > 1
   changed_when: false
@@ -4202,7 +4200,7 @@
     - no_reboot_needed
 
 - name: Create mount_info dictionary variable
-  set_fact:
+  ansible.builtin.set_fact:
     mount_info: '{{ mount_info|default({})|combine({item.0: item.1}) }}'
   with_together:
     - '{{ device_name.stdout_lines[0].split() | list | lower }}'
@@ -4227,7 +4225,7 @@
     - no_reboot_needed
 
 - name: If /tmp not mounted, craft mount_info manually
-  set_fact:
+  ansible.builtin.set_fact:
     mount_info: '{{ mount_info|default({})|combine({item.0: item.1}) }}'
   with_together:
     - - target
@@ -4258,7 +4256,7 @@
     - no_reboot_needed
 
 - name: Make sure nosuid option is part of the to /tmp options
-  set_fact:
+  ansible.builtin.set_fact:
     mount_info: '{{ mount_info | combine( {''options'':''''~mount_info.options~'',nosuid''
       }) }}'
   when:
@@ -4280,7 +4278,7 @@
     - no_reboot_needed
 
 - name: Ensure /tmp is mounted with nosuid option
-  mount:
+  ansible.posix.mount:
     path: /tmp
     src: '{{ mount_info.source }}'
     opts: '{{ mount_info.options }}'
@@ -4306,7 +4304,7 @@
     - no_reboot_needed
 
 - name: Check information associated to mountpoint
-  command: findmnt --fstab '/var/tmp'
+  ansible.builtin.command: findmnt --fstab '/var/tmp'
   register: device_name
   failed_when: device_name.rc > 1
   changed_when: false
@@ -4322,7 +4320,7 @@
     - no_reboot_needed
 
 - name: Create mount_info dictionary variable
-  set_fact:
+  ansible.builtin.set_fact:
     mount_info: '{{ mount_info|default({})|combine({item.0: item.1}) }}'
   with_together:
     - '{{ device_name.stdout_lines[0].split() | list | lower }}'
@@ -4341,7 +4339,7 @@
     - no_reboot_needed
 
 - name: If /var/tmp not mounted, craft mount_info manually
-  set_fact:
+  ansible.builtin.set_fact:
     mount_info: '{{ mount_info|default({})|combine({item.0: item.1}) }}'
   with_together:
     - - target
@@ -4366,7 +4364,7 @@
     - no_reboot_needed
 
 - name: Make sure nodev option is part of the to /var/tmp options
-  set_fact:
+  ansible.builtin.set_fact:
     mount_info: '{{ mount_info | combine( {''options'':''''~mount_info.options~'',nodev''
       }) }}'
   when:
@@ -4382,7 +4380,7 @@
     - no_reboot_needed
 
 - name: Ensure /var/tmp is mounted with nodev option
-  mount:
+  ansible.posix.mount:
     path: /var/tmp
     src: '{{ mount_info.source }}'
     opts: '{{ mount_info.options }}'
@@ -4402,7 +4400,7 @@
     - no_reboot_needed
 
 - name: Check information associated to mountpoint
-  command: findmnt --fstab '/var/tmp'
+  ansible.builtin.command: findmnt --fstab '/var/tmp'
   register: device_name
   failed_when: device_name.rc > 1
   changed_when: false
@@ -4418,7 +4416,7 @@
     - no_reboot_needed
 
 - name: Create mount_info dictionary variable
-  set_fact:
+  ansible.builtin.set_fact:
     mount_info: '{{ mount_info|default({})|combine({item.0: item.1}) }}'
   with_together:
     - '{{ device_name.stdout_lines[0].split() | list | lower }}'
@@ -4437,7 +4435,7 @@
     - no_reboot_needed
 
 - name: If /var/tmp not mounted, craft mount_info manually
-  set_fact:
+  ansible.builtin.set_fact:
     mount_info: '{{ mount_info|default({})|combine({item.0: item.1}) }}'
   with_together:
     - - target
@@ -4462,7 +4460,7 @@
     - no_reboot_needed
 
 - name: Make sure noexec option is part of the to /var/tmp options
-  set_fact:
+  ansible.builtin.set_fact:
     mount_info: '{{ mount_info | combine( {''options'':''''~mount_info.options~'',noexec''
       }) }}'
   when:
@@ -4478,7 +4476,7 @@
     - no_reboot_needed
 
 - name: Ensure /var/tmp is mounted with noexec option
-  mount:
+  ansible.posix.mount:
     path: /var/tmp
     src: '{{ mount_info.source }}'
     opts: '{{ mount_info.options }}'
@@ -4498,7 +4496,7 @@
     - no_reboot_needed
 
 - name: Check information associated to mountpoint
-  command: findmnt --fstab '/var/tmp'
+  ansible.builtin.command: findmnt --fstab '/var/tmp'
   register: device_name
   failed_when: device_name.rc > 1
   changed_when: false
@@ -4514,7 +4512,7 @@
     - no_reboot_needed
 
 - name: Create mount_info dictionary variable
-  set_fact:
+  ansible.builtin.set_fact:
     mount_info: '{{ mount_info|default({})|combine({item.0: item.1}) }}'
   with_together:
     - '{{ device_name.stdout_lines[0].split() | list | lower }}'
@@ -4533,7 +4531,7 @@
     - no_reboot_needed
 
 - name: If /var/tmp not mounted, craft mount_info manually
-  set_fact:
+  ansible.builtin.set_fact:
     mount_info: '{{ mount_info|default({})|combine({item.0: item.1}) }}'
   with_together:
     - - target
@@ -4558,7 +4556,7 @@
     - no_reboot_needed
 
 - name: Make sure nosuid option is part of the to /var/tmp options
-  set_fact:
+  ansible.builtin.set_fact:
     mount_info: '{{ mount_info | combine( {''options'':''''~mount_info.options~'',nosuid''
       }) }}'
   when:
@@ -4574,7 +4572,7 @@
     - no_reboot_needed
 
 - name: Ensure /var/tmp is mounted with nosuid option
-  mount:
+  ansible.posix.mount:
     path: /var/tmp
     src: '{{ mount_info.source }}'
     opts: '{{ mount_info.options }}'
@@ -4594,7 +4592,7 @@
     - no_reboot_needed
 
 - name: Ensure sysctl kernel.dmesg_restrict is set to 1
-  sysctl:
+  ansible.posix.sysctl:
     name: kernel.dmesg_restrict
     value: '1'
     state: present
@@ -4613,7 +4611,7 @@
     - sysctl_kernel_dmesg_restrict
 
 - name: Ensure sysctl kernel.kexec_load_disabled is set to 1
-  sysctl:
+  ansible.posix.sysctl:
     name: kernel.kexec_load_disabled
     value: '1'
     state: present
@@ -4629,7 +4627,7 @@
     - sysctl_kernel_kexec_load_disabled
 
 - name: Ensure sysctl kernel.yama.ptrace_scope is set to 1
-  sysctl:
+  ansible.posix.sysctl:
     name: kernel.yama.ptrace_scope
     value: '1'
     state: present
@@ -4645,7 +4643,7 @@
     - sysctl_kernel_yama_ptrace_scope
 
 - name: Gather the package facts
-  package_facts:
+  ansible.builtin.package_facts:
     manager: auto
   tags:
     - CCE-80169-6
@@ -4657,7 +4655,7 @@
     - restrict_strategy
 
 - name: disable core dumps with limits
-  lineinfile:
+  ansible.builtin.lineinfile:
     dest: /etc/security/limits.conf
     regexp: ^[^#].*core
     line: '*        hard       core      0'
@@ -4673,7 +4671,7 @@
     - restrict_strategy
 
 - name: Ensure sysctl kernel.kptr_restrict is set to 1
-  sysctl:
+  ansible.posix.sysctl:
     name: kernel.kptr_restrict
     value: '1'
     state: present
@@ -4693,7 +4691,7 @@
     - sysctl_kernel_kptr_restrict
 
 - name: Gather the package facts
-  package_facts:
+  ansible.builtin.package_facts:
     manager: auto
   tags:
     - CCE-82158-7
@@ -4706,7 +4704,7 @@
     - restrict_strategy
 
 - name: check page_poison argument exists
-  command: grep 'GRUB_CMDLINE_LINUX.*page_poison=' /etc/default/grub
+  ansible.builtin.command: grep 'GRUB_CMDLINE_LINUX.*page_poison=' /etc/default/grub
   failed_when: false
   check_mode: false
   register: argcheck
@@ -4724,7 +4722,7 @@
     - restrict_strategy
 
 - name: replace existing page_poison argument
-  replace:
+  ansible.builtin.replace:
     path: /etc/default/grub
     regexp: page_poison=\w+
     replace: page_poison=1
@@ -4743,7 +4741,7 @@
     - restrict_strategy
 
 - name: add page_poison argument
-  replace:
+  ansible.builtin.replace:
     path: /etc/default/grub
     regexp: (GRUB_CMDLINE_LINUX=.*)"
     replace: \1 page_poison=1"
@@ -4762,7 +4760,7 @@
     - restrict_strategy
 
 - name: update bootloader menu
-  command: /sbin/grubby --update-kernel=ALL --args="page_poison=1"
+  ansible.builtin.command: /sbin/grubby --update-kernel=ALL --args="page_poison=1"
   when:
     - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
     - '"grub2-common" in ansible_facts.packages'
@@ -4777,7 +4775,7 @@
     - restrict_strategy
 
 - name: Gather the package facts
-  package_facts:
+  ansible.builtin.package_facts:
     manager: auto
   tags:
     - CCE-82157-9
@@ -4790,7 +4788,7 @@
     - restrict_strategy
 
 - name: check slub_debug argument exists
-  command: grep 'GRUB_CMDLINE_LINUX.*slub_debug=' /etc/default/grub
+  ansible.builtin.command: grep 'GRUB_CMDLINE_LINUX.*slub_debug=' /etc/default/grub
   failed_when: false
   check_mode: false
   register: argcheck
@@ -4808,7 +4806,7 @@
     - restrict_strategy
 
 - name: replace existing slub_debug argument
-  replace:
+  ansible.builtin.replace:
     path: /etc/default/grub
     regexp: slub_debug=\w+
     replace: slub_debug=P
@@ -4827,7 +4825,7 @@
     - restrict_strategy
 
 - name: add slub_debug argument
-  replace:
+  ansible.builtin.replace:
     path: /etc/default/grub
     regexp: (GRUB_CMDLINE_LINUX=.*)"
     replace: \1 slub_debug=P"
@@ -4846,7 +4844,7 @@
     - restrict_strategy
 
 - name: update bootloader menu
-  command: /sbin/grubby --update-kernel=ALL --args="slub_debug=P"
+  ansible.builtin.command: /sbin/grubby --update-kernel=ALL --args="slub_debug=P"
   when:
     - ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
     - '"grub2-common" in ansible_facts.packages'
@@ -4866,7 +4864,7 @@
   block:
 
     - name: Check for duplicate values
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/selinux/config
         create: false
         regexp: ^SELINUXTYPE=
@@ -4876,7 +4874,7 @@
       register: dupes
 
     - name: Deduplicate values from /etc/selinux/config
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/selinux/config
         create: false
         regexp: ^SELINUXTYPE=
@@ -4884,7 +4882,7 @@
       when: dupes.found is defined and dupes.found > 1
 
     - name: Insert correct line to /etc/selinux/config
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/selinux/config
         create: true
         regexp: ^SELINUXTYPE=
@@ -4913,7 +4911,7 @@
   block:
 
     - name: Check for duplicate values
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/selinux/config
         create: false
         regexp: ^SELINUX=
@@ -4923,7 +4921,7 @@
       register: dupes
 
     - name: Deduplicate values from /etc/selinux/config
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/selinux/config
         create: false
         regexp: ^SELINUX=
@@ -4931,7 +4929,7 @@
       when: dupes.found is defined and dupes.found > 1
 
     - name: Insert correct line to /etc/selinux/config
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/selinux/config
         create: true
         regexp: ^SELINUX=
@@ -4955,7 +4953,7 @@
     - selinux_state
 
 - name: Ensure abrt is removed
-  package:
+  ansible.builtin.package:
     name: abrt
     state: absent
   tags:
@@ -4971,10 +4969,10 @@
   block:
 
     - name: Gather the service facts
-      service_facts: null
+      ansible.builtin.service_facts: null
 
     - name: Disable service kdump
-      systemd:
+      ansible.builtin.systemd:
         name: kdump.service
         enabled: 'no'
         state: stopped
@@ -4995,7 +4993,7 @@
     - service_kdump_disabled
 
 - name: Unit Socket Exists - kdump.socket
-  command: systemctl list-unit-files kdump.socket
+  ansible.builtin.command: systemctl list-unit-files kdump.socket
   register: socket_file_exists
   changed_when: false
   ignore_errors: true
@@ -5015,7 +5013,7 @@
     - service_kdump_disabled
 
 - name: Disable socket kdump
-  systemd:
+  ansible.builtin.systemd:
     name: kdump.socket
     enabled: 'no'
     state: stopped
@@ -5040,10 +5038,10 @@
   block:
 
     - name: Gather the service facts
-      service_facts: null
+      ansible.builtin.service_facts: null
 
     - name: Disable service rpcbind
-      systemd:
+      ansible.builtin.systemd:
         name: rpcbind.service
         enabled: 'no'
         state: stopped
@@ -5060,7 +5058,7 @@
     - service_rpcbind_disabled
 
 - name: Unit Socket Exists - rpcbind.socket
-  command: systemctl list-unit-files rpcbind.socket
+  ansible.builtin.command: systemctl list-unit-files rpcbind.socket
   register: socket_file_exists
   changed_when: false
   ignore_errors: true
@@ -5076,7 +5074,7 @@
     - service_rpcbind_disabled
 
 - name: Disable socket rpcbind
-  systemd:
+  ansible.builtin.systemd:
     name: rpcbind.socket
     enabled: 'no'
     state: stopped
@@ -5097,7 +5095,7 @@
   block:
 
     - name: Check for duplicate values
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         create: false
         regexp: (?i)^\s*HostbasedAuthentication\s+
@@ -5107,7 +5105,7 @@
       register: dupes
 
     - name: Deduplicate values from /etc/ssh/sshd_config
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         create: false
         regexp: (?i)^\s*HostbasedAuthentication\s+
@@ -5115,7 +5113,7 @@
       when: dupes.found is defined and dupes.found > 1
 
     - name: Insert correct line to /etc/ssh/sshd_config
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         create: true
         regexp: (?i)^\s*HostbasedAuthentication\s+
@@ -5145,7 +5143,7 @@
   block:
 
     - name: Check for duplicate values
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         create: false
         regexp: (?i)^\s*PermitEmptyPasswords\s+
@@ -5155,7 +5153,7 @@
       register: dupes
 
     - name: Deduplicate values from /etc/ssh/sshd_config
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         create: false
         regexp: (?i)^\s*PermitEmptyPasswords\s+
@@ -5163,7 +5161,7 @@
       when: dupes.found is defined and dupes.found > 1
 
     - name: Insert correct line to /etc/ssh/sshd_config
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         create: true
         regexp: (?i)^\s*PermitEmptyPasswords\s+
@@ -5193,7 +5191,7 @@
   block:
 
     - name: Check for duplicate values
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         create: false
         regexp: (?i)^\s*GSSAPIAuthentication\s+
@@ -5203,7 +5201,7 @@
       register: dupes
 
     - name: Deduplicate values from /etc/ssh/sshd_config
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         create: false
         regexp: (?i)^\s*GSSAPIAuthentication\s+
@@ -5211,7 +5209,7 @@
       when: dupes.found is defined and dupes.found > 1
 
     - name: Insert correct line to /etc/ssh/sshd_config
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         create: true
         regexp: (?i)^\s*GSSAPIAuthentication\s+
@@ -5239,7 +5237,7 @@
   block:
 
     - name: Check for duplicate values
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         create: false
         regexp: (?i)^\s*KerberosAuthentication\s+
@@ -5249,7 +5247,7 @@
       register: dupes
 
     - name: Deduplicate values from /etc/ssh/sshd_config
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         create: false
         regexp: (?i)^\s*KerberosAuthentication\s+
@@ -5257,7 +5255,7 @@
       when: dupes.found is defined and dupes.found > 1
 
     - name: Insert correct line to /etc/ssh/sshd_config
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         create: true
         regexp: (?i)^\s*KerberosAuthentication\s+
@@ -5285,7 +5283,7 @@
   block:
 
     - name: Check for duplicate values
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         create: false
         regexp: (?i)^\s*RhostsRSAAuthentication\s+
@@ -5295,7 +5293,7 @@
       register: dupes
 
     - name: Deduplicate values from /etc/ssh/sshd_config
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         create: false
         regexp: (?i)^\s*RhostsRSAAuthentication\s+
@@ -5303,7 +5301,7 @@
       when: dupes.found is defined and dupes.found > 1
 
     - name: Insert correct line to /etc/ssh/sshd_config
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         create: true
         regexp: (?i)^\s*RhostsRSAAuthentication\s+
@@ -5331,7 +5329,7 @@
   block:
 
     - name: Check for duplicate values
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         create: false
         regexp: (?i)^\s*PermitRootLogin\s+
@@ -5341,7 +5339,7 @@
       register: dupes
 
     - name: Deduplicate values from /etc/ssh/sshd_config
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         create: false
         regexp: (?i)^\s*PermitRootLogin\s+
@@ -5349,7 +5347,7 @@
       when: dupes.found is defined and dupes.found > 1
 
     - name: Insert correct line to /etc/ssh/sshd_config
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         create: true
         regexp: (?i)^\s*PermitRootLogin\s+
@@ -5383,7 +5381,7 @@
   block:
 
     - name: Check for duplicate values
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         create: false
         regexp: (?i)^\s*StrictModes\s+
@@ -5393,7 +5391,7 @@
       register: dupes
 
     - name: Deduplicate values from /etc/ssh/sshd_config
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         create: false
         regexp: (?i)^\s*StrictModes\s+
@@ -5401,7 +5399,7 @@
       when: dupes.found is defined and dupes.found > 1
 
     - name: Insert correct line to /etc/ssh/sshd_config
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         create: true
         regexp: (?i)^\s*StrictModes\s+
@@ -5428,7 +5426,7 @@
   block:
 
     - name: Check for duplicate values
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         create: false
         regexp: (?i)^\s*Banner\s+
@@ -5438,7 +5436,7 @@
       register: dupes
 
     - name: Deduplicate values from /etc/ssh/sshd_config
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         create: false
         regexp: (?i)^\s*Banner\s+
@@ -5446,7 +5444,7 @@
       when: dupes.found is defined and dupes.found > 1
 
     - name: Insert correct line to /etc/ssh/sshd_config
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         create: true
         regexp: (?i)^\s*Banner\s+
@@ -5477,7 +5475,7 @@
   block:
 
     - name: Check for duplicate values
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         create: false
         regexp: (?i)^\s*ClientAliveInterval\s+
@@ -5487,7 +5485,7 @@
       register: dupes
 
     - name: Deduplicate values from /etc/ssh/sshd_config
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         create: false
         regexp: (?i)^\s*ClientAliveInterval\s+
@@ -5495,7 +5493,7 @@
       when: dupes.found is defined and dupes.found > 1
 
     - name: Insert correct line to /etc/ssh/sshd_config
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         create: true
         regexp: (?i)^\s*ClientAliveInterval\s+
@@ -5528,7 +5526,7 @@
   block:
 
     - name: Check for duplicate values
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         create: false
         regexp: (?i)^\s*ClientAliveCountMax\s+
@@ -5538,7 +5536,7 @@
       register: dupes
 
     - name: Deduplicate values from /etc/ssh/sshd_config
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         create: false
         regexp: (?i)^\s*ClientAliveCountMax\s+
@@ -5546,7 +5544,7 @@
       when: dupes.found is defined and dupes.found > 1
 
     - name: Insert correct line to /etc/ssh/sshd_config
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         create: true
         regexp: (?i)^\s*ClientAliveCountMax\s+
@@ -5579,7 +5577,7 @@
   block:
 
     - name: Check for duplicate values
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         create: false
         regexp: (?i)^\s*Ciphers\s+
@@ -5589,7 +5587,7 @@
       register: dupes
 
     - name: Deduplicate values from /etc/ssh/sshd_config
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         create: false
         regexp: (?i)^\s*Ciphers\s+
@@ -5597,7 +5595,7 @@
       when: dupes.found is defined and dupes.found > 1
 
     - name: Insert correct line to /etc/ssh/sshd_config
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         create: true
         regexp: (?i)^\s*Ciphers\s+
@@ -5633,7 +5631,7 @@
   block:
 
     - name: Check for duplicate values
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         create: false
         regexp: (?i)^\s*MACs\s+
@@ -5643,7 +5641,7 @@
       register: dupes
 
     - name: Deduplicate values from /etc/ssh/sshd_config
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         create: false
         regexp: (?i)^\s*MACs\s+
@@ -5651,7 +5649,7 @@
       when: dupes.found is defined and dupes.found > 1
 
     - name: Insert correct line to /etc/ssh/sshd_config
-      lineinfile:
+      ansible.builtin.lineinfile:
         path: /etc/ssh/sshd_config
         create: true
         regexp: (?i)^\s*MACs\s+
