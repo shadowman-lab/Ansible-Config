@@ -4,4 +4,4 @@
   serial: 1
 
   roles:
-    - shadowman_esx_upgrade
+    - shadowman_esx_update
