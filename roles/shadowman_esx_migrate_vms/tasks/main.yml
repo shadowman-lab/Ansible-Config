@@ -1,0 +1,7 @@
+---
+- name: Perform vMotion of virtual machine to ESX Host
+  community.vmware.vmware_vmotion:
+    validate_certs: false
+    vm_name: "{{ item }}"
+    destination_host: "{{ esx_host_name }}"
+  loop: "{{ vm_names }}"

@@ -1,0 +1,6 @@
+---
+- name: Migrate ESX Hosts
+  hosts: localhost
+
+  roles:
+    - shadowman_esx_migrate_vms
