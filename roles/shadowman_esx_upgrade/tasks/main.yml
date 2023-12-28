@@ -1,0 +1,52 @@
+---
+
+- name: ESXi enter maintenance
+  community.vmware.vmware_maintenancemode:
+    esxi_hostname: "{{ inventory_hostname }}"
+    evacuate: true
+    validate_certs: false
+    timeout: 3600
+    state: present
+  delegate_to: localhost
+
+- name: Start SSH service setting for an ESXi Host in given Cluster
+  community.vmware.vmware_host_service_manager:
+    esxi_hostname: "{{ inventory_hostname }}"
+    service_name: TSM-SSH
+    state: present
+
+- name: ESXi Install Update # noqa command-instead-of-shell no-changed-when
+  ansible.builtin.shell: esxcli software profile update -d {{ esx_zip_location }} -p {{ esx_profile_name }}
+
+- name: Stop SSH service setting for an ESXi Host in given Cluster
+  community.vmware.vmware_host_service_manager:
+    esxi_hostname: "{{ inventory_hostname }}"
+    service_name: TSM-SSH
+    state: absent
+
+- name: ESXi reboot
+  community.vmware.vmware_host_powerstate:
+    esxi_hostname: "{{ inventory_hostname }}"
+    validate_certs: false
+    timeout: 3600
+    state: reboot-host
+  delegate_to: localhost
+  register: reboot_host
+
+- name: ESXi wait for the reboot to complete
+  ansible.builtin.wait_for:
+    host: "{{ inventory_hostname }}"
+    port: 443
+    delay: 360
+    state: started
+    timeout: 3600
+  delegate_to: localhost
+
+- name: ESXi exit maintenance
+  community.vmware.vmware_maintenancemode:
+    esxi_hostname: "{{ inventory_hostname }}"
+    evacuate: true
+    validate_certs: false
+    timeout: 3600
+    state: absent
+  delegate_to: localhost

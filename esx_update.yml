@@ -1,0 +1,7 @@
+---
+- name: Update ESX Hosts
+  hosts: all
+  serial: 1
+
+  roles:
+    - shadowman_esx_upgrade
