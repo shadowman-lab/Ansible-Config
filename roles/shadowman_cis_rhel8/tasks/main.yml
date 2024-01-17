@@ -1771,7 +1771,7 @@
     - restrict_strategy
 
 - name: get current kernel parameters
-  ansible.builtin.ansible.builtin.shell:
+  ansible.builtin.shell:
     cmd: /usr/bin/grub2-editenv - list | grep "kernelopts="
   register: kernelopts
   check_mode: false
@@ -1841,7 +1841,7 @@
     - restrict_strategy
 
 - name: get current kernel parameters
-  ansible.builtin.ansible.builtin.shell:
+  ansible.builtin.shell:
     cmd: /usr/bin/grub2-editenv - list | grep "kernelopts="
   register: kernelopts
   check_mode: false

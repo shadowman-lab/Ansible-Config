@@ -11533,7 +11533,7 @@
     - service_chronyd_or_ntpd_enabled
 
 - name: Gather the package facts
-  ansible.builtin.ansible.builtin.package_facts:
+  ansible.builtin.package_facts:
     manager: auto
   when: ansible_virtualization_type not in ["docker", "lxc", "openvz", "podman", "container"]
   tags:
