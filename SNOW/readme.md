@@ -5,6 +5,8 @@
 
 [ServiceNow/AAP Integration Instructions using Ansible Spoke](https://github.com/shadowman-lab/Ansible-SNOW/tree/main/SNOWSetup#servicenowaap-integration-instructions-using-ansible-spoke)
 
+[ServiceNow/AAP Integration Instructions using Event-Driven Ansible Notification Service](https://github.com/shadowman-lab/Ansible-SNOW/tree/main/SNOWSetup#servicenowaap-integration-instructions-using-event-driven-ansible-notification-service)
+
 [Have AAP reach out to ServiceNow](https://github.com/shadowman-lab/Ansible-SNOW/tree/main/SNOWSetup#have-aap-reach-out-to-servicenow)
 
 [Have AAP use ServiceNow as an inventory source](https://github.com/shadowman-lab/Ansible-SNOW/tree/main/SNOWSetup#have-aap-use-servicenow-as-an-inventory-source)
@@ -14,16 +16,19 @@
 ## Notes
 - These instructions assume that there is no MID-Server for ServiceNow, and that the ServiceNow instance and AAP can talk to each other directly over the public internet.
 - This has been tested with:
-  - Ansible Tower 3.6, 3.7, 3.8, AAP 2.0, 2.1, 2.2
-  - ServiceNow Orlando, Paris, Quebec
+  - Ansible Tower 3.6, 3.7, 3.8, AAP 2.0, 2.1, 2.2, 2.3, 2.4
+  - ServiceNow Orlando, Paris, Quebec, Vancouver
 
 - While the mid-server is an outbound connection from on-prem to the customer’s ServiceNow Instance, it subscribes to the “ECC Queue” allowing for bidirectional communication between an on-prem AAP and ServiceNow. Because it is polling, there can be a delay between the initiation of an action and the mid-server processing the request.
 
-- If you create outbound REST messages in ServiceNow you can choose to have that executed directly from the ServiceNow instance or via a mid-server. 
+- If you create outbound REST messages in ServiceNow you can choose to have that executed directly from the ServiceNow instance or via a mid-server.
 
 - If you have a subscription to ServiceNow’s Standard IntegrationHub pack, there is a spoke for integrating with AAP so you don't have to write you own API requests.
 
 ## ServiceNow/AAP Integration Instructions using Rest Messages
+
+## Notes
+- ServiceNow MID Servers do not support OAuth, you must use basic authentication. Skip steps 1-3, 6-11. In step 12, click Authentication Type of Basic. Click the Magnifying Glass next to the Basic Auth Profile and create a new profile with a valid AAP username and password. Skip step 13. In step 14, under HTTP Request, ensure you select the desired MID Server next to Use MID Server.
 
 ### Preparing AAP
 
@@ -50,13 +55,9 @@ Next, navigate to **Settings** on the left side of the screen and then **Miscell
 <img src="images/tower_settings.png" alt="AAP Settings" title="AAP Settings" width="1000" />
 
 #### 4)
-The Orlando release of the ServiceNow developer instance does not allow for the self-signed certificate provided by AAP. We need to equip our AAP instance with a certificate from a trusted Certificate Authority. The easiest way to accomplish this to SSH into AAP and run the Certbot ACME client in order to generate a certificate from LetsEncrypt (instructions can be found [here](https://letsencrypt.org/getting-started/)). It is important to place the contents of the certificate you generate (found at `/etc/letsencrypt/live/<tower domain>/cert.pem`), followed by the LetsEncrypt intermediate certificate (starting on a new line) at location AAP places its self-signed certificate, `/etc/tower/tower.cert`. The LetsEncrypt intermediate certificate can be found [here](https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem.txt). You must also replace the contents of `/etc/tower/tower.key` with the contents of `/etc/letsencrypt/live/<tower domain>/privkey.pem`. 
+The Orlando release of the ServiceNow developer instance does not allow for the self-signed certificate provided by AAP. We need to equip our AAP instance with a certificate from a trusted Certificate Authority. The easiest way to accomplish this is to SSH into AAP and run the Certbot ACME client in order to generate a certificate from LetsEncrypt (instructions can be found [here](https://letsencrypt.org/getting-started/)). It is important to place the contents of the root certificate + the intermediate certificate + the certificate you generate (found at `/etc/letsencrypt/live/<tower domain>/cert.pem`) at the location AAP places its self-signed certificate, `/etc/tower/tower.cert`. The LetsEncrypt intermediate certificate can be found [here](https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem.txt). You must also replace the contents of `/etc/tower/tower.key` with the contents of `/etc/letsencrypt/live/<tower domain>/privkey.pem`.
 
 Be sure to restart the nginx service on your AAP server after updating the certificate and key.
-
-An example of the generated certificate with the intermediate certificate appended (what needs to be place in `/etc/tower/tower.cert`) is pictured below:
-
-<img src="images/fullchain_cert.png" alt="AAP Cert" title="AAP Cert" width="500" />
 
 ### Preparing ServiceNow
 
@@ -67,7 +68,7 @@ Moving over to ServiceNow, Navigate to **System Definition-->Certificates**. Thi
 | Name  | Descriptive name of the certificate  |
 |  Format |  `PEM` |
 |  Type |  `Trust Store Cert` |
-|  PEM Certificate |  The certificate to authenticate against AAP with. Use the certificate you just generated on your AAP server, located at `/etc/tower/tower.cert.` Copy the contents of this file (EXCLUDE the intermediate certificate) into the field in ServiceNow. |
+|  PEM Certificate |  The certificate to authenticate against AAP with. Use the certificate you just generated on your AAP server, located at `/etc/tower/tower.cert.` Copy the contents of this file into the field in ServiceNow. |
 
 <img src="images/tower_cert.png" alt="AAP Certificate" title="AAP Certificate" width="1000" />
 
@@ -132,6 +133,10 @@ Right-click inside the grey area at the top; click **Save**.
 
 #### 13)
 Click the **Get Oauth Token** button on the REST Message screen. This will generate a pop-up window asking to authorize ServiceNow against your AAP instance/cluster. Click Authorize. ServiceNow will now have an Oauth2 token to authenticate against your AAP server.
+
+Note: The ServiceNow user MUST be able to access the ServiceNow API (check if the user you are logged into ServiceNow with has API access)
+
+Note: If you wish to have AAP use a specific user when reaching out from ServiceNow (such as a dedicated servicenow user) ensure you are logged in as that user when you click Authorize. You can utilize a System Administrator or a Normal User as this user. If you are using a Normal User, ensure they have execute access on any Job Templates or Workflow Job Templates you intend to run.
 
 <img src="images/snow_authorize.png" alt="SNOW Authorize" title="SNOW Authorize" width="500" />
 
@@ -288,7 +293,10 @@ Congratulations! After completing these steps, you can now use a ServiceNow Cata
 
 ## ServiceNow/AAP Integration Instructions using Ansible Spoke
 
-This walkthrough assumes you have an Integration Hub Standard/Professional subscription and Ansible spoke activated. It also assumes you have the ability to reach your automation controller from ServiceNow (a mid-server can be utilized). For this example, I will be utilizing an already existing Ansible Automation Platform (AAP) workflow that patches all of my Red Hat Enterprise Linux Servers and updates a ServiceNow Catalog Request. I will also be using Ansible Automation Platform 2.2 but this integration will work in Ansible Automation Platform 1.2 and 2.1 as well. Ansible spoke leverages the ServiceNow Flow Designer which can be easier to use when leveraging variables and building out the API Rest message.
+This walkthrough assumes you have an Integration Hub Standard/Professional subscription and Ansible spoke activated. It also assumes you have the ability to reach your automation controller from ServiceNow (a mid-server can be utilized but only basic Auth will work). For this example, I will be utilizing an already existing Ansible Automation Platform (AAP) workflow that patches all of my Red Hat Enterprise Linux Servers and updates a ServiceNow Catalog Request. I will also be using Ansible Automation Platform 2.2 but this integration will work in Ansible Automation Platform 1.2 and any version of 2.x as well. Ansible spoke leverages the ServiceNow Flow Designer which can be easier to use when leveraging variables and building out the API Rest message.
+
+## Notes
+- ServiceNow MID Servers do not support OAuth, you must use basic authentication. Skip steps 1-3 and replace steps 6 and 7 with https://docs.servicenow.com/bundle/tokyo-application-development/page/administer/integrationhub-store-spokes/task/setup-ansible.html#setup-ansiblespk-basic
 
 ### Preparing AAP
 
@@ -315,13 +323,10 @@ Next, navigate to **Settings** on the left side of the screen and then **Miscell
 <img src="images/tower_settings.png" alt="AAP Settings" title="AAP Settings" width="1000" />
 
 #### 4)
-The Orlando release of the ServiceNow developer instance does not allow for the self-signed certificate provided by AAP. We need to equip our AAP instance with a certificate from a trusted Certificate Authority. The easiest way to accomplish this to SSH into AAP and run the Certbot ACME client in order to generate a certificate from LetsEncrypt (instructions can be found [here](https://letsencrypt.org/getting-started/)). It is important to place the contents of the certificate you generate (found at `/etc/letsencrypt/live/<tower domain>/cert.pem`), followed by the LetsEncrypt intermediate certificate (starting on a new line) at location AAP places its self-signed certificate, `/etc/tower/tower.cert`. The LetsEncrypt intermediate certificate can be found [here](https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem.txt). You must also replace the contents of `/etc/tower/tower.key` with the contents of `/etc/letsencrypt/live/<tower domain>/privkey.pem`. 
+The Orlando release of the ServiceNow developer instance does not allow for the self-signed certificate provided by AAP. We need to equip our AAP instance with a certificate from a trusted Certificate Authority. The easiest way to accomplish this is to SSH into AAP and run the Certbot ACME client in order to generate a certificate from LetsEncrypt (instructions can be found [here](https://letsencrypt.org/getting-started/)). It is important to place the contents of the root certificate + the intermediate certificate + the certificate you generate (found at `/etc/letsencrypt/live/<tower domain>/cert.pem`) at the location AAP places its self-signed certificate, `/etc/tower/tower.cert`. The LetsEncrypt intermediate certificate can be found [here](https://letsencrypt.org/certs/lets-encrypt-x3-cross-signed.pem.txt). You must also replace the contents of `/etc/tower/tower.key` with the contents of `/etc/letsencrypt/live/<tower domain>/privkey.pem`.
 
 Be sure to restart the nginx service on your AAP server after updating the certificate and key.
 
-An example of the generated certificate with the intermediate certificate appended (what needs to be place in `/etc/tower/tower.cert`) is pictured below:
-
-<img src="images/fullchain_cert.png" alt="AAP Cert" title="AAP Cert" width="500" />
 
 ### Preparing ServiceNow
 
@@ -332,13 +337,15 @@ Moving over to ServiceNow, Navigate to **System Definition-->Certificates**. Thi
 | Name  | Descriptive name of the certificate  |
 |  Format |  `PEM` |
 |  Type |  `Trust Store Cert` |
-|  PEM Certificate |  The certificate to authenticate against AAP with. Use the certificate you just generated on your AAP server, located at `/etc/tower/tower.cert.` Copy the contents of this file (EXCLUDE the intermediate certificate) into the field in ServiceNow. |
+|  PEM Certificate |  The certificate to authenticate against AAP with. Use the certificate you just generated on your AAP server, located at `/etc/tower/tower.cert.` Copy the contents of this file into the field in ServiceNow. |
 
 <img src="images/tower_cert.png" alt="AAP Certificate" title="AAP Certificate" width="1000" />
 
 Click the **Submit** (or **Update** if you had a previous AAP certificate) button at the bottom.
 
 ### Set Up Ansible Spoke
+
+If using a MID server, skip steps 6 and 7 and perform https://docs.servicenow.com/bundle/tokyo-application-development/page/administer/integrationhub-store-spokes/task/setup-ansible.html#setup-ansiblespk-basic
 
 #### 6)
 Navigate to **Connections & Credentials-->Connection & Credential Aliases**. Click the existing "AnsibleTowerAlias" alias. In the resulting dialog window, ensure the following fields are filled in:
@@ -360,7 +367,7 @@ Under Related Links select "Create New Connection & Credential" and enter in the
 | Parameter | Value |
 |-----|-----|
 | Connection Name  | `<provider-name> Spoke Connection` |
-|  Connection URL  |  `https://<aap_url>/api/o/authorize/` |
+|  Connection URL  |  `https://<aap_url>` |
 |  Credential Name |  `<provider-name> Spoke Credentials` |
 |  Application Registry Name |  `<provider-name>` |
 |  OAuth Client ID | The Client ID you got from AAP |
@@ -373,9 +380,11 @@ Under Related Links select "Create New Connection & Credential" and enter in the
 
 <img src="images/connection_credential.png" alt="Connection & Credential" title="Connection & Credential" width="800" />
 
-Select **Create and Get OAuth Token** to complete the Ansible spoke set up.  This will generate a window asking to authorize ServiceNow against your AAP instance/cluster. Click **Authorize**. 
+Select **Create and Get OAuth Token** to complete the Ansible spoke set up.  This will generate a window asking to authorize ServiceNow against your AAP instance/cluster. Click **Authorize**.
 
-Note: If you wish to have AAP use a specific user when reaching out from ServiceNow (such as a dedicated servicenow user) ensure you are logged in as that user when you click **Authorize**.
+Note: The ServiceNow user MUST be able to access the ServiceNow API (check if the user you are logged into ServiceNow with has API access)
+
+Note: If you wish to have AAP use a specific user when reaching out from ServiceNow (such as a dedicated servicenow user) ensure you are logged in as that user when you click Authorize. You can utilize a System Administrator or a Normal User as this user. If you are using a Normal User, ensure they have execute access on any Job Templates or Workflow Job Templates you intend to run. **Authorize**.
 
 ### Create a Catalog Item for Users
 
@@ -475,7 +484,7 @@ Click on the blue **Submit** Button
 <img src="images/new_flow.png" alt="New Flow" title="New Flow" width="800" />
 
 #### 13)
-In the New Tab that appears, click Add a trigger, select Service Catalog, Select Advanced Options and select "Run flow in background (default)" 
+In the New Tab that appears, click Add a trigger, select Service Catalog, Select Advanced Options and select "Run flow in background (default)"
 
 Click on the blue **Done** Button
 
@@ -528,6 +537,102 @@ Lastly, to run this catalog item, navigate to **Self-Service-->Service Catalog**
 <img src="images/spoke_catalog.png" alt="Catalog Item" title="Catalog Item" width="1000" />
 
 Congratulations! After completing these steps, you can now use a ServiceNow Catalog Item to launch a Template in AAP using Ansible Spoke. This is ideal for allowing end users to use a front end they are familiar with in order to perform this, and other automated tasks of varying complexities. This goes a long way toward reducing the time to value for the enterprise as a whole, rather than just the teams responsible for writing the playbooks being used.
+
+## ServiceNow/AAP Integration Instructions using Event-Driven Ansible Notification Service
+
+This walkthrough assumes you are able to install applications within your ServiceNow instance. It also assumes you have the ability to reach your Event-Driven Ansible Controller from ServiceNow (a mid-server can be utilized).
+
+### Preparing ServiceNow
+
+#### 1)
+In ServiceNow, navigate to the **All** menu and select **System Applications -> All Available Applications -> All** which will navigate to the Application Manager. Search for **Event-Driven Ansible** and then click on the Store Application for Event-Driven Ansible Notification Service.
+
+<img src="images/application_manager.png" alt="Application Manager" title="Application Manager" width="1000" />
+
+On the Event-Driven Ansible Notification Service click install, select your version, Install Now, and then Click Install and let the process complete.
+
+<img src="images/eda_notification_service.png" alt="Event-Driven Ansible Notification Service" title="Event-Driven Ansible Notification Service" width="1000" />
+
+#### 2)
+After the install is complete, you need to add the EDA role to the ServiceNow user who will be performing the configuration. Navigate to the **All** menu and select **System Security -> Users and Groups -> Users**. Select a user from the list or click New to create a new user. If needed, fill in the required and possibly other fields. If necessary, set a password. To assign roles, switch to the Roles tab and click **Edit**. In the Edit Member page search the collection for the **x_rhtpp_eda.admin** role and move it to the right to appear in the roles list. In addition, assign the **itil** and **itil_admin** roles to grant the user write access to the problem, problem task, configuration item, change request, and incident tables. Click **Save** to apply the assigned roles.
+
+<img src="images/eda_user_role.png" alt="Event-Driven Ansible Role" title="Event-Driven Ansible Role" width="1000" />
+
+### Preparing AAP
+
+## Notes
+This assumes you have already set up the token for automation controller within Event-Driven Ansible controller.
+
+#### 3)
+Now we will create a basic rulebook in order to display the information sent by ServiceNow. Push this rulebook to a Git repository (ensure it is in a folder called rulebooks from the root of the project). The rulebook is where you will decide what events to monitor for and what actions to take (such as calling an existing Job Template or Workflow Job Template in automation controller). This example rulebook will listen on port 5003 and debug any notifications that appear to help us see what information is sent from ServiceNow.
+```
+- name: Listen for events on a webhook from ServiceNow
+  hosts: all
+  sources:
+    - ansible.eda.webhook:
+        host: 0.0.0.0
+        port: 5003
+
+  rules:
+    - name: Output ServiceNow Information
+      condition: event.meta is defined
+      action:
+        debug:
+```
+A more detailed rulebook example including a job template
+```
+---
+- name: Listen for events on a webhook from ServiceNow
+  hosts: all
+  sources:
+    - ansible.eda.webhook:
+        host: 0.0.0.0
+        port: 5003
+
+  rules:
+    - name: Respond to Node Exporter Down Incident
+      condition: event.payload.short_description  == "Prometheus Node Exporter is down" event.payload.token == "{{ servicenow_token }}"
+      action:
+        run_job_template:
+          name: "Start Prometheus Node Exporter"
+          organization: "Infrastructure"
+          job_args:
+            extra_vars:
+              vm_name: "{{ event.payload.u_vm_name }}"
+```
+
+#### 4)
+After your rulebook has been pushed to Git, we will login to Event-Driven Ansible controller and go to Projects. Either sync an existing Project if you already have one or go to **+ Create Project** and provide a name and your SCM URL and click **Create Project**. Ensure the Project has succesfully synced.
+
+Create a Rulebook Activation by going to **Rulebook Activations** and clicking **+ Create rulebook activation**. Give it a name, select your existing Project, the rulebook you previously created, and your Decision environment (the default Decision Environment will work). Click **Create rulebook activation**.
+
+On the new page, click **History** and ensure the rulebook is successfully running. The rulebook must be running in order for the test in the next section to work (and also for EDA to receive events from ServiceNow)
+
+<img src="images/eda_controller.png" alt="Event-Driven Ansible Controller" title="Event-Driven Ansible Controller" width="1000" />
+
+### Back to ServiceNow
+
+#### 5)
+Now we will configure the Event-Driven Ansible Notification as the ServiceNow user we just assigned permissions. Navigate to the **All** menu and select **Event-Driven Ansible Notifications -> Properties**. In the Webhook Configurations section fill in a Webhook URL and a
+Webhook authorization token if desired. The webhook URL should your EDA Controller server plus the port your rulebook webhook will be listening on, for example **http://eda.shadowman.dev:5003/endpoint**
+
+No MID Server is needed if the webhook url is accessible directly from the running servicenow instance. Otherwise fill in a proper MID Server name. The machine listening to the webhook requests must be reachable by the MID Server. To validate the MID Server use the **All** menu and select **MID Servers -> Servers**. The selected MID Server must appear on the server list and its Status field must be Up and its Validated field must be Yes.
+
+Click the **Test Connectivity** button to test the connection from the running servicenow instance to the configured webhook. If successful, it will display “Webhook Connection OK”.
+
+Select what tables to monitor and when to send events to the webhook in the Tables to monitor section.
+
+Please note that all fields in a selected table will be included in the payload of the event sent to Event-Driven Ansible via the webhook. There is no filtering of what fields are excluded.
+Finally click the **OK** button to persist all the settings. These settings can be modified anytime by visiting the same properties page.
+
+<img src="images/eda_configuration.png" alt="Event-Driven Ansible Configuration" title="Event-Driven Ansible Configuration" width="1000" />
+
+#### 6)
+To test the configuration and see the output provided by ServiceNow, I will use Incidents. For this test, navigate to the **All** menu and select **Event-Driven Ansible Notifications -> Properties**. Check **When Created** for the Incident table if you haven't already. Click **OK** to confirm the changes. Create a new Incident, navigate to the **All** menu and select **Incident -> Create New**. Fill in the incident information (at a minimum you need Caller and Short description) and click Submit.
+
+Navigate to Event-Driven Ansible Controller and select **Rule Audit**. You should see a new Rule that has been triggered. Select the name. Go to **Events** and click on **ansible.eda.webhook** to see the full json payload that was received by EDA. This is what you can use to create the conditions for your rulebook in the future. You can now utilize the Event-Driven Ansible Notification Service.
+
+<img src="images/eda_json.png" alt="Event-Driven Ansible Controller JSON" title="Event-Driven Ansible Controller JSON" width="1000" />
 
 ## Have AAP reach out to ServiceNow
 
@@ -623,9 +728,9 @@ Congratulations! You can now have AAP reach out to SNOW to query and update reco
   hosts: "{{ vm_name }}"
   gather_facts: yes
   connection: local
-  
-  tasks: 
-  
+
+  tasks:
+
   - name: Create an incident in ServiceNow
     servicenow.itsm.incident:
       state: new
@@ -637,11 +742,11 @@ Congratulations! You can now have AAP reach out to SNOW to query and update reco
       other:
         u_operating_system: "{{ os | default(omit) }}"
         u_ip_address: "{{ ip_addr | default(omit) }}"
-        u_vm_name: "{{ inventory_hostname | default(omit) }}"       
+        u_vm_name: "{{ inventory_hostname | default(omit) }}"
     register: new_incident
     delegate_to: localhost
 
-  - debug: 
+  - debug:
       var: new_incident.record.number
 ```
 
@@ -650,9 +755,9 @@ Congratulations! You can now have AAP reach out to SNOW to query and update reco
 - name: Update a catalog item in ServiceNow
   hosts: localhost
   gather_facts: no
-  
-  tasks: 
-  
+
+  tasks:
+
   - name: Retrieve catalog request sysid
     servicenow.itsm.api_info:
       resource: sc_request
@@ -668,7 +773,7 @@ Congratulations! You can now have AAP reach out to SNOW to query and update reco
       data:
         request_state: "{{ request_state | default(omit) }}"
         work_notes: "{{ work_notes }}"
-    when: ticket_number != '' 
+    when: ticket_number != ''
 ```
 
 ## Have AAP use ServiceNow as an inventory source
