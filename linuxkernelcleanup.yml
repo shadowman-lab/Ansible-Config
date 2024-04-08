@@ -1,0 +1,6 @@
+---
+- name: Kernel Clean Up RHEL Servers
+  hosts: all
+
+  roles:
+    - shadowman_kernel_cleanup

@@ -1,0 +1,14 @@
+---
+- name: Remove old kernels RHEL 7 and older
+  ansible.builtin.command: package-cleanup --oldkernels -y
+  when: ansible_pkg_mgr == "yum"
+  register: kernelresult
+  changed_when: kernelresult.rc == 0
+  failed_when: kernelresult.rc > 1
+
+- name: Remove old kernels RHEL 8 and newer
+  ansible.builtin.command: dnf remove --oldinstallonly -y
+  when: ansible_pkg_mgr == "dnf"
+  register: kerneldnfresult
+  changed_when: kerneldnfresult.rc == 0
+  failed_when: kerneldnfresult.rc > 1
