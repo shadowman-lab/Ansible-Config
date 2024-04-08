@@ -3,7 +3,7 @@
   ansible.builtin.command: package-cleanup --oldkernels -y
   when: ansible_pkg_mgr == "yum"
   register: kernelresult
-  changed_when: kernelresult.rc == 0
+  changed_when: (kernelresult.stdout_lines | last) == "Complete!"
   failed_when: kernelresult.rc > 1
 
 - name: Remove old kernels RHEL 8 and newer
