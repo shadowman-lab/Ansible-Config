@@ -1,0 +1,52 @@
+---
+dependency:
+  name: galaxy
+  options:
+    requirements-file: requirements.yml
+driver:
+  name: default
+  options:
+    managed: true
+    ansible_connection_options:
+      connection: local
+platforms:
+  - name: rhel-ubi7
+    image: registry.access.redhat.com/ubi7/ubi:latest
+    workingDir: '/tmp'
+  - name: rhel-ubi8
+    image: registry.access.redhat.com/ubi8/ubi:latest
+    workingDir: '/tmp'
+  - name: rhel-ubi9
+    image: registry.access.redhat.com/ubi9/ubi:latest
+    workingDir: '/tmp'
+provisioner:
+  name: ansible
+  # Failing to write the ansible into /.ansible/tmp
+  config_options:
+    defaults:
+      remote_tmp: '/tmp'
+      # This just says go back a directory and thats your roles path
+      # You can also provide this via pipeline with something like this
+      # ANSIBLE_ROLES_PATH: $COLLECTION_ROLES
+
+      # COLLECTIONS_PATH: ${PROJECT_SOURCE}
+      # ANSIBLE_ROLES_PATH: ${PROJECT_SOURCE}/${molecule_namespace}
+  inventory:
+    group_vars:
+      all:
+        molecule_namespace: ${DEVWORKSPACE_NAMESPACE}
+        molecule_pip_dependencies:
+          - kubernetes
+verifier:
+  name: ansible
+scenario:
+  name: default
+  test_sequence:
+    - prepare
+    - dependency
+    - syntax
+    - create
+    - converge
+   # - idempotence not needed for this test since verify handles idempotence
+    - verify
+    - destroy

@@ -1,0 +1,40 @@
+---
+- name: Check for packages to include
+  ansible.builtin.set_fact:
+    accept_packages: "{{ acceptlist.split(',') }}"
+  when: acceptlist != ''
+
+- name: Check for packages to exclude
+  ansible.builtin.set_fact:
+    reject_packages: "{{ rejectlist.split(',') }}"
+  when: rejectlist != ''
+
+- name: Install Windows Updates
+  ansible.windows.win_updates:
+    category_names: "{{ categories | default('*') }}"
+    reboot: "{{ reboot_server | default('true') }}"
+    accept_list: "{{ accept_packages | default(omit) }}"
+    reject_list: "{{ reject_packages | default(omit) }}"
+  register: patchresult
+
+- name: Display Patching Results
+  ansible.builtin.debug:
+    msg: "{{ patchresult | json_query('updates.*.title') }}"
+
+- name: Set patching data for ServiceNow
+  ansible.builtin.set_stats:
+    data:
+      work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] {{ patchresult | json_query('updates.*.title') | to_nice_json }}"
+      expose_to_cloud_redhat_com_results: "{{ inventory_hostname }}:{{ patchresult | json_query('updates.*.title') | to_nice_json }}"
+  when:
+    - patchresult.found_update_count | int > 0
+    - ticket_number is defined
+
+- name: Set patching data for ServiceNow
+  ansible.builtin.set_stats:
+    data:
+      work_notes: "[code]<h3>{{ inventory_hostname }}</h3>[/code] Compliant"
+      expose_to_cloud_redhat_com_results: "{{ inventory_hostname }}: Compliant"
+  when:
+    - patchresult.found_update_count | int <= 0
+    - ticket_number is defined

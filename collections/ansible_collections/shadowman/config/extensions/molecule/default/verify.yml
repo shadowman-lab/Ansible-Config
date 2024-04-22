@@ -1,0 +1,20 @@
+---
+# This is an example playbook to execute Ansible tests.
+
+- name: Verify
+  hosts: all
+  gather_facts: true
+  connection: redhat.openshift.oc
+
+  tasks:
+
+    - name: Verifier | Perform Patching
+      ansible.builtin.include_role:
+        name: shadowman.config.shadowman_patching
+
+    - name: Verifier | Check that no packages where installed
+      ansible.builtin.assert:
+        that:
+          - not patchingresult.changed
+          - not patchingresultdnf.changed
+        fail_msg: "Patching did not complete successfully"

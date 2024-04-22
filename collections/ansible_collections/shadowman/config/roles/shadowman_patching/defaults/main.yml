@@ -1,0 +1,7 @@
+---
+acceptlist: ''
+rejectlist: ''
+categories: '*'
+exclude_packages: "{{ exclude.split(',') }}"
+exclude: ''
+os: rhel8

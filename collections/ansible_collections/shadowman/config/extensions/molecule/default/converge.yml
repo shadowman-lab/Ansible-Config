@@ -1,0 +1,9 @@
+---
+- name: Converge
+  hosts: all
+  gather_facts: true
+  connection: redhat.openshift.oc
+  tasks:
+    - name: Perform Patching
+      ansible.builtin.include_role:
+        name: shadowman.config.shadowman_patching
