@@ -6,5 +6,7 @@ include devfile.yaml
 include *.code-workspace
 recursive-exclude .git *
 recursive-include collections *.yml
+recursive-include collections *.md
+recursive-include collections *.rst
 recursive-include roles *
 recursive-include SNOW *
