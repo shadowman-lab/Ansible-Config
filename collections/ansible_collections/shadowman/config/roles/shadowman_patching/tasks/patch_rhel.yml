@@ -38,6 +38,12 @@
     msg: "{{ patchingresultdnf.results }}"
   when: ansible_pkg_mgr == "dnf"
 
+- name: Ensure dnf-utils is installed
+  ansible.builtin.dnf:
+    name: dnf-utils
+    state: present
+  when: ansible_pkg_mgr == "dnf"
+
 - name: Check to see if we need a reboot
   ansible.builtin.command: needs-restarting -r
   register: result
