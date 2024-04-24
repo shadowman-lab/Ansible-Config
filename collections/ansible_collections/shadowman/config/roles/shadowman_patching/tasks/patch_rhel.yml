@@ -53,7 +53,9 @@
 
 - name: Reboot Server if Necessary
   ansible.builtin.reboot:
-  when: result.rc == 1
+  when:
+    - result.rc == 1
+    - ansible_connection == "ssh"
 
 - name: Set patching data for ServiceNow Yum if patching happened
   ansible.builtin.set_stats:
