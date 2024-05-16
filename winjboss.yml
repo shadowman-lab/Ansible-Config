@@ -1,0 +1,28 @@
+---
+- name: Set up Java
+  hosts: all
+  become: true
+
+  vars:
+    jdk_package: jdk8
+    java_major_version: 8.0
+    java_minor_version: 162
+  tasks:
+
+    - name: Install Java
+      chocolatey.chocolatey.win_chocolatey:
+        name: "{{ jdk_package }}"
+        state: present
+        version: "{{ java_major_version }}.{{ java_minor_version }}"
+
+    - name: Set Java_home
+      ansible.windows.win_environment:
+        state: present
+        name: JAVA_HOME
+        value: 'c:\program files\java\jdk1.{{ java_major_version }}_{{ java_minor_version }}'
+        level: machine
+
+    - name: Add Java to path
+      ansible.windows.win_path:
+        elements:
+          - 'c:\program files\java\jdk{{ java_major_version }}_{{ java_minor_version }}\bin'
