@@ -19,10 +19,10 @@
       ansible.windows.win_environment:
         state: present
         name: JAVA_HOME
-        value: 'c:\program files\OpenJDK\jdk-{{ java_major_version }}.{{ java_minor_version }}'
+        value: 'C:\Program Files\OpenJDK\jdk-{{ java_major_version }}.{{ java_minor_version }}'
         level: machine
 
     - name: Add Java to path
       ansible.windows.win_path:
         elements:
-          - 'c:\program files\OpenJDK\jdk-{{ java_major_version }}.{{ java_minor_version }}\bin'
+          - 'C:\Program Files\OpenJDK\jdk-{{ java_major_version }}.{{ java_minor_version }}\bin'
