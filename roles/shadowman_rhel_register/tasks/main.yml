@@ -1,7 +1,7 @@
 ---
 - name: Install Katello RPM for Satellite Server for RHEL 7
   ansible.builtin.yum:
-    name: https://sat6.shadowman.dev/pub/katello-ca-consumer-sat6.shadowman.dev-1.0-3.noarch.rpm
+    name: https://sat6.shadowman.dev/pub/katello-ca-consumer-latest.noarch.rpm
     state: present
     disable_gpg_check: true
   when:
@@ -11,7 +11,7 @@
 
 - name: Install Katello RPM for Satellite Server for RHEL 8 or 9
   ansible.builtin.dnf:
-    name: https://sat6.shadowman.dev/pub/katello-ca-consumer-sat6.shadowman.dev-1.0-3.noarch.rpm
+    name: https://sat6.shadowman.dev/pub/katello-ca-consumer-latest.noarch.rpm
     state: present
     disable_gpg_check: true
   when:
