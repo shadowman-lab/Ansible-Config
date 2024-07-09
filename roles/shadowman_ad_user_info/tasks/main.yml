@@ -1,9 +1,4 @@
 ---
-- name: Create site directory structure
-  ansible.windows.win_file:
-    path: "{{ report_path }}"
-    state: directory
-
 - name: Get AD user accounts with groups and lock status
   ansible.windows.win_shell: |
     Import-Module ActiveDirectory
