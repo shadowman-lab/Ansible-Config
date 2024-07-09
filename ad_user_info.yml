@@ -1,0 +1,6 @@
+---
+- name: Build AD User Infor Report
+  hosts: all
+
+  roles:
+    - shadowman_ad_user_info
