@@ -10,7 +10,7 @@
 
 - name: Create HTML report
   ansible.builtin.template:
-    src: fullreport.j2
+    src: users_template.j2
     dest: "{{ file_path }}/ad_users.html"
     owner: root
     group: root
