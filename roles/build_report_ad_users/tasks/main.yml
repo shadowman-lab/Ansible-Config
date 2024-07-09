@@ -1,0 +1,23 @@
+- name: Ensure Apache is installed
+  ansible.builtin.yum:
+    name: httpd
+    state: present
+
+- name: Ensure Apache is started
+  ansible.builtin.service:
+    name: httpd
+    state: started
+
+- name: Create HTML report
+  ansible.builtin.template:
+    src: fullreport.j2
+    dest: "{{ file_path }}/ad_users.html"
+    owner: root
+    group: root
+    mode: '0644'
+  vars:
+    users: "{{ ad_users.stdout | from_json }}"
+
+- name: Display link to inventory report
+  ansible.builtin.debug:
+    msg: "Please go to http://{{ ansible_host }}/ad_users.html"

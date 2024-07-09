@@ -4,3 +4,12 @@
 
   roles:
     - shadowman_ad_user_info
+
+  tasks:
+
+    - name: Build the report
+      ansible.builtin.include_role:
+        name: build_report_ad_users
+        apply:
+          delegate_to: report.shadowman.dev
+          run_once: true
