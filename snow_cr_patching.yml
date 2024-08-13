@@ -1,0 +1,7 @@
+---
+- name: Patch from SNOW CR
+  hosts: localhost
+  gather_facts: false
+
+  roles:
+    - shadowman_schedule_cr
