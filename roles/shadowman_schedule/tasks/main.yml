@@ -5,9 +5,3 @@
     state: present
     unified_job_template: "{{ job_template_name }}"
     rrule: "{{ query('ansible.controller.schedule_rrule', 'none', start_date=date_time, timezone='GMT') }}"
-  when: ((now(utc=true, fmt="%Y-%m-%d %H:%M:%S") | to_datetime) - (date_time | to_datetime)).total_seconds() | int < 0
-
-- name: Run the job now if past the scheduled time
-  ansible.controller.job_launch:
-    job_template: "{{ job_template_name }}"
-  when: ((now(utc=true, fmt="%Y-%m-%d %H:%M:%S") | to_datetime) - (date_time | to_datetime)).total_seconds() | int > 0

@@ -1,0 +1,7 @@
+---
+- name: Patch from Change Request
+  hosts: localhost
+  gather_facts: false
+
+  roles:
+    - shadowman_schedule_cr

@@ -1,0 +1,13 @@
+---
+- name: Build the Schedule for {{ job_template_name }} job at {{ date_time }} GMT
+  ansible.controller.schedule:
+    name: Run {{ job_template_name }} job at {{ date_time }} GMT
+    state: present
+    unified_job_template: "{{ job_template_name }}"
+    rrule: "{{ query('ansible.controller.schedule_rrule', 'none', start_date=date_time, timezone='GMT') }}"
+  when: ((now(utc=true, fmt="%Y-%m-%d %H:%M:%S") | to_datetime) - (date_time | to_datetime("%m-%d-%Y %H:%M:%S"))).total_seconds() | int < 0
+
+- name: Run the job now if past the scheduled time
+  ansible.controller.job_launch:
+    job_template: "{{ job_template_name }}"
+  when: ((now(utc=true, fmt="%Y-%m-%d %H:%M:%S") | to_datetime) - (date_time | to_datetime("%m-%d-%Y %H:%M:%S"))).total_seconds() | int > 0
