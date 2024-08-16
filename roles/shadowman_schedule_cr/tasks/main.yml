@@ -12,7 +12,6 @@
       vm_name: "{{ vm_name | default(omit) }}"
       operating_system: "{{ operating_system | default(omit) }}"
       shadowman_provision_hypervisor: "{{ shadowman_provision_hypervisor | default(omit) }}"
-
   when: ((now(utc=true, fmt="%Y-%m-%d %H:%M:%S") | to_datetime) - (date_time | to_datetime)).total_seconds() | int < 0
 
 - name: Run the job now if past the scheduled time
