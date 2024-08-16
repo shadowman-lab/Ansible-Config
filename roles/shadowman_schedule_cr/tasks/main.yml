@@ -8,7 +8,7 @@
     extra_data:
       change_request_number: "{{ change_request_number }}"
       owner: "{{ owner | default(omit) }}"
-      env: "{{ environment | default(omit) }}"
+      env: "{{ env | default(omit) }}"
       vm_name: "{{ vm_name | default(omit) }}"
       operating_system: "{{ operating_system | default(omit) }}"
       shadowman_provision_hypervisor: "{{ shadowman_provision_hypervisor | default(omit) }}"
@@ -21,7 +21,7 @@
     extra_vars:
       change_request_number: "{{ change_request_number }}"
       owner: "{{ owner | default(omit) }}"
-      env: "{{ environment | default(omit) }}"
+      env: "{{ env | default(omit) }}"
       vm_name: "{{ vm_name | default(omit) }}"
       operating_system: "{{ operating_system | default(omit) }}"
       shadowman_provision_hypervisor: "{{ shadowman_provision_hypervisor | default(omit) }}"
