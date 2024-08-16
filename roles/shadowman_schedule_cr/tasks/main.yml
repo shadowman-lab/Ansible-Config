@@ -1,18 +1,17 @@
 ---
-- name: Set Start Date
-  ansible.builtin.set_fact:
-    start_time: "{{ date_time | to_datetime('%m-%d-%Y %H:%M:%S') }}"
-  when: ((now(utc=true, fmt="%Y-%m-%d %H:%M:%S") | to_datetime) - (date_time | to_datetime("%m-%d-%Y %H:%M:%S"))).total_seconds() | int < 0
-
 - name: Build the Schedule for {{ job_template_name }} job at {{ date_time }} GMT
   ansible.controller.schedule:
     name: Run {{ job_template_name }} job at {{ date_time }} GMT
     state: present
     unified_job_template: "{{ job_template_name }}"
-    rrule: "{{ query('ansible.controller.schedule_rrule', 'none', start_date=start_time, timezone='GMT') }}"
-  when: ((now(utc=true, fmt="%Y-%m-%d %H:%M:%S") | to_datetime) - (date_time | to_datetime("%m-%d-%Y %H:%M:%S"))).total_seconds() | int < 0
+    rrule: "{{ query('ansible.controller.schedule_rrule', 'none', start_date=date_time, timezone='GMT') }}"
+    extra_data:
+      change_request_number: "{{ change_request_number }}"
+  when: ((now(utc=true, fmt="%Y-%m-%d %H:%M:%S") | to_datetime) - (date_time | to_datetime)).total_seconds() | int < 0
 
 - name: Run the job now if past the scheduled time
-  ansible.controller.job_launch:
-    job_template: "{{ job_template_name }}"
-  when: ((now(utc=true, fmt="%Y-%m-%d %H:%M:%S") | to_datetime) - (date_time | to_datetime("%m-%d-%Y %H:%M:%S"))).total_seconds() | int > 0
+  ansible.controller.workflow_launch:
+    workflow_template: "{{ job_template_name }}"
+    extra_vars:
+      change_request_number: "{{ change_request_number }}"
+  when: ((now(utc=true, fmt="%Y-%m-%d %H:%M:%S") | to_datetime) - (date_time | to_datetime)).total_seconds() | int > 0
