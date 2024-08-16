@@ -7,6 +7,12 @@
     rrule: "{{ query('ansible.controller.schedule_rrule', 'none', start_date=date_time, timezone='GMT') }}"
     extra_data:
       change_request_number: "{{ change_request_number }}"
+      owner: "{{ owner | default(omit) }}"
+      env: "{{ environment | default(omit) }}"
+      vm_name: "{{ vm_name | default(omit) }}"
+      operating_system: "{{ operating_system | default(omit) }}"
+      shadowman_provision_hypervisor: "{{ shadowman_provision_hypervisor | default(omit) }}"
+
   when: ((now(utc=true, fmt="%Y-%m-%d %H:%M:%S") | to_datetime) - (date_time | to_datetime)).total_seconds() | int < 0
 
 - name: Run the job now if past the scheduled time
@@ -14,4 +20,9 @@
     workflow_template: "{{ job_template_name }}"
     extra_vars:
       change_request_number: "{{ change_request_number }}"
+      owner: "{{ owner | default(omit) }}"
+      env: "{{ environment | default(omit) }}"
+      vm_name: "{{ vm_name | default(omit) }}"
+      operating_system: "{{ operating_system | default(omit) }}"
+      shadowman_provision_hypervisor: "{{ shadowman_provision_hypervisor | default(omit) }}"
   when: ((now(utc=true, fmt="%Y-%m-%d %H:%M:%S") | to_datetime) - (date_time | to_datetime)).total_seconds() | int > 0
