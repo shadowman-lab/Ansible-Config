@@ -134,7 +134,7 @@
 - name: Create Scap Report Index Page
   ansible.builtin.template:
     src: "indexpage.html.j2"
-    dest: "{{ file_path }}/openscap/index.html"
+    dest: "{{ file_path }}/index.html"
     owner: root
     group: root
     mode: '0644'

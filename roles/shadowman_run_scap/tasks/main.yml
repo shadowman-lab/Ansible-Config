@@ -121,6 +121,29 @@
   run_once: true
   when: sendemailreport
 
+- name: Find all scap folders
+  ansible.builtin.find:
+    paths: /var/www/html/openscap
+    file_type: directory
+  delegate_to: report.shadowman.dev
+  run_once: true
+  register: completedreports
+
+- name: Create Scap Report Index Page
+  ansible.builtin.template:
+    src: "indexpage.html.j2"
+    dest: "{{ file_path }}/index.html"
+    owner: root
+    group: root
+    mode: '0644'
+  delegate_to: report.shadowman.dev
+  run_once: true
+
+- name: DISPLAY LINK TO SUMMARY REPORT
+  ansible.builtin.debug:
+    msg: "https://report.shadowman.dev/openscap/index.html"
+  run_once: true
+
 - name: Send Report via E-mail
   community.general.mail:
     host: "{{ EMAIL_HOST }}"
@@ -128,7 +151,7 @@
     password: "{{ EMAIL_PASSWORD }}"
     port: "{{ EMAIL_PORT }}"
     subject: "Linux Scan Report"
-    body: "Linux Compliance Scan Completed, please see the attached report"
+    body: "{{ lookup('template', 'indexpage.html.j2') }}"
     attach:
       - /tmp/linux{{ ansible_date_time.iso8601 }}.html
     from: "{{ email_from }}"
