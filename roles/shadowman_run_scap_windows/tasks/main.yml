@@ -139,3 +139,24 @@
   run_once: true
   become: false
   when: sendemailreport
+
+- name: Find all scap folders
+  ansible.builtin.find:
+    paths: /var/www/html/openscap
+    file_type: directory
+  register: completedreports
+
+- name: Create Scap Report Index Page
+  ansible.builtin.template:
+    src: "indexpage.html.j2"
+    dest: "{{ file_path }}/openscap/index.html"
+    owner: root
+    group: root
+    mode: '0644'
+  delegate_to: report.shadowman.dev
+  run_once: true
+
+- name: DISPLAY LINK TO SUMMARY REPORT
+  ansible.builtin.debug:
+    msg: "https://report.shadowman.dev/openscap/index.html"
+  run_once: true
