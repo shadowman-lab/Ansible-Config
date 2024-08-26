@@ -31,9 +31,9 @@
 {% for allfiles in completedreports.files %}
 {% set host = allfiles.path.split('/')[-1] %}
         <tr>
-            <td>{{hostvars[host]['inventory_hostname']}}</td>
-            <td>{{hostvars[host]['ansible_os_family']|default("none")}}</td>
-            <td>{{hostvars[host]['ansible_distribution_version']|default("none")}}</td>
+            <td>{{host}}</td>
+            <td>{{hostvars[host]['ansible_os_family']|default("Summary Page")}}</td>
+            <td>{{hostvars[host]['ansible_distribution_version']|default("Summary Page")}}</td>
             <td>https://report.shadowman.dev/openscap/{{host}}/</td>
         </tr>
 {% endfor %}

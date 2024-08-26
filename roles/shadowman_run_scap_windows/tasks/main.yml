@@ -123,23 +123,6 @@
   run_once: true
   when: sendemailreport
 
-- name: Send Report via E-mail
-  community.general.mail:
-    host: "{{ EMAIL_HOST }}"
-    username: "{{ EMAIL_USERNAME }}"
-    password: "{{ EMAIL_PASSWORD }}"
-    port: "{{ EMAIL_PORT }}"
-    subject: "Windows Scan Report"
-    body: "Windows Compliance Scan Completed, please see the attached report"
-    attach:
-      - /tmp/windows{{ ansible_date_time.iso8601 }}.html
-    from: "{{ email_from }}"
-    to: "{{ email_to }}"
-  delegate_to: localhost
-  run_once: true
-  become: false
-  when: sendemailreport
-
 - name: Find all scap folders
   ansible.builtin.find:
     paths: /var/www/html/openscap
@@ -162,3 +145,20 @@
   ansible.builtin.debug:
     msg: "https://report.shadowman.dev/openscap/index.html"
   run_once: true
+
+- name: Send Report via E-mail
+  community.general.mail:
+    host: "{{ EMAIL_HOST }}"
+    username: "{{ EMAIL_USERNAME }}"
+    password: "{{ EMAIL_PASSWORD }}"
+    port: "{{ EMAIL_PORT }}"
+    subject: "Windows Scan Report"
+    body: "{{ lookup('template', 'indexpage.html.j2') }}"
+    attach:
+      - /tmp/windows{{ ansible_date_time.iso8601 }}.html
+    from: "{{ email_from }}"
+    to: "{{ email_to }}"
+  delegate_to: localhost
+  run_once: true
+  become: false
+  when: sendemailreport
