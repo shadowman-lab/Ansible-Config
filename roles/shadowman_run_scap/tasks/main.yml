@@ -156,6 +156,7 @@
       - /tmp/linux{{ ansible_date_time.iso8601 }}.html
     from: "{{ email_from }}"
     to: "{{ email_to }}"
+    subtype: html
   delegate_to: localhost
   run_once: true
   become: false
