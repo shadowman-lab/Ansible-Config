@@ -144,6 +144,8 @@
   ansible.builtin.find:
     paths: /var/www/html/openscap
     file_type: directory
+  delegate_to: report.shadowman.dev
+  run_once: true
   register: completedreports
 
 - name: Create Scap Report Index Page
