@@ -1,0 +1,15 @@
+---
+- name: Patch Servers based on selected VMs
+  hosts: "{{ vm_names }}"
+
+  roles:
+    - shadowman_patching
+
+  tasks:
+
+    - name: Build the report
+      ansible.builtin.include_role:
+        name: shadowman.reports.build_report_patch
+        apply:
+          delegate_to: report.shadowman.dev
+          run_once: true
