@@ -5,6 +5,6 @@
 
   tasks:
 
-    - name: Debug Limit
+    - name: Debug Host to Automate and Inventory to Sync
       ansible.builtin.debug:
-        msg: "{{ tower1.shadowman.dev }} and inventory source to sync {{  inventory_source_to_sync }}"
+        msg: "{{ host_to_automate }} and inventory source to sync {{  inventory_source_to_sync }}"
