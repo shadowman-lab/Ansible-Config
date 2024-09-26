@@ -7,4 +7,4 @@
 
     - name: Debug Limit
       ansible.builtin.debug:
-        msg: "{{ ansible_limit }}"
+        msg: "{{ tower1.shadowman.dev }} and inventory source to sync {{  inventory_source_to_sync }}"
