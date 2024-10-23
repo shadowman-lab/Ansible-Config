@@ -260,7 +260,7 @@ p.hostname {
   }
 
   .ui-state-active .ui-icon, .ui-button:active .ui-icon {
-    background-image: url("http://code.jquery.com/ui/1.12.1/themes/base/images/ui-icons_ffffff_256x240.png") !important;
+    background-image: url("https://code.jquery.com/ui/1.12.1/themes/base/images/ui-icons_ffffff_256x240.png") !important;
   }
 
   p.opportunities {
