@@ -119,7 +119,7 @@
                         <td style="text-align: center;">{{ inventory.id | default("unknown") }}</td>
                         <td style="text-align: center;">{{ jobs_per_inventory }}</td>
                         <td style="text-align: center;">{{ job_template_list_dict[inventory.id].count | default("0") }}</td>
-                        <td style="text-align: center;"><a target="_new" href="https://{{ lookup('env', 'TOWER_HOST')lookup('env', 'TOWER_HOST') }}{{ inventory.url }}">Link</a></td>
+                        <td style="text-align: center;"><a target="_new" href="https://{{ automation_controller_host }}{{ inventory.url }}">Link</a></td>
                     </tr>
                 </tbody>
             </table>
