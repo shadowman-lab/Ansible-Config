@@ -51,7 +51,7 @@ $(function() {
               <tbody>
                 <tr>
                   <td>Name</td>
-                  <td class="sub_net_info">{{ automation_controller_host }}</td>
+                  <td class="sub_net_info">{{ lookup('env', 'TOWER_HOST') }}</td>
                 </tr>
               </tbody>
               </table>
