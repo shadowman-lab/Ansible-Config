@@ -47,7 +47,9 @@
   loop:
     - "webpage_logo.png"
     - "redhat-ansible-logo.svg"
-    - "server.png"
+    - "aap_icon.png"
+    - "engineer_background.png"
+    - "engineer_icon.png"
 
 - name: Display link to inventory report
   ansible.builtin.debug:

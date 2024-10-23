@@ -1,7 +1,7 @@
 ---
 - name: Retrieve inventory and Jobs from Ansible Automation Controller
   hosts: localhost
-  gather_facts: false
+  gather_facts: true
 
 
   tasks:
@@ -52,9 +52,9 @@
       loop_control:
         label: "{{ item.name }}"
 
-- name: Build ROI report
-  hosts: report.shadowman.dev
-  gather_facts: true
-
-  roles:
-    - shadowman_aap_roi
+    - name: Build the report
+      ansible.builtin.include_role:
+        name: shadowman_aap_roi
+        apply:
+          delegate_to: report.shadowman.dev
+          run_once: true
