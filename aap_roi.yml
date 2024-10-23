@@ -1,0 +1,60 @@
+---
+- name: Retrieve inventory and Jobs from Ansible Automation Controller
+  hosts: localhost
+  gather_facts: false
+
+
+  tasks:
+
+    - name: Load the inventory from Automation Controller using the connection info
+      ansible.builtin.set_fact:
+        controller_inventory: "{{ lookup('ansible.controller.controller_api', 'inventories?page_size=200') }}"
+
+    - name: Retrieve job template list for each inventory and store in a dictionary
+      ansible.builtin.uri:
+        url: "https://{{ lookup('env', 'TOWER_HOST') }}/api/v2/job_templates/?inventory_id={{ item.id }}"
+        method: GET
+        user: "{{ lookup('env', 'TOWER_USERNAME') }}"
+        password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+        force_basic_auth: true
+        validate_certs: false
+        return_content: true
+      loop: "{{ controller_inventory }}"
+      loop_control:
+        label: "{{ item.name }}"
+      register: job_template_list_results
+
+    - name: Combine job template list into a dictionary
+      ansible.builtin.set_fact:
+        job_template_list_dict: "{{ job_template_list_dict | default({}) | combine({item.id: (job_template_list_results.results | selectattr('item.id', 'eq', item.id) | map(attribute='content') | map('from_json'))[0]}) }}"
+      loop: "{{ controller_inventory }}"
+      loop_control:
+        label: "{{ item.name }}"
+
+    - name: Retrieve job list for each inventory and store in a dictionary
+      ansible.builtin.uri:
+        url: "https://{{ lookup('env', 'TOWER_HOST') }}/api/v2/jobs/?inventory_id={{ item.id }}"
+        method: GET
+        user: "{{ lookup('env', 'TOWER_USERNAME') }}"
+        password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
+        force_basic_auth: true
+        validate_certs: false
+        return_content: true
+      loop: "{{ controller_inventory }}"
+      loop_control:
+        label: "{{ item.name }}"
+      register: job_list_results
+
+    - name: Combine job list into a dictionary
+      ansible.builtin.set_fact:
+        job_list_dict: "{{ job_list_dict | default({}) | combine({item.id: (job_list_results.results | selectattr('item.id', 'eq', item.id) | map(attribute='content') | map('from_json'))[0]}) }}"
+      loop: "{{ controller_inventory }}"
+      loop_control:
+        label: "{{ item.name }}"
+
+- name: Build ROI report
+  hosts: report.shadowman.dev
+  gather_facts: true
+
+  roles:
+    - shadowman_aap_roi

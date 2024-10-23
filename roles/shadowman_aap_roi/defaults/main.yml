@@ -1,0 +1,22 @@
+---
+# manual time = configurable time (in seconds) to manually complete the task on one host
+# this is in seconds, 300 is 5 minutes
+manual_time_per_job: 300
+# use if jinja issues happen
+usesingletemplate: false
+# this is the cost per hour to run automation
+# this is running the AAP infrastrucure, building automation, etc
+# if the below says 10, its $10 per hour to run this automation
+automated_process_cost: 10
+
+# this is the cost of an engineer to do the eqvuialent of automation (manually configure something)
+manual_cost_per_hour: 30.0
+
+# this is the cost of an engineer to create automation, e.g. create an Ansible Playbook and test it
+manual_cost_per_hour_to_automate: 80
+
+# this is amount of time in hours to develop automation for this use case
+hours_to_create_automation: 1
+
+# days per year of FTE (full time engineer), default is 52 weeks a year * 5 days a week or 260
+days_per_year_fte: 260

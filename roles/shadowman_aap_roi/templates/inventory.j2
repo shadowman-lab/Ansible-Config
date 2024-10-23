@@ -1,0 +1,227 @@
+<!-- INTERNAL TABLE FOR Ansible -->
+<div id="accordion">
+    <!-- {% set outside_loop = namespace(all_jobs_aggregate_total_elapsed_time=0.0) %} -->
+    {% for inventory in controller_inventory %}
+    {% set inventory_id = inventory.id %}
+    {% set total = inventory.total_hosts %}
+    {% set stopped = inventory.hosts_with_active_failures %}
+    {% set running = total - stopped %}
+
+
+    {% set variables = inventory.variables | from_yaml %}
+    {% if variables.hours_to_create_automation is defined %}
+        {% set hours_to_create_automation = variables.hours_to_create_automation %}
+    {% endif %}
+    {% if variables.manual_time_per_job is defined %}
+        {% set manual_time_per_job = variables.manual_time_per_job %}
+    {% endif %}
+    {% if variables.automated_process_cost is defined %}
+        {% set automated_process_cost = variables.automated_process_cost %}
+    {% endif %}
+    {% if variables.manual_cost_per_hour is defined %}
+        {% set manual_cost_per_hour = variables.manual_cost_per_hour %}
+    {% endif %}
+    {% if variables.manual_cost_per_hour_to_automate is defined %}
+        {% set manual_cost_per_hour_to_automate = variables.manual_cost_per_hour_to_automate %}
+    {% endif %}
+
+    {% set ns = namespace(total_elapsed_time=0.0) %}
+    {% if inventory_id in job_list_dict and job_list_dict[inventory_id].count > 0 %}
+
+
+        {% for job in job_list_dict[inventory_id].results %}
+            {% set job_elapsed_time = job.elapsed | default(0.0) %}
+            {% set ns.total_elapsed_time = ns.total_elapsed_time + job_elapsed_time %}
+            <!-- {% set outside_loop.all_jobs_aggregate_total_elapsed_time = outside_loop.all_jobs_aggregate_total_elapsed_time + job_elapsed_time %} -->
+        {% endfor %}
+
+    {% endif %}
+    {% set jobs_per_inventory = job_list_dict[inventory.id].count | default("0") %}
+
+    {% if jobs_per_inventory <= 0 %}
+    {% set hours_to_create_automation = 0 %}
+    {% endif %}
+
+    <div class="test_highlight">
+        <h3>
+            <div id="region_title">{{ inventory.name | default('unknown') }}</div>
+            {% if ns.total_elapsed_time is number %}
+                <div id="job_time">
+                {% set total_seconds = ns.total_elapsed_time %}
+                {% set days = total_seconds // 86400 %}
+                {% set hours = (total_seconds % 86400) // 3600 %}
+                {% set minutes = ((total_seconds % 3600) // 60) + ((total_seconds % 60) / 60) %}
+                {% set effective_running = running if running > 0 else 1 %}
+                {% set total_seconds_manual = (manual_time_per_job * effective_running * jobs_per_inventory) %}
+                {% set days_manual = total_seconds_manual // 86400 %}
+                {% set hours_manual = (total_seconds_manual % 86400) // 3600 %}
+                {% set minutes_manual = ((total_seconds_manual % 3600) // 60) + ((total_seconds_manual % 60) / 60) %}
+                {% set automation_cost = automated_process_cost * (total_seconds / 3600) %}
+                {% set manual_cost = (total_seconds_manual / 3600) * manual_cost_per_hour %}
+                {% set time_difference = total_seconds_manual - total_seconds %}
+                {% set days_time_difference = time_difference // 86400 %}
+                {% set hours_time_difference = (time_difference % 86400) // 3600 %}
+                {% set minutes_time_difference = ((time_difference % 3600) // 60) + ((time_difference % 60) / 60) %}
+                {% set automation_creation_cost = hours_to_create_automation * manual_cost_per_hour_to_automate %}
+                {% set automation_cost_savings = manual_cost - automation_cost - automation_creation_cost %}
+
+                <div id="time_saved">
+                    <div id="time_saved_title">Time Saved</div>
+                    <div id="time_saved_value">{{ days_time_difference | round(0) }} day(s) - {{ hours_time_difference | round(0) }} hour(s) - {{ minutes_time_difference | round(2) }} minute(s)</div>
+                </div>
+
+                <div id="automation_savings">
+                    <div id="automation_savings_title">Value of Automation</div>
+                    <div id="automation_savings_value">{{ "${:,.2f}".format(automation_cost_savings) }}</div>
+                </div>
+            </div>
+            {% else %}
+            <div id="no_automation">No Automation has been run</div>
+            {% endif %}
+
+
+            <div class="instances_highlight">
+                {% if total > 0 %}
+                    {% if running > 0 %}
+                    <div class="instances_running">
+                    {% endif %}
+                        <i class="fa-solid fa-server"></i> {{ running }} nodes
+                    {% if running > 0 %}
+                    </div>
+                    {% endif %}
+                    {% if stopped > 0 %}
+                      <div class="instances_stopped"><i class="fa-solid fa-triangle-exclamation"></i> {{ stopped }} failed ({{ total }} total)</div>
+                    {% else %}
+                    {% endif %}
+                {% else %}
+                    <div class="no_nodes">No Nodes | Single Node or API driven automation</div>
+                {% endif %}
+            </div>
+        </h3>
+        <div class="net_content">
+            <table class="net_info inventory_info">
+                <tbody>
+                    <tr>
+                        <th class="vpc_info"><p class="highlight_title">Description</p></th>
+                        <th class="vpc_info"><p class="highlight_title">ID</p></th>
+                        <th class="vpc_info"><p class="highlight_title">Job Runs</p></th>
+                        <th class="vpc_info"><p class="highlight_title">Job Templates</p></th>
+                        <th class="vpc_info"><p class="highlight_title">URL</p></th>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center;">
+                        {% if inventory.description == '' %}
+                        No description provided
+                        {% else %}
+                        {{ inventory.description }}
+                        {% endif %}
+                        </td>
+                        <td style="text-align: center;">{{ inventory.id | default("unknown") }}</td>
+                        <td style="text-align: center;">{{ jobs_per_inventory }}</td>
+                        <td style="text-align: center;">{{ job_template_list_dict[inventory.id].count | default("0") }}</td>
+                        <td style="text-align: center;"><a target="_new" href="https://{{ automation_controller_host }}{{ inventory.url }}">Link</a></td>
+                    </tr>
+                </tbody>
+            </table>
+            <table class="net_info main_attraction">
+                <tbody>
+                    <tr>
+                        <th class="vpc_info title_main_attraction"><p class="highlight_title">Automation infra cost</p></th>
+                        <th class="vpc_info title_main_attraction"><p class="highlight_title">Manual cost</p></th>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center;"><p class="highlight_value">${{ automation_cost | round(2) }}</p></td>
+                        <td style="text-align: center;"><p class="highlight_value">{{ "${:,.2f}".format(manual_cost) }}</p></td>
+                    </tr>
+                </tbody>
+            </table>
+            <!-- <p class="table_title">Explanation of calculations</p> -->
+
+            <!-- begin of expandable header -->
+
+            <div class="inner-accordion">
+                <h4>Explanation of calculations</h4>
+                <div>
+            <!-- end of expandable header -->
+
+            <table class="net_info">
+                <tbody>
+                    <tr>
+                        <th class="vpc_info"><p class="highlight_title">Automation time</p><p class="description_text">all automation job runtimes added together</p></th>
+                        <th class="vpc_info"><p class="highlight_title">Automation infra cost</p><p class="description_text">automated_process_cost * (total_seconds / 3600)<br>{{ automated_process_cost }} * {{ (total_seconds / 3600) | round(2) }}</p></th>
+                        <th class="vpc_info"><p class="highlight_title">Manual Time per Job</p><p class="description_text">(seconds)</p></th>
+                        <th class="vpc_info"><p class="highlight_title">Total Time if entirely Manual</p><p class="description_text">manual time * nodes * job runs<br>{{ manual_time_per_job }} * {{ effective_running }} * {{ jobs_per_inventory }}</p></th>
+                        <th class="vpc_info"><p class="highlight_title">Manual cost</p><p class="description_text">manual_cost_per_hour * (total_seconds_manual / 3600)<br>{{ manual_cost_per_hour }} * {{ (total_seconds_manual / 3600) | round(2) }}</p></th>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center;">{{ days | round(0) }} day(s) - {{ hours | round(0) }} hour(s) - {{ minutes | round(2) }} minute(s)</td>
+                        <td style="text-align: center;">${{ automation_cost | round(2) }}</td>
+                        <td style="text-align: center;">{{ manual_time_per_job }}</td>
+                        <td style="text-align: center;">{{ days_manual | round(0) }} day(s) - {{ hours_manual | round(0) }} hour(s) - {{ minutes_manual | round(2) }} minute(s)</td>
+                        <td style="text-align: center;">${{ manual_cost | round(2) }}</td>
+                    </tr>
+                </tbody>
+            </table><br><br>
+            <table class="net_info">
+                <tbody>
+                    <tr>
+                        <th class="vpc_info"><p class="highlight_title">Hours invested to create automation</p><p class="description_text">(hours)</p></th>
+                        <th class="vpc_info"><p class="highlight_title">Cost per hour</p><p class="description_text">in $USD</p></th>
+                        <th class="vpc_info"><p class="highlight_title">Automation creation cost</p><p class="description_text">hours_to_create_automation * manual_cost_per_hour_to_automate<br>{{ hours_to_create_automation }} * {{ manual_cost_per_hour_to_automate }}</p></th>
+                        <th class="vpc_info"><p class="highlight_title">Value of Automation</p><p class="description_text">automation_cost_savings = manual_cost - automation_cost - automation_creation_cost<br>{{ manual_cost }} - {{ automation_cost | round(2) }} - {{ automation_creation_cost }}</p></th>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center;">{{ hours_to_create_automation }}</td>
+                        <td style="text-align: center;">${{ manual_cost_per_hour_to_automate }}</td>
+                        <td style="text-align: center;">${{ automation_creation_cost | round(2) }}</td>
+                        <td style="text-align: center;">{{ "${:,.2f}".format(automation_cost_savings) }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <p class="table_title">User configured variables</p>
+            <table class="net_info manual_var_table">
+                <tbody>
+                    <tr>
+                        <th class="vpc_info"><p class="highlight_title">Variable</p><p class="description_text"></p></th>
+                        <th class="vpc_info"><p class="highlight_title">Value</p><p class="description_text"></p></th>
+                        <th class="vpc_info"><p class="highlight_title">Desciprtion</p><p class="description_text"></p></th>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center;">manual_time_per_job</td>
+                        <td style="text-align: center;">{{ manual_time_per_job }}</td>
+                        <td style="text-align: center;">configurable time (in seconds) to manually complete the task on one host</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center;">automated_process_cost</td>
+                        <td style="text-align: center;">{{ automated_process_cost }}</td>
+                        <td style="text-align: center;">this is the cost per hour in $USD to run automation</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center;">manual_cost_per_hour</td>
+                        <td style="text-align: center;">{{ manual_cost_per_hour }}</td>
+                        <td style="text-align: center;">this is the cost of an engineer to do the eqvuialent of automation (manually configure something)</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center;">manual_cost_per_hour_to_automate</td>
+                        <td style="text-align: center;">{{ manual_cost_per_hour_to_automate }}</td>
+                        <td style="text-align: center;">this is the cost of an engineer to create automation, e.g. create an Ansible Playbook and test it</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align: center;">hours_to_create_automation</td>
+                        <td style="text-align: center;">{{ hours_to_create_automation }}</td>
+                        <td style="text-align: center;">this is amount of time in hours to develop automation for this inventory</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- end of expandable header -->
+            </div></div>
+            <!-- end of expandable header -->
+
+
+        </div>
+
+    </div>
+    {% endfor %}
+</div>
+<!-- END INTERNAL TABLE FOR Ansible -->
