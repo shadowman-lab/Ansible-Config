@@ -1,0 +1,9 @@
+---
+- name: Perform inital configs of lab VMs
+  hosts: "{{ vm_name | default('all')}}"
+  gather_facts: false
+
+  tasks:
+
+    - name: Clear gathered facts from all currently targeted hosts
+      ansible.builtin.meta: clear_facts
