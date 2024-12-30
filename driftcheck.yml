@@ -18,9 +18,15 @@
     - name: IDM register
       ansible.builtin.include_role:
         name: shadowman_add_to_idm
-      when: ansible_os_family is match("RedHat")
+      when:
+        - ansible_os_family is match("RedHat")
+        - shadowman_provision_hypervisor|default('RHV') != "Azure"
+        - shadowman_provision_hypervisor|default('RHV') != "AWS"
 
     - name: Windows Config
       ansible.builtin.include_role:
         name: shadowman_add_to_ad
-      when: ansible_os_family is match("Windows")
+      when:
+        - ansible_os_family is match("Windows")
+        - shadowman_provision_hypervisor|default('RHV') != "Azure"
+        - shadowman_provision_hypervisor|default('RHV') != "AWS"
