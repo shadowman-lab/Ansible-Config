@@ -7,3 +7,6 @@
 
     - name: Clear gathered facts from all currently targeted hosts
       ansible.builtin.meta: clear_facts
+
+    - name: Gather facts
+      ansible.builtin.setup:
