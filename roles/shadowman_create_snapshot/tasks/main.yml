@@ -1,30 +1,41 @@
 ---
-- name: RHV Block
-  block:
-  - name: Login to RHV
-    redhat.rhv.ovirt_auth:
-      hostname: "{{ rhvm_fqdn }}"
-      username: "{{ rhvm_user }}"
-      password: "{{ rhvm_password }}"
-      ca_file: "{{ rhvm_cafile | default(omit) }}"
-      insecure: "{{ rhvm_insecure | default(true) }}"
-    delegate_to: localhost
-    run_once: true
+# - name: RHV Block
+#   block:
+#   - name: Login to RHV
+#     redhat.rhv.ovirt_auth:
+#       hostname: "{{ rhvm_fqdn }}"
+#       username: "{{ rhvm_user }}"
+#       password: "{{ rhvm_password }}"
+#       ca_file: "{{ rhvm_cafile | default(omit) }}"
+#       insecure: "{{ rhvm_insecure | default(true) }}"
+#     delegate_to: localhost
+#     run_once: true
 
-  - name: Create Snapshot on VM(s)
-    redhat.rhv.ovirt_snapshot:
-      auth: "{{ ovirt_auth }}"
-      vm_name: "{{ inventory_hostname }}"
-      description: "{{ description }}"
-      use_memory: false
-      wait: true
-    register: snapshot
-    delegate_to: localhost
+#   - name: Create Snapshot on VM(s)
+#     redhat.rhv.ovirt_snapshot:
+#       auth: "{{ ovirt_auth }}"
+#       vm_name: "{{ inventory_hostname }}"
+#       description: "{{ description }}"
+#       use_memory: false
+#       wait: true
+#     register: snapshot
+#     delegate_to: localhost
 
-  always:
-    - name: Logout from RHV
-      redhat.rhv.ovirt_auth:
-        state: absent
-        ovirt_auth: "{{ ovirt_auth }}"
-      delegate_to: localhost
-      run_once: true
+#   always:
+#     - name: Logout from RHV
+#       redhat.rhv.ovirt_auth:
+#         state: absent
+#         ovirt_auth: "{{ ovirt_auth }}"
+#       delegate_to: localhost
+#       run_once: true
+
+- name: Create a snapshot
+  community.vmware.vmware_guest_snapshot:
+    datacenter: "Shadowman"
+    folder: "Discovered virtual machine"
+    name: "{{ inventory_hostname }}"
+    state: present
+    memory_dump: false
+    description: "{{ description }}"
+    snapshot_name: "{{ snap_name }}"
+  delegate_to: localhost
