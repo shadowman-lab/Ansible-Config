@@ -1,5 +1,5 @@
 ---
-- name: Patch RHEL Servers
+- name: Patch Servers
   hosts: all
 
   tasks:
@@ -10,6 +10,6 @@
             name: shadowman_patching
 
       rescue:
-        - name: Patching role
+        - name: Snapshot restore on failure
           ansible.builtin.include_role:
             name: shadowman_snapshot_restore
