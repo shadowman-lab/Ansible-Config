@@ -1,0 +1,88 @@
+---
+# - name: Login to RHV
+#   redhat.rhv.ovirt_auth:
+#     hostname: "{{ rhvm_fqdn }}"
+#     username: "{{ rhvm_user }}"
+#     password: "{{ rhvm_password }}"
+#     ca_file: "{{ rhvm_cafile | default(omit) }}"
+#     insecure: "{{ rhvm_insecure | default(true) }}"
+#   delegate_to: localhost
+#   become: false
+#   run_once: true
+
+# - name: Pull snapshot ID for a VM
+#   redhat.rhv.ovirt_snapshot_info:
+#     auth: "{{ ovirt_auth }}"
+#     vm: "{{ inventory_hostname }}"
+#     description: "{{ description }}"
+#   delegate_to: localhost
+#   become: false
+#   register: snapshot
+
+# - name: Stop VM
+#   redhat.rhv.ovirt_vm:
+#     auth: "{{ ovirt_auth }}"
+#     name: "{{ inventory_hostname }}"
+#     state: stopped
+#     wait: true
+#   delegate_to: localhost
+#   become: false
+
+# - name: Restore from Snapshot
+#   redhat.rhv.ovirt_snapshot:
+#     auth: "{{ ovirt_auth }}"
+#     vm_name: "{{ inventory_hostname }}"
+#     snapshot_id: "{{ snapshot.ovirt_snapshots[0].id }}"
+#     state: restore
+#     wait: true
+#   delegate_to: localhost
+#   become: false
+
+# - name: Start VM
+#   redhat.rhv.ovirt_vm:
+#     auth: "{{ ovirt_auth }}"
+#     name: "{{ inventory_hostname }}"
+#     state: running
+#     wait: true
+#   delegate_to: localhost
+#   become: false
+
+# - name: Logout from RHV
+#   redhat.rhv.ovirt_auth:
+#     state: absent
+#     ovirt_auth: "{{ ovirt_auth }}"
+#   delegate_to: localhost
+#   run_once: true
+#   become: false
+
+- name: Get VM info
+  vmware.vmware_rest.vcenter_vm_info:
+    filter_names:
+      - "{{ inventory_hostname }}"
+    vcenter_validate_certs: false
+  register: vm_info
+  delegate_to: localhost
+
+- name: Turn off VM
+  vmware.vmware_rest.vcenter_vm_power:
+    state: stop
+    vm: '{{ vm_info.value[0].vm }}'
+    vcenter_validate_certs: false
+  delegate_to: localhost
+
+- name: Revert from a snapshot
+  community.vmware.vmware_guest_snapshot:
+    datacenter: "Shadowman"
+    folder: "Discovered virtual machine"
+    name: "{{ inventory_hostname }}"
+    state: revert
+    description: "{{ description }}"
+    snapshot_name: "{{ snap_name }}"
+  delegate_to: localhost
+
+- name: Turn on VM
+  vmware.vmware_rest.vcenter_vm_power:
+    state: start
+    vm: '{{ vm_info.value[0].vm }}'
+    vcenter_validate_certs: false
+  delegate_to: localhost
