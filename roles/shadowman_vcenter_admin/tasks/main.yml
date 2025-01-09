@@ -1,0 +1,7 @@
+---
+- name: Add VCenter Admin Permissions
+  community.vmware.vmware_object_role_permission:
+    validate_certs: false
+    role: Admin
+    principal: "shadowman.dev\\{{ awx_user_name }}"
+    object_name: rootFolder
