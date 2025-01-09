@@ -38,8 +38,8 @@
 
 - name: Delete a snapshot
   community.vmware.vmware_guest_snapshot:
-    datacenter: "Shadowman"
-    folder: "Discovered virtual machine"
+    datacenter: "Shadowman-DC"
+    folder: "Lab virtual machine"
     name: "{{ inventory_hostname }}"
     state: absent
     description: "{{ description }}"
