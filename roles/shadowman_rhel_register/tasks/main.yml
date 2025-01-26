@@ -1,56 +1,26 @@
 ---
-- name: Install Katello RPM for Satellite Server for RHEL 7
-  ansible.builtin.yum:
-    name: https://sat6.shadowman.dev/pub/katello-ca-consumer-latest.noarch.rpm
-    state: present
-    disable_gpg_check: true
+- name: Generate registration command
+  redhat.satellite.registration_command:
+    smart_proxy: "capsule.shadowman.dev"
+    insecure:
+    setup_remote_execution: false
+    setup_insights: false
+    validate_certs: false
+    update_packages: false
+    setup_remote_execution_pull: false
+    activation_keys:
+      - "{{ operating_system }}"
+  register: register_command
   when:
-    - ansible_pkg_mgr == "yum"
     - shadowman_provision_hypervisor|default('RHV') != "Azure"
     - shadowman_provision_hypervisor|default('RHV') != "AWS"
 
-- name: Install Katello RPM for Satellite Server for RHEL 8 or 9
-  ansible.builtin.dnf:
-    name: https://sat6.shadowman.dev/pub/katello-ca-consumer-latest.noarch.rpm
-    state: present
-    disable_gpg_check: true
+- name: Perform registration
+  ansible.builtin.shell:
+    cmd: "{{ register_command.registration_command }}"
   when:
-    - ansible_pkg_mgr == "dnf"
     - shadowman_provision_hypervisor|default('RHV') != "Azure"
     - shadowman_provision_hypervisor|default('RHV') != "AWS"
-
-- name: Use Activation Key to Register RHEL7 Machine to Satellite
-  community.general.redhat_subscription:
-    state: present
-    activationkey: "RHEL7"
-    org_id: Shadowman
-  when:
-    - ansible_distribution_version is match("7.*")
-    - shadowman_provision_hypervisor|default('RHV') != "Azure"
-    - shadowman_provision_hypervisor|default('RHV') != "AWS"
-  ignore_errors: true
-
-- name: Use Activation Key to Register RHEL8 Machine to Satellite
-  community.general.redhat_subscription:
-    state: present
-    activationkey: "RHEL8"
-    org_id: Shadowman
-  when:
-    - ansible_distribution_version is match("8.*")
-    - shadowman_provision_hypervisor|default('RHV') != "Azure"
-    - shadowman_provision_hypervisor|default('RHV') != "AWS"
-  ignore_errors: true
-
-- name: Use Activation Key to Register RHEL9 Machine to Satellite
-  community.general.redhat_subscription:
-    state: present
-    activationkey: "RHEL9"
-    org_id: Shadowman
-  when:
-    - ansible_distribution_version is match("9.*")
-    - shadowman_provision_hypervisor|default('RHV') != "Azure"
-    - shadowman_provision_hypervisor|default('RHV') != "AWS"
-  ignore_errors: true
 
 - name: Use Activation Key to Register Azure RHEL Machine to RHSM
   community.general.redhat_subscription:
