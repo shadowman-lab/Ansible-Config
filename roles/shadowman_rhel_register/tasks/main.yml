@@ -26,7 +26,10 @@
 - name: Generate registration command
   redhat.satellite.registration_command:
     smart_proxy: "capsule.shadowman.dev"
-    insecure:
+    username: "{{ username }}"
+    password: "{{ password }}"
+    server_url: "{{ server_url }}"
+    insecure: true
     setup_remote_execution: false
     setup_insights: false
     validate_certs: false
