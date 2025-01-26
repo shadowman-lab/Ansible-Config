@@ -1,4 +1,28 @@
 ---
+- name: Set activation key for RHEL7
+  ansible.builtin.set_fact:
+    activation_key: RHEL7
+  when:
+    - ansible_distribution_version is match("7.*")
+    - shadowman_provision_hypervisor|default('RHV') != "Azure"
+    - shadowman_provision_hypervisor|default('RHV') != "AWS"
+
+- name: Set activation key for RHEL8
+  ansible.builtin.set_fact:
+    activation_key: RHEL8
+  when:
+    - ansible_distribution_version is match("8.*")
+    - shadowman_provision_hypervisor|default('RHV') != "Azure"
+    - shadowman_provision_hypervisor|default('RHV') != "AWS"
+
+- name: Set activation key for RHEL9
+  ansible.builtin.set_fact:
+    activation_key: RHEL9
+  when:
+    - ansible_distribution_version is match("9.*")
+    - shadowman_provision_hypervisor|default('RHV') != "Azure"
+    - shadowman_provision_hypervisor|default('RHV') != "AWS"
+
 - name: Generate registration command
   redhat.satellite.registration_command:
     smart_proxy: "capsule.shadowman.dev"
@@ -9,7 +33,7 @@
     update_packages: false
     setup_remote_execution_pull: false
     activation_keys:
-      - "{{ operating_system }}"
+      - "{{ activation_key }}"
   register: register_command
   when:
     - shadowman_provision_hypervisor|default('RHV') != "Azure"
