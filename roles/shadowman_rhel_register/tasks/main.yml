@@ -39,6 +39,7 @@
     activation_keys:
       - "{{ activation_key }}"
   register: register_command
+  delegate_to: localhost
   when:
     - shadowman_provision_hypervisor|default('RHV') != "Azure"
     - shadowman_provision_hypervisor|default('RHV') != "AWS"
