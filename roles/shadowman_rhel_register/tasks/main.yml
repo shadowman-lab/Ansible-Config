@@ -30,9 +30,9 @@
     password: "{{ password }}"
     server_url: "{{ server_url }}"
     insecure: true
-    setup_remote_execution: false
+    setup_remote_execution: true
     ignore_subman_errors: true
-    setup_insights: false
+    setup_insights: true
     validate_certs: false
     update_packages: false
     setup_remote_execution_pull: false
@@ -47,7 +47,6 @@
   ansible.builtin.shell:
     cmd: "{{ register_command.registration_command }}"
   register: register_result
-  failed_when: "'Host was not found by the subscription UUID' not in register_result.stdout"
   when:
     - shadowman_provision_hypervisor|default('RHV') != "Azure"
     - shadowman_provision_hypervisor|default('RHV') != "AWS"
