@@ -48,6 +48,8 @@
   ansible.builtin.shell:
     cmd: "{{ register_command.registration_command }}"
   register: register_result
+  changed_when: "'The system has been registered with ID' in register_result.stdout"
+  failed_when: "'Host was not found by the subscription UUID' in register_result.stdout"
   when:
     - shadowman_provision_hypervisor|default('RHV') != "Azure"
     - shadowman_provision_hypervisor|default('RHV') != "AWS"
