@@ -1,0 +1,7 @@
+---
+- name: Get VMWare facts
+  hosts: all
+  gather_facts: false
+
+  roles:
+    - shadowman_vmware_vm_info

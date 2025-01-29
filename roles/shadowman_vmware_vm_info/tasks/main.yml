@@ -1,0 +1,13 @@
+---
+- name: Get all of the Guest Info
+  community.vmware.vmware_guest_info:
+    validate_certs: false
+    schema: vsphere
+    name: "{{ inventory_hostname }}"
+  register: info
+  delegate_to: localhost
+
+- name: Output Pre-Reqs
+  ansible.builtin.debug:
+    msg: "Secure Boot: {{ info.instance.config.bootOptions.efiSecureBootEnabled }}, Firmware:{{ info.instance.config.firmware }}, VBS: {{ info.instance.config.flags.vbsEnabled }}, TPM: {{ info.instance.summary.config.tpmPresent }} VMWare Tools: {{ info.instance.guest.toolsStatus }} VMWare Tools Running: {{ info.instance.guest.toolsRunningStatus }}"
+  delegate_to: localhost
