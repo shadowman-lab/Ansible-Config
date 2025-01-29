@@ -11,21 +11,25 @@
   ansible.builtin.assert:
     that: info.instance.config.firmware == "efi"
     fail_msg: Boot Firmware is not EFI
+  delegate_to: localhost
 
 - name: Secure Boot Check
   ansible.builtin.assert:
     that: info.instance.config.bootOptions.efiSecureBootEnabled == True
     fail_msg: Secure Boot is Disabled
+  delegate_to: localhost
 
 - name: VBS Check
   ansible.builtin.assert:
     that: info.instance.config.flags.vbsEnabled == True
     fail_msg: VBS is Disabled
+  delegate_to: localhost
 
 - name: TPM Check
   ansible.builtin.assert:
     that: info.instance.summary.config.tpmPresent == False
     fail_msg: vTPM has already been added
+  delegate_to: localhost
 
 - name: Output Pre-Reqs
   ansible.builtin.debug:
