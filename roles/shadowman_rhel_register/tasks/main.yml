@@ -32,7 +32,7 @@
     insecure: true
     setup_remote_execution: true
     ignore_subman_errors: true
-    setup_insights: true
+    setup_insights: false
     validate_certs: false
     update_packages: false
     setup_remote_execution_pull: false
