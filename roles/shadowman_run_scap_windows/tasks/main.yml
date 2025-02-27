@@ -9,6 +9,7 @@
   ansible.windows.win_package:
     path: https://aka.ms/vs/15/release/VC_redist.x86.exe
     product_id: '{624ba875-fdfc-4efa-9c66-b170dfebc3ec}'
+    expected_return_code: [0, 1638, 3010]
     arguments:
       - /install
       - /passive
