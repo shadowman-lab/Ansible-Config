@@ -1,5 +1,4 @@
 ---
 - name: Delete User
-  ansible.windows.win_user:
-    name: "{{ event_logs.split('\n')[10].split(':')[1] | trim }}"
-    state: absent
+  ansible.builtin.debug:
+    msg: "{{ event_logs.split('\n') }}"
