@@ -1,0 +1,31 @@
+---
+- name: Create an incident in ServiceNow
+  servicenow.itsm.incident:
+    state: new
+    description: "A local user was created with the following entry: {{ event_logs | default(omit) }}"
+    short_description: "A local user was created and must be removed"
+    caller: admin
+    urgency: "high"
+    impact: "high"
+    other:
+      u_operating_system: "{{ os | default(omit) }}"
+      u_ip_address: "{{ ip_addr | default(omit) }}"
+      u_vm_name: "{{ inventory_hostname | default(omit) }}"
+  register: new_incident
+  delegate_to: localhost
+
+- name: Run Windows Removal tasks
+  ansible.builtin.include_tasks: windows.yml
+  when: os is match("windows.*") or os is match("2016.*") or os == "Windows"
+
+- name: Run RHEL Removal tasks
+  ansible.builtin.include_tasks: rhel.yml
+  when: os is match("rhel.*") or os == "Red Hat BYOL Linux"
+
+- name: Close an incident in ServiceNow
+  servicenow.itsm.incident:
+    state: closed
+    number: "{{ new_incident.record.number }}"
+    close_code: Solved (Permanently)
+    close_notes: "Local User was Removed"
+  delegate_to: localhost

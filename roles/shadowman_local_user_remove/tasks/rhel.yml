@@ -1,0 +1,4 @@
+---
+- name: Debug the logs
+  ansible.builtin.debug:
+    msg: "{{ event_logs }}"

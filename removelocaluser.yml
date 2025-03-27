@@ -1,0 +1,7 @@
+---
+- name: Remove Local User
+  hosts: "{{ vm_name | default('all')}}"
+  gather_facts: false
+
+  roles:
+    - shadowman_local_user_remove
