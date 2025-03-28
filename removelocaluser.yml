@@ -1,6 +1,6 @@
 ---
 - name: Remove Local User
-  hosts: "{{ vm_name | trim | default('all')}}"
+  hosts: "{{ vm_name | default('all')}}"
   gather_facts: false
 
   roles:
