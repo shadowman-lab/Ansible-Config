@@ -1,4 +1,15 @@
 ---
-- name: Debug the logs
-  ansible.builtin.debug:
-    msg: "{{ event_logs }}"
+- name: Remove the user
+  ansible.builtin.user:
+    name: "{{ event_logs.split(':')[4].split('=')[1].split(',')[0] }}"
+    state: absent
+
+- name: Delete the mail folder if it exists
+  ansible.builtin.file:
+    path: "/var/mail/{{ event_logs.split(':')[4].split('=')[1].split(',')[0] }}"
+    state: absent
+
+- name: Delete home directory if it exists
+  ansible.builtin.file:
+    path: "/home/{{ event_logs.split(':')[4].split('=')[1].split(',')[0] }}"
+    state: absent
