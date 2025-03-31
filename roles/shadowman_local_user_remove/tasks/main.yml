@@ -14,6 +14,26 @@
   register: new_incident
   delegate_to: localhost
 
+- name: Send notification message via Mattermost
+  community.general.mattermost:
+    url: "{{ mattermost_url }}"
+    api_key: "{{ mattermost_api_key }}"
+    attachments:
+      - text: "! ALERT !"
+        color: '#ff00dd'
+        title: "Local User Created"
+        fields:
+          - title: Issue
+            value: "A Local User was Created"
+            short: true
+          - title: Details
+            value: "ServiceNow Incident: {{ lookup('env', 'SN_HOST') }}nav_to.do?uri=incident.do?sysparm_query=number={{ new_incident.record.number }} has been opened. Remediation in progress for a local user created on {{ vm_name }}"
+            short: true
+          - title: Logs
+            value: "{{ event_logs }}"
+            short: true
+  delegate_to: localhost
+
 - name: Run Windows Removal tasks
   ansible.builtin.include_tasks: windows.yml
   when: os is match("windows.*") or os is match("2016.*") or os == "Windows"
@@ -28,4 +48,21 @@
     number: "{{ new_incident.record.number }}"
     close_code: Solved (Permanently)
     close_notes: "Local User was Removed"
+  delegate_to: localhost
+
+- name: Send notification message via Mattermost
+  community.general.mattermost:
+    url: "{{ mattermost_url }}"
+    api_key: "{{ mattermost_api_key }}"
+    attachments:
+      - text: "! ALERT !"
+        color: '#ff00dd'
+        title: "Local User Issue Resolved"
+        fields:
+          - title: Issue
+            value: "A Local User was Removed"
+            short: true
+          - title: Details
+            value: "ServiceNow Incident: {{ lookup('env', 'SN_HOST') }}nav_to.do?uri=incident.do?sysparm_query=number={{ new_incident.record.number }} has been closed. A local user has been removed from {{ vm_name }}"
+            short: true
   delegate_to: localhost
