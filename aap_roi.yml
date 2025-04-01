@@ -12,7 +12,7 @@
 
     - name: Retrieve job template list for each inventory and store in a dictionary
       ansible.builtin.uri:
-        url: "https://{{ lookup('env', 'TOWER_HOST') }}/api/v2/job_templates/?inventory_id={{ item.id }}"
+        url: "https://{{ lookup('env', 'TOWER_HOST') }}/api/controller/v2/job_templates/?inventory_id={{ item.id }}"
         method: GET
         user: "{{ lookup('env', 'TOWER_USERNAME') }}"
         password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
@@ -33,7 +33,7 @@
 
     - name: Retrieve job list for each inventory and store in a dictionary
       ansible.builtin.uri:
-        url: "https://{{ lookup('env', 'TOWER_HOST') }}/api/v2/jobs/?inventory_id={{ item.id }}"
+        url: "https://{{ lookup('env', 'TOWER_HOST') }}/api/controller/v2/jobs/?inventory_id={{ item.id }}"
         method: GET
         user: "{{ lookup('env', 'TOWER_USERNAME') }}"
         password: "{{ lookup('env', 'TOWER_PASSWORD') }}"
