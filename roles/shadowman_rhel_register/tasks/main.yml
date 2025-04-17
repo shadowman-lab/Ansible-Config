@@ -38,6 +38,7 @@
     setup_remote_execution_pull: false
     activation_keys:
       - "{{ activation_key }}"
+  become: false
   register: register_command
   delegate_to: localhost
   when:
