@@ -14,7 +14,7 @@
     - name: Wait for connection on AWS and OCPv
       ansible.builtin.wait_for_connection:
         timeout: 900
-      when: shadowman_provision_hypervisor | default('RHV') == "AWS" or shadowman_provision_hypervisor | default('RHV') == "OCPV"
+      when: shadowman_provision_hypervisor | default('RHV') == "AWS"
 
     - name: Gather facts to work with remainder of playbook
       ansible.builtin.setup:
