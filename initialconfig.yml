@@ -11,10 +11,10 @@
         ansible_host: "{{ ip_addr }}"
       delegate_to: localhost
 
-    - name: Wait for connection on AWS
+    - name: Wait for connection on AWS and OCPv
       ansible.builtin.wait_for_connection:
         timeout: 900
-      when: shadowman_provision_hypervisor | default('RHV') == "AWS"
+      when: shadowman_provision_hypervisor | default('RHV') == "AWS" or shadowman_provision_hypervisor | default('RHV') == "OCPV"
 
     - name: Gather facts to work with remainder of playbook
       ansible.builtin.setup:
@@ -38,6 +38,7 @@
         - ansible_os_family is match("RedHat")
         - shadowman_provision_hypervisor|default('RHV') != "Azure"
         - shadowman_provision_hypervisor|default('RHV') != "AWS"
+        - shadowman_provision_hypervisor|default('RHV') != "OCPV"
 
     - name: Windows Config
       ansible.builtin.include_role:
@@ -46,3 +47,4 @@
         - ansible_os_family is match("Windows")
         - shadowman_provision_hypervisor|default('RHV') != "Azure"
         - shadowman_provision_hypervisor|default('RHV') != "AWS"
+        - shadowman_provision_hypervisor|default('RHV') != "OCPV"
