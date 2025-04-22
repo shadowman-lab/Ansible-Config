@@ -10,8 +10,3 @@
 - name: Set timezone
   community.general.timezone:
     name: America/New_York
-
-- name: RHEL Hostname Set if using VMWare
-  ansible.builtin.hostname:
-    name: "{{ inventory_hostname }}"
-  when: shadowman_provision_hypervisor|default('RHV') == "VMWare"
