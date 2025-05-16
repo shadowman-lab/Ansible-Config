@@ -38,7 +38,6 @@
         - ansible_os_family is match("RedHat")
         - shadowman_provision_hypervisor|default('RHV') != "Azure"
         - shadowman_provision_hypervisor|default('RHV') != "AWS"
-        - shadowman_provision_hypervisor|default('RHV') != "OCPV"
 
     - name: Windows Config
       ansible.builtin.include_role:
