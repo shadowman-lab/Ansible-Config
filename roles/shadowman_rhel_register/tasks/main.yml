@@ -74,6 +74,7 @@
     - ansible_distribution_version is match("7.*")
     - shadowman_provision_hypervisor|default('RHV') != "Azure"
     - shadowman_provision_hypervisor|default('RHV') != "AWS"
+    - shadowman_provision_hypervisor|default('RHV') != "OCPV"
 
 - name: Enable Repositories for RHEL 8 when not using Azure base image
   community.general.rhsm_repository:
@@ -85,6 +86,7 @@
     - ansible_distribution_version is match("8.*")
     - shadowman_provision_hypervisor|default('RHV') != "Azure"
     - shadowman_provision_hypervisor|default('RHV') != "AWS"
+    - shadowman_provision_hypervisor|default('RHV') != "OCPV"
 
 - name: Enable Repositories for RHEL 9 when not using Azure base image
   community.general.rhsm_repository:
@@ -96,3 +98,4 @@
     - ansible_distribution_version is match("9.*")
     - shadowman_provision_hypervisor|default('RHV') != "Azure"
     - shadowman_provision_hypervisor|default('RHV') != "AWS"
+    - shadowman_provision_hypervisor|default('RHV') != "OCPV"
