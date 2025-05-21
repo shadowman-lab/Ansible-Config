@@ -23,6 +23,14 @@
     - shadowman_provision_hypervisor|default('RHV') != "Azure"
     - shadowman_provision_hypervisor|default('RHV') != "AWS"
 
+- name: Set activation key for RHEL10
+  ansible.builtin.set_fact:
+    activation_key: RHEL10
+  when:
+    - ansible_distribution_version is match("10.*")
+    - shadowman_provision_hypervisor|default('RHV') != "Azure"
+    - shadowman_provision_hypervisor|default('RHV') != "AWS"
+
 - name: Generate registration command
   redhat.satellite.registration_command:
     smart_proxy: "capsule.shadowman.dev"
@@ -96,6 +104,18 @@
     purge: true
   when:
     - ansible_distribution_version is match("9.*")
+    - shadowman_provision_hypervisor|default('RHV') != "Azure"
+    - shadowman_provision_hypervisor|default('RHV') != "AWS"
+    - shadowman_provision_hypervisor|default('RHV') != "OCPV"
+
+- name: Enable Repositories for RHEL 10 when not using Azure base image
+  community.general.rhsm_repository:
+    name:
+      - rhel-10-for-x86_64-appstream-rpms
+      - rhel-10-for-x86_64-baseos-rpms
+    purge: true
+  when:
+    - ansible_distribution_version is match("10.*")
     - shadowman_provision_hypervisor|default('RHV') != "Azure"
     - shadowman_provision_hypervisor|default('RHV') != "AWS"
     - shadowman_provision_hypervisor|default('RHV') != "OCPV"

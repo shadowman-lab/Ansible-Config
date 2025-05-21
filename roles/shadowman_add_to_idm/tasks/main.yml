@@ -11,7 +11,7 @@
     state: present
   when: ansible_pkg_mgr == "yum"
 
-- name: Install IPA Client for RHEL 8 or 9
+- name: Install IPA Client for RHEL 8, 9 or 10
   ansible.builtin.dnf:
     name: ipa-client
     state: present
