@@ -1,6 +1,6 @@
 ---
 - name: Patch Servers based on selected VMs
-  hosts: "{{ vm_names | trim }}"
+  hosts: "{{ vm_names }}"
 
   roles:
     - shadowman_patching
