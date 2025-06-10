@@ -1,15 +1,36 @@
 ---
-- name: Remove the user
-  ansible.builtin.user:
-    name: "{{ event_logs.split(':')[4].split('=')[1].split(',')[0] }}"
-    state: absent
+- name: Block for LM
+  when: event_logs is defined
+  block:
+    - name: Remove the user
+      ansible.builtin.user:
+        name: "{{ event_logs.split(':')[4].split('=')[1].split(',')[0] }}"
+        state: absent
 
-- name: Delete the mail folder if it exists
-  ansible.builtin.file:
-    path: "/var/mail/{{ event_logs.split(':')[4].split('=')[1].split(',')[0] }}"
-    state: absent
+    - name: Delete the mail folder if it exists
+      ansible.builtin.file:
+        path: "/var/mail/{{ event_logs.split(':')[4].split('=')[1].split(',')[0] }}"
+        state: absent
 
-- name: Delete home directory if it exists
-  ansible.builtin.file:
-    path: "/home/{{ event_logs.split(':')[4].split('=')[1].split(',')[0] }}"
-    state: absent
+    - name: Delete home directory if it exists
+      ansible.builtin.file:
+        path: "/home/{{ event_logs.split(':')[4].split('=')[1].split(',')[0] }}"
+        state: absent
+
+- name: Block for Splunk
+  when: user_name is defined
+  block:
+    - name: Remove the user
+      ansible.builtin.user:
+        name: "{{ user_name }}"
+        state: absent
+
+    - name: Delete the mail folder if it exists
+      ansible.builtin.file:
+        path: "/var/mail/{{ user_name }}"
+        state: absent
+
+    - name: Delete home directory if it exists
+      ansible.builtin.file:
+        path: "/home/{{ user_name }}"
+        state: absent
