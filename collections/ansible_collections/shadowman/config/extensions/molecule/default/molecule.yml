@@ -25,6 +25,7 @@ provisioner:
   config_options:
     defaults:
       remote_tmp: '/tmp'
+      collections_path: '/home/runner/.ansible/collections:/usr/share/ansible/collections:/projects/ansible-config/collections/ansible_collections'
       # This just says go back a directory and thats your roles path
       # You can also provide this via pipeline with something like this
       # ANSIBLE_ROLES_PATH: $COLLECTION_ROLES
