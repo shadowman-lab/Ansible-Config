@@ -1,0 +1,38 @@
+---
+- name: Create auth principals folder
+  ansible.builtin.file:
+    path: /etc/ssh/auth_principals
+    state: directory
+    owner: root
+    group: root
+    mode: '0755'
+
+- name: Create user auth principal
+  ansible.builtin.copy:
+    content: "{{ ssh_user }}"
+    dest: /etc/ssh/auth_principals/{{ ssh_user }}
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart_sshd
+
+- name: Create trusted CA file
+  ansible.builtin.copy:
+    content: "{{ trusted_ca }}"
+    dest: /etc/ssh/trusted-CA.pem
+    owner: root
+    group: root
+    mode: '0644'
+  notify: Restart_sshd
+
+- name: Update sshd config
+  ansible.builtin.blockinfile:
+    path: /etc/ssh/sshd_config
+    owner: root
+    group: root
+    mode: '0600'
+    block: |
+      # Hashi config
+      AuthorizedPrincipalsFile /etc/ssh/auth_principals/%u
+      TrustedUserCAKeys /etc/ssh/trusted-CA.pem
+  notify: Restart_sshd
