@@ -1,6 +1,7 @@
 ---
 - name: Modify sshd config to support Hashi Signed SSH
   hosts: all
+  gather_facts: false
 
   roles:
     - shadowman_hashi_sshd_config
