@@ -10,6 +10,7 @@
     validate_certs: false
   run_once: true
   delegate_to: localhost
+  check_mode: false
   register: job_details
 
 - name: Get all aap images
