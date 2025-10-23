@@ -1,0 +1,66 @@
+---
+- name: Get Job information to get current EE
+  ansible.builtin.uri:
+    url: https://{{ lookup('env', 'CONTROLLER_HOST') }}/api/controller/v2/jobs/{{ awx_job_id }}
+    user: "{{ lookup('env', 'CONTROLLER_USERNAME') }}"
+    password: "{{ lookup('env', 'CONTROLLER_PASSWORD') }}"
+    force_basic_auth: true
+    method: "GET"
+    status_code: "200"
+    validate_certs: false
+  run_once: true
+  delegate_to: localhost
+  register: job_details
+
+- name: Get all aap images
+  containers.podman.podman_image_info:
+  register: aapimages
+  vars:
+    ansible_user: aap
+
+- name: Get all EE images
+  containers.podman.podman_image_info:
+  register: eeimages
+  environment:
+    CONTAINER_HOST: "unix://run/user/1000/podman/podman.sock"
+  vars:
+    ansible_user: aap
+
+- name: Destroy none AAP images
+  containers.podman.podman_image:
+    name: "{{ item.Id }}"
+    state: absent
+  when: item.RepoTags[0] is not defined
+  vars:
+    ansible_user: aap
+  loop: "{{ aapimages.images }}"
+  loop_control:
+    label: "{{ item.Id }}"
+
+- name: Destroy none EE images
+  containers.podman.podman_image:
+    name: "{{ item.Id }}"
+    state: absent
+  environment:
+    CONTAINER_HOST: "unix://run/user/1000/podman/podman.sock"
+  when: item.RepoTags[0] is not defined
+  vars:
+    ansible_user: aap
+  loop: "{{ eeimages.images }}"
+  loop_control:
+    label: "{{ item.Id }}"
+
+- name: Destroy Shadowman EE images
+  containers.podman.podman_image:
+    name: "{{ item.Id }}"
+    state: absent
+  environment:
+    CONTAINER_HOST: "unix://run/user/1000/podman/podman.sock"
+  when:
+    - job_details.json.summary_fields.execution_environment.image != (item.RepoTags[0] | default("no") )
+    - "'aap.shadowman.dev' in (item.RepoTags[0] | default('no'))"
+  vars:
+    ansible_user: aap
+  loop: "{{ eeimages.images }}"
+  loop_control:
+    label: "{{ item.Id }}"
