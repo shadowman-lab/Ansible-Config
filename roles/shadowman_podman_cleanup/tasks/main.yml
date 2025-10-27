@@ -60,7 +60,7 @@
   when:
     - job_details.json.summary_fields.execution_environment.image != (item.RepoTags[0] | default("no") )
     - "'aap.shadowman.dev' in (item.RepoTags[0] | default('no'))"
-    - item.RepoTags[0] | default([]) | length == 1
+    - item.RepoTags | default([]) | length == 1
   vars:
     ansible_user: aap
   loop: "{{ eeimages.images }}"
