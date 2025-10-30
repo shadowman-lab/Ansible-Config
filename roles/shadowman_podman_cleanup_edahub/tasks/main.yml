@@ -1,0 +1,72 @@
+---
+- name: Get current DE
+  ansible.builtin.uri:
+    url: https://{{ lookup('env', 'CONTROLLER_HOST') }}/api/eda/v1/decision-environments/3/
+    user: "{{ lookup('env', 'CONTROLLER_USERNAME') }}"
+    password: "{{ lookup('env', 'CONTROLLER_PASSWORD') }}"
+    force_basic_auth: true
+    method: "GET"
+    status_code: "200"
+    validate_certs: false
+  run_once: true
+  delegate_to: localhost
+  check_mode: false
+  register: eda_details
+
+- name: Get all aap images
+  containers.podman.podman_image_info:
+  register: aapimages
+  vars:
+    ansible_user: aap
+
+- name: Get all DE images
+  containers.podman.podman_image_info:
+  register: deimages
+  when: inventory_hostname == "aapeda.shadowman.dev"
+  environment:
+    CONTAINER_HOST: "unix://run/user/1000/podman/podman.sock"
+  vars:
+    ansible_user: aap
+
+- name: Destroy none AAP images
+  containers.podman.podman_image:
+    name: "{{ item.Id }}"
+    state: absent
+  when: item.RepoTags[0] is not defined
+  vars:
+    ansible_user: aap
+  loop: "{{ aapimages.images }}"
+  loop_control:
+    label: "{{ item.Id }}"
+
+- name: Destroy none DE images
+  containers.podman.podman_image:
+    name: "{{ item.Id }}"
+    state: absent
+  environment:
+    CONTAINER_HOST: "unix://run/user/1000/podman/podman.sock"
+  when:
+    - item.RepoTags[0] is not defined
+    - inventory_hostname == "aapeda.shadowman.dev"
+  vars:
+    ansible_user: aap
+  loop: "{{ deimages.images }}"
+  loop_control:
+    label: "{{ item.Id }}"
+
+- name: Destroy Shadowman DE images
+  containers.podman.podman_image:
+    name: "{{ item.Id }}"
+    state: absent
+  environment:
+    CONTAINER_HOST: "unix://run/user/1000/podman/podman.sock"
+  when:
+    - eda_details.json.image_url != (item.RepoTags[0] | default("no") )
+    - "'aap.shadowman.dev' in (item.RepoTags[0] | default('no'))"
+    - item.RepoTags | default([]) | length == 1
+    - inventory_hostname == "aapeda.shadowman.dev"
+  vars:
+    ansible_user: aap
+  loop: "{{ deimages.images }}"
+  loop_control:
+    label: "{{ item.Id }}"

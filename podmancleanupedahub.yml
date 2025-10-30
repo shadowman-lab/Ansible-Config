@@ -1,0 +1,7 @@
+---
+- name: Cleanup podman images
+  hosts: all
+  gather_facts: false
+
+  roles:
+    - shadowman_podman_cleanup_edahub
