@@ -115,7 +115,8 @@
 - name: "SCORED | 9.2.1 | PATCH | (L1) Ensure 'Windows Firewall: Private: Firewall state' is set to 'On (recommended)'"
   community.windows.win_firewall:
       state: enabled
-      profile: Private
+      profiles:
+        - Private
   when:
       - rule_9_2_1
   tags:
@@ -226,7 +227,8 @@
 - name: "SCORED | 9.3.1 | PATCH | (L1) Ensure 'Windows Firewall: Public: Firewall state' is set to 'On (recommended)'"
   community.windows.win_firewall:
       state: enabled
-      profile: Public
+      profiles:
+        - Public
   when:
       - rule_9_3_1
   tags:
