@@ -14,7 +14,7 @@
           u_operating_system: "{{ os | default(omit) }}"
           u_ip_address: "{{ ip_addr | default(omit) }}"
           u_vm_name: "{{ inventory_hostname | default(omit) }}"
-      register: splunk_incident
+      register: new_incident
       delegate_to: localhost
 
     - name: Send notification message via Mattermost
@@ -52,7 +52,7 @@
           u_operating_system: "{{ os | default(omit) }}"
           u_ip_address: "{{ ip_addr | default(omit) }}"
           u_vm_name: "{{ inventory_hostname | default(omit) }}"
-      register: new_incident
+      register: splunk_incident
       delegate_to: localhost
 
     - name: Send notification message via Mattermost
@@ -68,7 +68,7 @@
                 value: "A Local User was Created"
                 short: true
               - title: Details
-                value: "ServiceNow Incident: {{ lookup('env', 'SN_HOST') }}nav_to.do?uri=incident.do?sysparm_query=number={{ new_incident.record.number }} has been opened. Remediation in progress for a local user created on {{ vm_name }}"
+                value: "ServiceNow Incident: {{ lookup('env', 'SN_HOST') }}nav_to.do?uri=incident.do?sysparm_query=number={{ splunk_incident.record.number }} has been opened. Remediation in progress for a local user created on {{ vm_name }}"
                 short: true
               - title: Logs
                 value: "{{ logs }}"
