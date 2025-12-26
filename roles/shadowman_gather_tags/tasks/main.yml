@@ -19,6 +19,8 @@
 - name: Get AWS VM Info
   amazon.aws.ec2_instance_info:
     region: "{{ item.region_name }}"
+    filters:
+      instance-state-name: ["shutting-down", "stopping", "stopped", "running"]
   loop: "{{ allregions.regions }}"
   loop_control:
     label: "{{ item.region_name }}"
