@@ -72,7 +72,7 @@
 - name: Set report facts
   ansible.builtin.set_fact:
     openscap_scan_results:
-      benchmark_id: "{{ test_result['benchmark']['@id'] }}"
+      # benchmark_id: "{{ test_result['benchmark']['@id'] }}"
       total_rules_count: "{{ rule_result | length }}"
       score: "{{ test_result['score']['#text'] }}%"
       rule_results_count:
