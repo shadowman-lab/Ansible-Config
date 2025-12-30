@@ -1,6 +1,6 @@
 ---
 - name: Ensure Apache is installed
-  ansible.builtin.yum:
+  ansible.builtin.dnf:
     name: httpd
     state: present
 

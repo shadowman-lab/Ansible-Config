@@ -1,28 +1,28 @@
 ---
-- name: Upgrade all packages (yum)
-  ansible.builtin.yum:
-    name: '*'
-    state: latest
-    exclude: "{{ exclude_packages }}"
-    update_only: true
-  when: ansible_pkg_mgr == "yum"
-  register: patchingresult
+# - name: Upgrade all packages (yum)
+#   ansible.builtin.yum:
+#     name: '*'
+#     state: latest
+#     exclude: "{{ exclude_packages }}"
+#     update_only: true
+#   when: ansible_pkg_mgr == "yum"
+#   register: patchingresult
 
-- name: Combine results into single line
-  ansible.builtin.set_fact:
-    myresults: "{{ myresults | default([]) + [item[0] + ': ' + item[1]] }}"
-  loop: "{{ patchingresult.changes.updated }}"
-  loop_control:
-    label: "{{ item[0] }}"
-  when:
-    - ansible_pkg_mgr == "yum"
-    - patchingresult.changes.updated is defined
+# - name: Combine results into single line
+#   ansible.builtin.set_fact:
+#     myresults: "{{ myresults | default([]) + [item[0] + ': ' + item[1]] }}"
+#   loop: "{{ patchingresult.changes.updated }}"
+#   loop_control:
+#     label: "{{ item[0] }}"
+#   when:
+#     - ansible_pkg_mgr == "yum"
+#     - patchingresult.changes.updated is defined
 
-- name: Display Yum Patching Results
-  ansible.builtin.debug:
-    msg: "{{ myresults | default('System is up to date') }}"
-  when:
-    - ansible_pkg_mgr == "yum"
+# - name: Display Yum Patching Results
+#   ansible.builtin.debug:
+#     msg: "{{ myresults | default('System is up to date') }}"
+#   when:
+#     - ansible_pkg_mgr == "yum"
 
 - name: Upgrade all packages (dnf)
   ansible.builtin.dnf:

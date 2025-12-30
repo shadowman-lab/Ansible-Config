@@ -1,6 +1,6 @@
 ---
 - name: Make sure openscap-scanner and scap-security guide are installed
-  ansible.builtin.yum:
+  ansible.builtin.dnf:
     name:
       - openscap-scanner
       - scap-security-guide

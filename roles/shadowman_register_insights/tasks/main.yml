@@ -1,6 +1,6 @@
 ---
 - name: Install Insights and OpenSCAP
-  ansible.builtin.yum:
+  ansible.builtin.dnf:
     name:
       - openscap-scanner
       - scap-security-guide

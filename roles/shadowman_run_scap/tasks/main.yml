@@ -1,11 +1,11 @@
 ---
-- name: Make sure openscap-scanner and scap-security guide are installed yum
-  ansible.builtin.yum:
-    name:
-      - openscap-scanner
-      - scap-security-guide
-    state: present
-  when: ansible_pkg_mgr == "yum"
+# - name: Make sure openscap-scanner and scap-security guide are installed yum
+#   ansible.builtin.yum:
+#     name:
+#       - openscap-scanner
+#       - scap-security-guide
+#     state: present
+#   when: ansible_pkg_mgr == "yum"
 
 - name: Make sure openscap-scanner and scap-security guide are installed dnf
   ansible.builtin.dnf:

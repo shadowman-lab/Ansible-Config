@@ -5,6 +5,6 @@
 
   tasks:
     - name: Install Linux Package
-      ansible.builtin.yum:
+      ansible.builtin.dnf:
         name: "{{ packagename }}"
         state: latest

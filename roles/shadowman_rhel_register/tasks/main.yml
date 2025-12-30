@@ -1,19 +1,19 @@
 ---
-- name: Set activation key for RHEL7
-  ansible.builtin.set_fact:
-    activation_key: RHEL7
-  when:
-    - ansible_distribution_version is match("7.*")
-    - shadowman_provision_hypervisor|default('RHV') != "Azure"
-    - shadowman_provision_hypervisor|default('RHV') != "AWS"
+# - name: Set activation key for RHEL7
+#   ansible.builtin.set_fact:
+#     activation_key: RHEL7
+#   when:
+#     - ansible_distribution_version is match("7.*")
+#     - shadowman_provision_hypervisor|default('RHV') != "Azure"
+#     - shadowman_provision_hypervisor|default('RHV') != "AWS"
 
-- name: Set activation key for RHEL8
-  ansible.builtin.set_fact:
-    activation_key: RHEL8
-  when:
-    - ansible_distribution_version is match("8.*")
-    - shadowman_provision_hypervisor|default('RHV') != "Azure"
-    - shadowman_provision_hypervisor|default('RHV') != "AWS"
+# - name: Set activation key for RHEL8
+#   ansible.builtin.set_fact:
+#     activation_key: RHEL8
+#   when:
+#     - ansible_distribution_version is match("8.*")
+#     - shadowman_provision_hypervisor|default('RHV') != "Azure"
+#     - shadowman_provision_hypervisor|default('RHV') != "AWS"
 
 - name: Set activation key for RHEL9
   ansible.builtin.set_fact:
@@ -71,30 +71,30 @@
   when: shadowman_provision_hypervisor | default('RHV') == "Azure"
   ignore_errors: true
 
-- name: Enable Repositories for RHEL 7
-  community.general.rhsm_repository:
-    name:
-      - rhel-7-server-rpms
-      - rhel-7-server-extras-rpms
-      - rhel-7-server-optional-rpms
-    purge: true
-  when:
-    - ansible_distribution_version is match("7.*")
-    - shadowman_provision_hypervisor|default('RHV') != "Azure"
-    - shadowman_provision_hypervisor|default('RHV') != "AWS"
-    - shadowman_provision_hypervisor|default('RHV') != "OCPV"
+# - name: Enable Repositories for RHEL 7
+#   community.general.rhsm_repository:
+#     name:
+#       - rhel-7-server-rpms
+#       - rhel-7-server-extras-rpms
+#       - rhel-7-server-optional-rpms
+#     purge: true
+#   when:
+#     - ansible_distribution_version is match("7.*")
+#     - shadowman_provision_hypervisor|default('RHV') != "Azure"
+#     - shadowman_provision_hypervisor|default('RHV') != "AWS"
+#     - shadowman_provision_hypervisor|default('RHV') != "OCPV"
 
-- name: Enable Repositories for RHEL 8 when not using Azure base image
-  community.general.rhsm_repository:
-    name:
-      - rhel-8-for-x86_64-appstream-rpms
-      - rhel-8-for-x86_64-baseos-rpms
-    purge: true
-  when:
-    - ansible_distribution_version is match("8.*")
-    - shadowman_provision_hypervisor|default('RHV') != "Azure"
-    - shadowman_provision_hypervisor|default('RHV') != "AWS"
-    - shadowman_provision_hypervisor|default('RHV') != "OCPV"
+# - name: Enable Repositories for RHEL 8 when not using Azure base image
+#   community.general.rhsm_repository:
+#     name:
+#       - rhel-8-for-x86_64-appstream-rpms
+#       - rhel-8-for-x86_64-baseos-rpms
+#     purge: true
+#   when:
+#     - ansible_distribution_version is match("8.*")
+#     - shadowman_provision_hypervisor|default('RHV') != "Azure"
+#     - shadowman_provision_hypervisor|default('RHV') != "AWS"
+#     - shadowman_provision_hypervisor|default('RHV') != "OCPV"
 
 - name: Enable Repositories for RHEL 9 when not using Azure base image
   community.general.rhsm_repository:

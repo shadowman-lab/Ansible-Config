@@ -5,11 +5,11 @@
     state: present
   when: ansible_pkg_mgr == "dnf"
 
-- name: Install IPA Client for RHEL 7
-  ansible.builtin.yum:
-    name: ipa-client
-    state: present
-  when: ansible_pkg_mgr == "yum"
+# - name: Install IPA Client for RHEL 7
+#   ansible.builtin.yum:
+#     name: ipa-client
+#     state: present
+#   when: ansible_pkg_mgr == "yum"
 
 - name: Install IPA Client for RHEL 8, 9 or 10
   ansible.builtin.dnf:
