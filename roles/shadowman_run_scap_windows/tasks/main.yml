@@ -15,17 +15,32 @@
       - /passive
       - /norestart
 
-- name: Copy options file needed for scan
+- name: Copy options file needed for scan Win2016
   ansible.windows.win_copy:
     src: Windows_Server_2016_STIG.xml
     dest: C:\Program Files (x86)\OpenSCAP 1.3.0\Windows_Server_2016_STIG.xml
+  when: ansible_distribution == "Microsoft Windows Server 2016 Datacenter"
 
-- name: Create Compliance Report
+- name: Create Compliance Report Win2016
   ansible.windows.win_command: oscap.exe xccdf eval --profile xccdf_mil.disa.stig_profile_{{ profile }} --results C:\Users\ansible\report.xml --report C:\Users\ansible\index.html Windows_Server_2016_STIG.xml
   args:
     chdir: C:\Program Files (x86)\OpenSCAP 1.3.0\
   register: command_result
   failed_when: command_result.rc != 2
+  when: ansible_distribution == "Microsoft Windows Server 2016 Datacenter"
+
+- name: Copy options file needed for scan Win2025
+  ansible.windows.win_copy:
+    src: Windows_Server_2025_STIG.xml
+    dest: C:\Program Files (x86)\OpenSCAP 1.3.0\Windows_Server_2025_STIG.xml
+  when: ansible_distribution == "Microsoft Windows Server 2025 Standard"
+
+- name: Create Compliance Report Win2025
+  ansible.windows.win_command: oscap.exe xccdf eval --profile {{ profile }} --results C:\Users\ansible\report.xml --report C:\Users\ansible\index.html Windows_Server_2025_STIG.xml
+  args:
+    chdir: C:\Program Files (x86)\OpenSCAP 1.3.0\
+  register: command_result
+  when: ansible_distribution == "Microsoft Windows Server 2025 Standard"
 
 - name: Copy files to EE
   ansible.builtin.fetch:
