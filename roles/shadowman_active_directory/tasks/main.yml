@@ -8,6 +8,7 @@
     groups:
       set:
         - Domain Admins
+        - Domain Users
     state: "{{ state }}"
     update_password: on_create
     domain_username: "{{ domainuser }}"
