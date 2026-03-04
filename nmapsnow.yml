@@ -147,11 +147,41 @@
         - name: End play
           ansible.builtin.meta: end_play
 
-- name: Show Remaining Hosts
+- name: Show Hosts Report
   hosts: localhost
   gather_facts: false
 
   tasks:
-    - name: Display hosts in unreachable_hosts_final
+    - name: "Consolidate Host version data into a report"
+      ansible.builtin.set_fact:
+        host_report: |
+          {%- set summary = {} -%}
+          {%- for host in groups['ssh'] | difference(groups['unreachable_hosts_final']) -%}
+            {%- set ver = hostvars[host].ansible_facts['distribution'] | default('Unknown') -%}
+            {%- if ver not in summary -%}
+              {%- set _ = summary.update({ver: []}) -%}
+            {%- endif -%}
+            {%- set _ = summary[ver].append(host) -%}
+          {%- endfor -%}
+
+          REPORT: HOST DISTRIBUTION
+          =================================
+          {% for version in summary.keys() | sort %}
+          Version: {{ version }}
+          {% for host in summary[version] | sort %}
+          - {{ host }}
+          {% endfor %}
+
+          {% endfor %}
+          {%- set unreachable = groups['unreachable_hosts_final'] -%}
+          {%- if unreachable %}
+          UNREACHABLE HOSTS
+          =================
+          {% for host in unreachable | sort %}
+          - {{ host }}
+          {% endfor %}
+          {%- endif %}
+
+    - name: "Emit formatted report to console"
       ansible.builtin.debug:
-        msg: "{{ groups['unreachable_hosts_final'] }}"
+        msg: "{{ host_report.split('\n') }}"
