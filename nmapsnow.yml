@@ -65,6 +65,7 @@
           os_domain: "{{ os.stdout | default(omit) }}"
           host_name: "{{ hostname.stdout | default(omit) }}"
           cpu_count: "{{ cores.stdout | default(omit) }}"
+          short_description: "NMAP Discovered Name: {{ inventory_hostname }}"
       delegate_to: localhost
 
     - name: Clear errors so the next play can see these hosts
@@ -117,6 +118,7 @@
           os_domain: "{{ os.stdout | default(omit) }}"
           host_name: "{{ hostname.stdout | default(omit) }}"
           cpu_count: "{{ cores.stdout | default(omit) }}"
+          short_description: "NMAP Discovered Name: {{ inventory_hostname }}"
       delegate_to: localhost
 
     - name: Set Fact
@@ -189,6 +191,7 @@
           os_domain: "{{ os.stdout | default(omit) }}"
           host_name: "{{ hostname.stdout | default(omit) }}"
           cpu_count: "{{ cores.stdout | default(omit) }}"
+          short_description: "NMAP Discovered Name: {{ inventory_hostname }}"
       delegate_to: localhost
 
     - name: Set Fact
