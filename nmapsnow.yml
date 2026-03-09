@@ -8,55 +8,70 @@
     ansible_password: "{{ ansible_pass_1 }}"
 
   tasks:
-    - name: Block Handle issues
-      block:
-        - name: Quick SSH Discovery Test
-          ansible.builtin.command: >
-            timeout 15s sshpass -p '{{ ansible_password }}'
-            ssh -o ConnectTimeout=10 -o StrictHostKeyChecking=no
-            -o PreferredAuthentications=password -o PubkeyAuthentication=no
-            {{ ansible_user }}@{{ inventory_hostname }} "cat /etc/os-release"
-          delegate_to: localhost
-          register: ssh_output
-          no_log: true
+    - name: Quick SSH Discovery Test
+      ansible.builtin.command: >
+        timeout 15s sshpass -p '{{ ansible_password }}'
+        ssh -o ConnectTimeout=10 -o StrictHostKeyChecking=no
+        -o PreferredAuthentications=password -o PubkeyAuthentication=no
+        {{ ansible_user }}@{{ inventory_hostname }} "cat /etc/os-release"
+      delegate_to: localhost
+      register: ssh_output
+      no_log: true
 
-        - name: Set Fact
-          ansible.builtin.set_fact:
-            ssh_connection: true
-          when: ssh_output.rc == 0
+    - name: Set Fact
+      ansible.builtin.set_fact:
+        ssh_connection: true
+      when: ssh_output.rc == 0
 
-        - name: Create 'unreachable_hosts' group
-          ansible.builtin.add_host:
-            name: "{{ item }}"
-            groups: unreachable_hosts
-          loop: "{{ ansible_play_hosts_all }}"
-          when: hostvars[item]['ssh_connection'] | default(false) == false
+    - name: Create 'unreachable_hosts' group
+      ansible.builtin.add_host:
+        name: "{{ item }}"
+        groups: unreachable_hosts
+      loop: "{{ ansible_play_hosts_all }}"
+      when: hostvars[item]['ssh_connection'] | default(false) == false
 
-        - name: Run Setup to gather facts
-          ansible.builtin.setup:
-            gather_timeout: 60
-          timeout: 60
+    - name: Get Hostname
+      ansible.builtin.raw: cat /proc/sys/kernel/hostname
+      register: hostname
+      changed_when: hostname.rc > 0
+      timeout: 30
 
-        - name: Update SNOW CMDB
-          servicenow.itsm.configuration_item:
-            state: present
-            name: "{{ ansible_fqdn }}"
-            ip_address: "{{ ansible_default_ipv4.address | default(omit) }}"
-            sys_class_name: cmdb_ci_linux_server
-            other:
-              fqdn: "{{ ansible_fqdn | default(omit) }}"
-              os: "{{ ansible_distribution + ansible_distribution_major_version | default(omit) }}"
-              host_name: "{{ ansible_fqdn | default(omit) }}"
-              cpu_count: "{{ ansible_processor_vcpus }}"
-          delegate_to: localhost
+    - name: Get OS
+      ansible.builtin.raw: cat /etc/redhat-release
+      register: os
+      changed_when: os.rc > 0
+      timeout: 30
 
-      rescue:
+    - name: Get IP
+      ansible.builtin.raw: ip -4 -o addr show scope global | awk '{split($4,a,"/"); print a[1]}' | grep -v '[#]' | head -2 | tail -1
+      register: ip_address
+      changed_when: ip_address.rc > 0
+      timeout: 30
 
-        - name: Clear errors so the next play can see these hosts
-          ansible.builtin.meta: clear_host_errors
+    - name: Get cores
+      ansible.builtin.raw: cat /proc/cpuinfo 2>/dev/null | grep '^processor\s*.' | wc -l
+      register: cores
+      changed_when: cores.rc > 0
+      timeout: 30
 
-        - name: End play
-          ansible.builtin.meta: end_play
+    - name: Update SNOW CMDB
+      servicenow.itsm.configuration_item:
+        state: present
+        name: "{{ hostname.stdout }}"
+        ip_address: "{{ ip_address.stdout | default(omit) }}"
+        sys_class_name: cmdb_ci_linux_server
+        other:
+          fqdn: "{{ hostname.stdout | default(omit) }}"
+          os_domain: "{{ os.stdout | default(omit) }}"
+          host_name: "{{ hostname.stdout | default(omit) }}"
+          cpu_count: "{{ cores.stdout | default(omit) }}"
+      delegate_to: localhost
+
+    - name: Clear errors so the next play can see these hosts
+      ansible.builtin.meta: clear_host_errors
+
+    - name: End play
+      ansible.builtin.meta: end_play
 
 - name: Gather Facts using Credentials Set 2
   hosts: unreachable_hosts
@@ -67,40 +82,60 @@
     ansible_password: "{{ ansible_pass_2 }}"
 
   tasks:
-    - name: Block Handle issues
-      block:
-        - name: Run Setup to gather facts
-          ansible.builtin.setup:
-            gather_timeout: 60
-          timeout: 60
+    - name: Get Hostname
+      ansible.builtin.raw: cat /proc/sys/kernel/hostname
+      register: hostname
+      changed_when: hostname.rc > 0
+      timeout: 30
 
-        - name: Update SNOW CMDB
-          servicenow.itsm.configuration_item:
-            state: present
-            name: "{{ ansible_fqdn }}"
-            ip_address: "{{ ansible_default_ipv4.address | default(omit) }}"
-            sys_class_name: cmdb_ci_linux_server
-            other:
-              fqdn: "{{ ansible_fqdn | default(omit) }}"
-              os: "{{ ansible_distribution + ansible_distribution_major_version | default(omit) }}"
-              host_name: "{{ ansible_fqdn | default(omit) }}"
-              cpu_count: "{{ ansible_processor_vcpus }}"
-          delegate_to: localhost
+    - name: Get OS
+      ansible.builtin.raw: cat /etc/redhat-release
+      register: os
+      changed_when: os.rc > 0
+      timeout: 30
 
-      rescue:
-        - name: Create 'unreachable_hosts_2' group
-          ansible.builtin.add_host:
-            name: "{{ item }}"
-            groups: unreachable_hosts_2
-          loop: "{{ ansible_play_hosts_all | difference(ansible_play_batch) }}"
-          run_once: true
+    - name: Get IP
+      ansible.builtin.raw: ip -4 -o addr show scope global | awk '{split($4,a,"/"); print a[1]}' | grep -v '[#]' | head -2 | tail -1
+      register: ip_address
+      changed_when: ip_address.rc > 0
+      timeout: 30
 
-        - name: Clear errors so the next play can see these hosts
-          ansible.builtin.meta: clear_host_errors
+    - name: Get cores
+      ansible.builtin.raw: cat /proc/cpuinfo 2>/dev/null | grep '^processor\s*.' | wc -l
+      register: cores
+      changed_when: cores.rc > 0
+      timeout: 30
 
-        - name: End play
-          ansible.builtin.meta: end_play
+    - name: Update SNOW CMDB
+      servicenow.itsm.configuration_item:
+        state: present
+        name: "{{ hostname.stdout }}"
+        ip_address: "{{ ip_address.stdout | default(omit) }}"
+        sys_class_name: cmdb_ci_linux_server
+        other:
+          fqdn: "{{ hostname.stdout | default(omit) }}"
+          os_domain: "{{ os.stdout | default(omit) }}"
+          host_name: "{{ hostname.stdout | default(omit) }}"
+          cpu_count: "{{ cores.stdout | default(omit) }}"
+      delegate_to: localhost
 
+    - name: Set Fact
+      ansible.builtin.set_fact:
+        ssh_connection: true
+      when: hostname.rc == 0
+
+    - name: Create 'unreachable_host_2' group
+      ansible.builtin.add_host:
+        name: "{{ item }}"
+        groups: unreachable_hosts_2
+      loop: "{{ ansible_play_hosts_all }}"
+      when: hostvars[item]['ssh_connection'] | default(false) == false
+
+    - name: Clear errors so the next play can see these hosts
+      ansible.builtin.meta: clear_host_errors
+
+    - name: End play
+      ansible.builtin.meta: end_play
 
 - name: Gather Facts on remaining hosts using Windows Credentials
   hosts: unreachable_hosts_2
@@ -138,7 +173,7 @@
           ansible.builtin.add_host:
             name: "{{ item }}"
             groups: unreachable_hosts_final
-          loop: "{{ ansible_play_hosts_all | difference(ansible_play_batch) }}"
+          loop: "{{ ansible_play_hosts_all | difference(ansible_play_hosts) }}"
           run_once: true
 
         - name: Clear errors so the next play can see these hosts
@@ -155,24 +190,6 @@
     - name: "Consolidate Host version data into a report"
       ansible.builtin.set_fact:
         host_report: |
-          {%- set summary = {} -%}
-          {%- for host in groups['ssh'] | difference(groups['unreachable_hosts_final']) -%}
-            {%- set ver = hostvars[host].ansible_facts['distribution'] | default('Unknown') -%}
-            {%- if ver not in summary -%}
-              {%- set _ = summary.update({ver: []}) -%}
-            {%- endif -%}
-            {%- set _ = summary[ver].append(host) -%}
-          {%- endfor -%}
-
-          REPORT: HOST DISTRIBUTION
-          =================================
-          {% for version in summary.keys() | sort %}
-          Version: {{ version }}
-          {% for host in summary[version] | sort %}
-          - {{ host }}
-          {% endfor %}
-
-          {% endfor %}
           {%- set unreachable = groups['unreachable_hosts_final'] -%}
           {%- if unreachable %}
           UNREACHABLE HOSTS
