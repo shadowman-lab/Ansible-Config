@@ -151,31 +151,39 @@
       register: hostname
       changed_when: hostname.rc > 0
       timeout: 30
+      vars:
+        ansible_shell_type: powershell
 
     - name: Get OS
       ansible.builtin.raw: (Get-ItemProperty 'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion').ProductName
       register: os
       changed_when: os.rc > 0
       timeout: 30
+      vars:
+        ansible_shell_type: powershell
 
     - name: Get IP
       ansible.builtin.raw: Get-NetIPAddress -AddressFamily IPv4 | Where-Object {$_.InterfaceAlias -NotLike '*Loopback*'} | Select-Object -ExpandProperty IPAddress
       register: ip_address
       changed_when: ip_address.rc > 0
       timeout: 30
+      vars:
+        ansible_shell_type: powershell
 
     - name: Get cores
       ansible.builtin.raw: (Get-CimInstance Win32_ComputerSystem).NumberOfLogicalProcessors
       register: cores
       changed_when: cores.rc > 0
       timeout: 30
+      vars:
+        ansible_shell_type: powershell
 
     - name: Update SNOW CMDB
       servicenow.itsm.configuration_item:
         state: present
         name: "{{ hostname.stdout }}"
         ip_address: "{{ ip_address.stdout | default(omit) }}"
-        sys_class_name: cmdb_ci_linux_server
+        sys_class_name: cmdb_ci_win_server
         other:
           fqdn: "{{ hostname.stdout | default(omit) }}"
           os_domain: "{{ os.stdout | default(omit) }}"
