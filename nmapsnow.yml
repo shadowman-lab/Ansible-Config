@@ -146,41 +146,60 @@
     ansible_password: "{{ ansible_pass_3 }}"
 
   tasks:
-    - name: Block Handle issues
-      block:
-        - name: Run Setup to gather facts
-          ansible.builtin.setup:
-            gather_timeout: 60
-          timeout: 60
-          vars:
-            ansible_shell_type: powershell
+    - name: Get Hostname
+      ansible.builtin.raw: '[System.Net.Dns]::GetHostEntry($env:computername).HostName'
+      register: hostname
+      changed_when: hostname.rc > 0
+      timeout: 30
 
-        - name: Update SNOW CMDB
-          servicenow.itsm.configuration_item:
-            state: present
-            name: "{{ ansible_fqdn }}"
-            ip_address: "{{ ansible_interfaces[0].ipv4.address | default(omit) }}"
-            sys_class_name: cmdb_ci_win_server
-            other:
-              fqdn: "{{ ansible_fqdn | default(omit) }}"
-              os: "{{ ansible_distribution | default(omit) }}"
-              host_name: "{{ ansible_fqdn | default(omit) }}"
-              cpu_count: "{{ ansible_processor_vcpus }}"
-          delegate_to: localhost
+    - name: Get OS
+      ansible.builtin.raw: (Get-ItemProperty 'HKLM:\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion').ProductName
+      register: os
+      changed_when: os.rc > 0
+      timeout: 30
 
-      always:
-        - name: Get final list of unreachable hosts
-          ansible.builtin.add_host:
-            name: "{{ item }}"
-            groups: unreachable_hosts_final
-          loop: "{{ ansible_play_hosts_all | difference(ansible_play_hosts) }}"
-          run_once: true
+    - name: Get IP
+      ansible.builtin.raw: Get-NetIPAddress -AddressFamily IPv4 | Where-Object {$_.InterfaceAlias -NotLike '*Loopback*'} | Select-Object -ExpandProperty IPAddress
+      register: ip_address
+      changed_when: ip_address.rc > 0
+      timeout: 30
 
-        - name: Clear errors so the next play can see these hosts
-          ansible.builtin.meta: clear_host_errors
+    - name: Get cores
+      ansible.builtin.raw: (Get-CimInstance Win32_ComputerSystem).NumberOfLogicalProcessors
+      register: cores
+      changed_when: cores.rc > 0
+      timeout: 30
 
-        - name: End play
-          ansible.builtin.meta: end_play
+    - name: Update SNOW CMDB
+      servicenow.itsm.configuration_item:
+        state: present
+        name: "{{ hostname.stdout }}"
+        ip_address: "{{ ip_address.stdout | default(omit) }}"
+        sys_class_name: cmdb_ci_linux_server
+        other:
+          fqdn: "{{ hostname.stdout | default(omit) }}"
+          os_domain: "{{ os.stdout | default(omit) }}"
+          host_name: "{{ hostname.stdout | default(omit) }}"
+          cpu_count: "{{ cores.stdout | default(omit) }}"
+      delegate_to: localhost
+
+    - name: Set Fact
+      ansible.builtin.set_fact:
+        ssh_connection: true
+      when: hostname.rc == 0
+
+    - name: Create 'unreachable_hosts_final' group
+      ansible.builtin.add_host:
+        name: "{{ item }}"
+        groups: unreachable_hosts_final
+      loop: "{{ ansible_play_hosts_all }}"
+      when: hostvars[item]['ssh_connection'] | default(false) == false
+
+    - name: Clear errors so the next play can see these hosts
+      ansible.builtin.meta: clear_host_errors
+
+    - name: End play
+      ansible.builtin.meta: end_play
 
 - name: Show Hosts Report
   hosts: localhost
