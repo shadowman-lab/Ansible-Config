@@ -44,7 +44,7 @@
     state: closed
     number: "{{ new_incident.record.number }}"
     close_code: Solved (Permanently)
-    close_notes: "Firewall Rule was Removed"
+    close_notes: "Firewall Rule was Removed with Ansible Automation and EDA"
   delegate_to: localhost
 
 - name: Send notification message via Mattermost
