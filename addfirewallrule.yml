@@ -1,0 +1,7 @@
+---
+- name: Add Firewall Rule
+  hosts: "{{ vm_name | default('none')}}"
+  gather_facts: false
+
+  roles:
+    - shadowman_windows_firewall_add
