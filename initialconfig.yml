@@ -46,4 +46,4 @@
         - ansible_os_family is match("Windows")
         - shadowman_provision_hypervisor|default('RHV') != "Azure"
         - shadowman_provision_hypervisor|default('RHV') != "AWS"
-        # - shadowman_provision_hypervisor|default('RHV') != "OCPV"
+        - shadowman_provision_hypervisor|default('RHV') != "OCPV"
