@@ -24,6 +24,7 @@
     validate_certs: false # Set to true if using valid CA certs
   register: login
   delegate_to: localhost
+  no_log: true
   when: shadowman_provision_hypervisor|default('RHV') == "OCPV"
 
 - name: Create DNS A Record
@@ -45,4 +46,5 @@
     status_code: 200
     validate_certs: false
   delegate_to: localhost
+  no_log: true
   when: shadowman_provision_hypervisor|default('RHV') == "OCPV"
