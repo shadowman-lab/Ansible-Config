@@ -8,43 +8,15 @@
     state: domain
     reboot: true
 
-- name: Authenticate to IDM API
-  ansible.builtin.uri:
-    url: "https://{{ IPA_HOST }}/ipa/session/login_password"
-    method: POST
-    body_format: form-urlencoded
-    headers:
-      Referer: "https://{{ IPA_HOST }}/ipa"
-      Content-Type: "application/x-www-form-urlencoded"
-      Accept: "text/plain"
-    body:
-      user: "{{ IPA_USER }}"
-      password: "{{ IPA_PASS }}"
-    status_code: 200
-    validate_certs: false # Set to true if using valid CA certs
-  register: login
+- name: Ensure DNS record is created for Windows on OCPV
+  community.general.ipa_dnsrecord:
+    name: "{{ fqdn.split('.shadowman.dev')[0] }}"
+    state: present
+    zone_name: "shadowman.dev"
+    ipa_pass: "{{ IPA_PASS }}"
+    ipa_host: "{{ IPA_HOST }}"
+    ipa_user: "{{ IPA_USER }}"
+    record_type: "A"
+    record_value: "{{ ip_addr }}"
   delegate_to: localhost
-  no_log: true
-  when: shadowman_provision_hypervisor|default('RHV') == "OCPV"
-
-- name: Create DNS A Record
-  ansible.builtin.uri:
-    url: "https://{{ IPA_HOST }}/ipa/session/json"
-    method: POST
-    headers:
-      Referer: "https://{{ IPA_HOST }}/ipa"
-      Cookie: "{{ login.set_cookie }}"
-      Content-Type: "application/json"
-      Accept: "application/json"
-    body_format: json
-    body:
-      method: "dnsrecord_add"
-      params:
-        - ["shadowman.dev", "{{ fqdn.split('.shadowman.dev')[0] }}"]
-        - arecord: "{{ ip_addr }}"
-      id: 0
-    status_code: 200
-    validate_certs: false
-  delegate_to: localhost
-  no_log: true
   when: shadowman_provision_hypervisor|default('RHV') == "OCPV"
