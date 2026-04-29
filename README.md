@@ -2,11 +2,14 @@
 
 # Config Automation
 
+[![Contribute](https://img.shields.io/badge/OpenShift-Dev%20Spaces-525C86?logo=redhatopenshift&labelColor=EE0000)](https://devspaces.apps.ocp.shadowman.dev/#https://github.com/shadowman-lab/Ansible-Config)
+
+
 This directory contains Ansible automation for config management and operations.
 
 ## Overview
 
-The Config automation provides playbooks and roles for managing and configuring 
+The Config automation provides playbooks and roles for managing and configuring
 config infrastructure and services.
 
 ## Roles
