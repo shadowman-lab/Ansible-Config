@@ -12,10 +12,20 @@
 - name: Install Windows Updates
   ansible.windows.win_updates:
     category_names: "{{ categories | default('*') }}"
-    reboot: "{{ reboot_server | default('true') }}"
+    reboot: false
     accept_list: "{{ accept_packages | default(omit) }}"
     reject_list: "{{ reject_packages | default(omit) }}"
   register: patchresult
+
+- name: Reboot if required after patching
+  ansible.windows.win_reboot:
+    msg: "AAP triggered patch reboot"
+    pre_reboot_delay: 30
+    post_reboot_delay: 30
+    reboot_timeout: 900
+  when:
+    - patchresult.reboot_required | default(false) | bool
+    - reboot_server | default('true') | bool
 
 - name: Display Patching Results
   ansible.builtin.debug:
