@@ -2,14 +2,23 @@
 - name: Pull AAP Metrics
   community.postgresql.postgresql_query:
     db: awx
+    query: SELECT * FROM public.main_hostmetric ORDER BY last_automation DESC
+    login_user: "{{ db_user }}"
+    login_password: "{{ db_password }}"
+  register: aapmetricsmonth
+
+
+- name: Pull AAP Metrics for month
+  community.postgresql.postgresql_query:
+    db: awx
     query: SELECT * FROM public.main_hostmetric WHERE last_automation >= '{{ ansible_date_time.year }}-{{ ansible_date_time.month }}-01 00:00:00' AND last_automation <= '{{ ansible_date_time.year }}-{{ ansible_date_time.month }}-{{ ansible_date_time.day }} {{ ansible_date_time.time }}' ORDER BY last_automation DESC
     login_user: "{{ db_user }}"
     login_password: "{{ db_password }}"
-  register: aapmetrics
+  register: aapmetricsmonth
 
-- name: Host Automated
+- name: Host Automated Month
   ansible.builtin.debug:
-    msg: "{{ aapmetrics.rowcount }}"
+    msg: "{{ aapmetricsmonth.rowcount }}"
 
 - name: Display Host Automated Information
   ansible.builtin.debug:
