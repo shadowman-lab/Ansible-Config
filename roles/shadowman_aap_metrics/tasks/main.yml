@@ -1,6 +1,7 @@
 ---
 - name: Pull AAP Metrics
   community.postgresql.postgresql_query:
+    host: "{{ db_host }}"
     db: awx
     query: SELECT * FROM public.main_hostmetric ORDER BY last_automation DESC
     login_user: "{{ db_user }}"
@@ -10,6 +11,7 @@
 
 - name: Pull AAP Metrics for month
   community.postgresql.postgresql_query:
+    host: "{{ db_host }}"
     db: awx
     query: SELECT * FROM public.main_hostmetric WHERE last_automation >= '{{ ansible_date_time.year }}-{{ ansible_date_time.month }}-01 00:00:00' AND last_automation <= '{{ ansible_date_time.year }}-{{ ansible_date_time.month }}-{{ ansible_date_time.day }} {{ ansible_date_time.time }}' ORDER BY last_automation DESC
     login_user: "{{ db_user }}"
