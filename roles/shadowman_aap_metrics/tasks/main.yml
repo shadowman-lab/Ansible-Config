@@ -16,6 +16,16 @@
   ansible.builtin.debug:
     msg: "{{ aapmetrics.query_result }}"
 
+- name: Write CSV file
+  ansible.builtin.copy:
+    dest: /tmp/host_metrics.csv
+    content: |
+      hostname,first_automation,last_automation,last_deleted,automated_counter,deleted_counter,deleted,used_in_inventories,id
+      {% for item in aapmetrics.query_result %}
+      {{ item.hostname }},{{ item.first_automation }},{{ item.last_automation }},{{ item.last_deleted }},{{ item.automated_counter }},{{ item.deleted_counter }},{{ item.deleted }},{{ item.used_in_inventories }},{{ item.id }}
+      {% endfor %}
+  delegate_to: localhost
+
 - name: Pull AAP Metrics for month
   community.postgresql.postgresql_query:
     login_db: awx
