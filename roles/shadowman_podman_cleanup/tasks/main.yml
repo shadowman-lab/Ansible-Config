@@ -1,7 +1,7 @@
 ---
 - name: Get Job information to get current EE
   ansible.builtin.uri:
-    url: https://{{ lookup('env', 'CONTROLLER_HOST') }}/api/controller/v2/jobs/{{ awx_job_id }}
+    url: https://{{ lookup('env', 'CONTROLLER_HOST') }}/api/controller/v2/jobs/{{ tower_job_id }}
     user: "{{ lookup('env', 'CONTROLLER_USERNAME') }}"
     password: "{{ lookup('env', 'CONTROLLER_PASSWORD') }}"
     force_basic_auth: true
