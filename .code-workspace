@@ -5,7 +5,7 @@
         "ansible.ansible.useFullyQualifiedCollectionNames": true,
         "ansible.executionEnvironment.image": "aap.shadowman.dev/shadowmanee:latest",
         "ansible.executionEnvironment.enabled": true,
-        "ansible.python.interpreterPath": "/usr/bin/python3.11",
+        "ansible.python.interpreterPath": "/usr/bin/python3.12",
         "files.associations": {
             "*.yaml": "ansible",
 			"*.yml": "ansible"
