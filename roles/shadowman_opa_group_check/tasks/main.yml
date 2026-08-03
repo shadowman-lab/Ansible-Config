@@ -1,0 +1,20 @@
+---
+- name: Query Open Policy Agent (OPA) to check allowed groups for validation
+  ansible.builtin.uri:
+    url: "https://opa-default.apps.ocp.shadowman.dev/v1/data/groupcheck"
+    method: POST
+    body_format: json
+    body:
+      input:
+        groups: "{{ group_names }}"
+    status_code: 200
+    validate_certs: false
+    return_content: true
+  register: tags_result
+
+- name: Assert OPA allows groups validation to proceed
+  ansible.builtin.assert:
+    that:
+      - tags_result.json.result.allow == true
+    fail_msg: OPA groups compliance policy denied validation.
+    success_msg: "OPA groups compliance policy approved for {{ group_names }}."
