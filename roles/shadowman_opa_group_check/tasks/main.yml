@@ -11,6 +11,7 @@
     validate_certs: false
     return_content: true
   register: tags_result
+  check_mode: false
   delegate_to: localhost
 
 - name: Assert OPA allows groups validation to proceed
