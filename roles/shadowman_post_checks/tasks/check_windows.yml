@@ -1,8 +1,8 @@
 ---
 - name: Record running services after patch
-  ansible.windows.win_shell: >
-    powershell -NoProfile -Command
-    "Get-Service | Where-Object { $_.Status -eq 'Running' } | Select-Object -ExpandProperty Name"
+  ansible.windows.win_powershell:
+    script: |
+      Get-Service | Where-Object { $_.Status -eq 'Running' } | Select-Object -ExpandProperty Name
   register: post_patch_services
   check_mode: false
   changed_when: false

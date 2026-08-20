@@ -30,9 +30,9 @@
   check_mode: false
 
 - name: Record currently running services
-  ansible.windows.win_shell: >
-    powershell -NoProfile -Command
-    "Get-Service | Where-Object { $_.Status -eq 'Running' } | Select-Object -ExpandProperty Name"
+  ansible.windows.win_powershell:
+    script: |
+      Get-Service | Where-Object { $_.Status -eq 'Running' } | Select-Object -ExpandProperty Name
   register: pre_patch_services
   changed_when: false
   check_mode: false
