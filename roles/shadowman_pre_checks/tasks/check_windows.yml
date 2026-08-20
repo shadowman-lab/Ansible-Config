@@ -9,26 +9,6 @@
       }
   check_mode: false
 
-- name: Detect pending reboot before patching
-  ansible.windows.win_powershell:
-    script: |
-      $pending = $false
-      if (Test-Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired') {
-        $pending = $true
-      }
-      if (Test-Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Component Based Servicing\RebootPending') {
-        $pending = $true
-      }
-      $pfro = Get-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager' `
-        -Name PendingFileRenameOperations -ErrorAction SilentlyContinue
-      if ($null -ne $pfro.PendingFileRenameOperations) {
-        $pending = $true
-      }
-      $pending
-  register: pre_reboot_pending
-  changed_when: false
-  check_mode: false
-
 - name: Record currently running services
   ansible.windows.win_powershell:
     script: |
