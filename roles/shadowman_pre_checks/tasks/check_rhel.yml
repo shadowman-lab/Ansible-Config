@@ -13,3 +13,4 @@
   ansible.builtin.command: "systemctl list-units --type=service --state=running --no-legend"
   register: pre_patch_services
   changed_when: false
+  check_mode: false

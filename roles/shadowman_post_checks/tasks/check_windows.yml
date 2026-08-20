@@ -4,6 +4,7 @@
     powershell -NoProfile -Command
     "Get-Service | Where-Object { $_.Status -eq 'Running' } | Select-Object -ExpandProperty Name"
   register: post_patch_services
+  check_mode: false
   changed_when: false
 
 - name: Verify critical services recovered
