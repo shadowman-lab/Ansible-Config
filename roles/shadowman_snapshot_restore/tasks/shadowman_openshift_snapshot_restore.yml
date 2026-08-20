@@ -1,27 +1,10 @@
 ---
 - name: Stop OpenShift Virtualization VM
-  kubernetes.core.k8s:
-    state: present
-    definition:
-      apiVersion: kubevirt.io/v1
-      kind: VirtualMachine
-      metadata:
-        name: "{{ inventory_hostname }}"
-        namespace: "{{ vm_namespace }}"
-      spec:
-        running: false
-  delegate_to: localhost
-
-- name: Wait for VM to stop
-  kubernetes.core.k8s_info:
-    api_version: kubevirt.io/v1
-    kind: VirtualMachineInstance
+  redhat.openshift_virtualization.kubevirt_vm:
     name: "{{ inventory_hostname }}"
     namespace: "{{ vm_namespace }}"
-  register: shadowman_snapshot_restore_ocpv_vmi_info
-  until: shadowman_snapshot_restore_ocpv_vmi_info.resources | length == 0
-  retries: 30
-  delay: 10
+    state: stopped
+    wait: true
   delegate_to: localhost
 
 - name: Restore from Snapshot for OpenShift Virtualization VM
@@ -54,14 +37,9 @@
   delegate_to: localhost
 
 - name: Start OpenShift Virtualization VM
-  kubernetes.core.k8s:
-    state: present
-    definition:
-      apiVersion: kubevirt.io/v1
-      kind: VirtualMachine
-      metadata:
-        name: "{{ inventory_hostname }}"
-        namespace: "{{ vm_namespace }}"
-      spec:
-        running: true
+  redhat.openshift_virtualization.kubevirt_vm:
+    name: "{{ inventory_hostname }}"
+    namespace: "{{ vm_namespace }}"
+    state: started
+    wait: true
   delegate_to: localhost
