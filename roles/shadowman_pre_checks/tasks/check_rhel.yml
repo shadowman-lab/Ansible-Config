@@ -1,8 +1,8 @@
 ---
-- name: Check available disk space on `/`
+- name: Check available disk space on /
   ansible.builtin.assert:
     that:
-      - (ansible_facts['mounts'] | selectattr('mount', 'equalto', '/) | map(attribute='size_available') | first | default(0)) > (required_disk_space_mb * 1024 * 1024)
+      - (ansible_facts['mounts'] | selectattr('mount', 'equalto', '/') | map(attribute='size_available') | first | default(0)) > (required_disk_space_mb * 1024 * 1024)
     fail_msg: "Insufficient space on `/` for patching. Requires at least {{ required_disk_space_mb }} MB."
 
 - name: Capture the package versions before patching
