@@ -10,6 +10,6 @@
 - name: Verify critical services recovered
   ansible.builtin.assert:
     that:
-      - (pre_patch_services.stdout_lines | difference(post_patch_services.stdout_lines)) | length == 0
+      - (pre_patch_services.output | difference(post_patch_services.output)) | length == 0
     fail_msg: "One or more services that were running before patching did not recover."
-  when: pre_patch_services.stdout_lines | length > 0
+  when: pre_patch_services.output | length > 0
