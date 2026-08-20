@@ -1,9 +1,9 @@
 ---
-- name: Check available disk space on `/var`
+- name: Check available disk space on `/`
   ansible.builtin.assert:
     that:
-      - (ansible_facts['mounts'] | selectattr('mount', 'equalto', '/var') | map(attribute='size_available') | first | default(0)) > (required_disk_space_mb * 1024 * 1024)
-    fail_msg: "Insufficient space on `/var` for patching. Requires at least {{ required_disk_space_mb }} MB."
+      - (ansible_facts['mounts'] | selectattr('mount', 'equalto', '/) | map(attribute='size_available') | first | default(0)) > (required_disk_space_mb * 1024 * 1024)
+    fail_msg: "Insufficient space on `/` for patching. Requires at least {{ required_disk_space_mb }} MB."
 
 - name: Capture the package versions before patching
   ansible.builtin.package_facts:
