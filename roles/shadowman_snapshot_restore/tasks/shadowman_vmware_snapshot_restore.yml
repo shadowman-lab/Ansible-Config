@@ -1,0 +1,31 @@
+---
+- name: Get VM info
+  vmware.vmware_rest.vcenter_vm_info:
+    filter_names:
+      - "{{ inventory_hostname }}"
+    vcenter_validate_certs: false
+  register: vm_info
+  delegate_to: localhost
+
+- name: Turn off VM
+  vmware.vmware_rest.vcenter_vm_power:
+    state: stop
+    vm: '{{ vm_info.value[0].vm }}'
+    vcenter_validate_certs: false
+  delegate_to: localhost
+
+- name: Revert to Snapshot for VMWare
+  vmware.vmware.vm_snapshot_revert:
+    datacenter: "Shadowman-DC"
+    name: "{{ inventory_hostname }}"
+    folder: "{{ path | regex_replace('^Datacenters/', '') }}"
+    snapshot_name: "{{ name_of_snapshot }}"
+    validate_certs: false
+  delegate_to: localhost
+
+- name: Turn on VM
+  vmware.vmware_rest.vcenter_vm_power:
+    state: start
+    vm: '{{ vm_info.value[0].vm }}'
+    vcenter_validate_certs: false
+  delegate_to: localhost

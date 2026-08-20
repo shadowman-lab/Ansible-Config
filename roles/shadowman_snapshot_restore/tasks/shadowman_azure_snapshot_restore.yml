@@ -1,0 +1,46 @@
+---
+- name: Get Azure VM info
+  azure.azcollection.azure_rm_virtualmachine_info:
+    resource_group: "{{ resource_group }}"
+    name: "{{ inventory_hostname }}"
+  register: shadowman_snapshot_restore_azure_vm_info
+  delegate_to: localhost
+
+- name: Deallocate Azure VM
+  azure.azcollection.azure_rm_virtualmachine:
+    resource_group: "{{ resource_group }}"
+    name: "{{ inventory_hostname }}"
+    allocated: false
+  delegate_to: localhost
+
+- name: Get Snapshot info
+  azure.azcollection.azure_rm_snapshot_info:
+    resource_group: "{{ resource_group }}"
+    name: "{{ name_of_snapshot }}"
+  register: shadowman_snapshot_restore_azure_snapshot_info
+  delegate_to: localhost
+
+- name: Create Managed Disk from Snapshot
+  azure.azcollection.azure_rm_manageddisk:
+    resource_group: "{{ resource_group }}"
+    name: "{{ inventory_hostname }}-osdisk-restored"
+    location: "{{ shadowman_snapshot_restore_azure_vm_info.vms[0].location }}"
+    create_option: copy
+    source_uri: "{{ shadowman_snapshot_restore_azure_snapshot_info.snapshots[0].id }}"
+  delegate_to: localhost
+
+- name: Swap OS Disk on Azure VM
+  azure.azcollection.azure_rm_virtualmachine:
+    resource_group: "{{ resource_group }}"
+    name: "{{ inventory_hostname }}"
+    os_disk:
+      name: "{{ inventory_hostname }}-osdisk-restored"
+      managed_disk_type: "{{ shadowman_snapshot_restore_azure_vm_info.vms[0].storage_profile.os_disk.managed_disk.storage_account_type | default('Standard_LRS') }}"
+  delegate_to: localhost
+
+- name: Start Azure VM
+  azure.azcollection.azure_rm_virtualmachine:
+    resource_group: "{{ resource_group }}"
+    name: "{{ inventory_hostname }}"
+    started: true
+  delegate_to: localhost

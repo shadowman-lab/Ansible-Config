@@ -1,0 +1,60 @@
+---
+- name: Find Snapshot for AWS EC2
+  amazon.aws.ec2_snapshot_info:
+    region: "{{ placement.region }}"
+    filters:
+      "tag:Name": "{{ name_of_snapshot }}"
+  register: shadowman_snapshot_restore_aws_snapshot_info
+  delegate_to: localhost
+
+- name: Get AWS EC2 instance info
+  amazon.aws.ec2_instance_info:
+    region: "{{ placement.region }}"
+    filters:
+      "tag:Name": "{{ inventory_hostname }}"
+  register: shadowman_snapshot_restore_aws_instance_info
+  delegate_to: localhost
+
+- name: Stop AWS EC2 instance
+  amazon.aws.ec2_instance:
+    region: "{{ placement.region }}"
+    instance_ids:
+      - "{{ shadowman_snapshot_restore_aws_instance_info.instances[0].instance_id }}"
+    state: stopped
+    wait: true
+  delegate_to: localhost
+
+- name: Create volume from snapshot
+  amazon.aws.ec2_vol:
+    region: "{{ placement.region }}"
+    snapshot: "{{ shadowman_snapshot_restore_aws_snapshot_info.snapshots[0].snapshot_id }}"
+    volume_type: "{{ shadowman_snapshot_restore_aws_instance_info.instances[0].block_device_mappings[0].ebs.volume_type | default('gp3') }}"
+    zone: "{{ shadowman_snapshot_restore_aws_instance_info.instances[0].placement.availability_zone }}"
+    tags:
+      Name: "{{ inventory_hostname }}-restored"
+  register: shadowman_snapshot_restore_aws_restored_vol
+  delegate_to: localhost
+
+- name: Detach current root volume
+  amazon.aws.ec2_vol:
+    region: "{{ placement.region }}"
+    id: "{{ shadowman_snapshot_restore_aws_instance_info.instances[0].block_device_mappings[0].ebs.volume_id }}"
+    instance: ""
+  delegate_to: localhost
+
+- name: Attach restored volume as root device
+  amazon.aws.ec2_vol:
+    region: "{{ placement.region }}"
+    id: "{{ shadowman_snapshot_restore_aws_restored_vol.volume_id }}"
+    instance: "{{ shadowman_snapshot_restore_aws_instance_info.instances[0].instance_id }}"
+    device_name: "{{ shadowman_snapshot_restore_aws_instance_info.instances[0].root_device_name }}"
+  delegate_to: localhost
+
+- name: Start AWS EC2 instance
+  amazon.aws.ec2_instance:
+    region: "{{ placement.region }}"
+    instance_ids:
+      - "{{ shadowman_snapshot_restore_aws_instance_info.instances[0].instance_id }}"
+    state: running
+    wait: true
+  delegate_to: localhost

@@ -1,0 +1,67 @@
+---
+- name: Stop OpenShift Virtualization VM
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: kubevirt.io/v1
+      kind: VirtualMachine
+      metadata:
+        name: "{{ inventory_hostname }}"
+        namespace: "{{ vm_namespace }}"
+      spec:
+        running: false
+  delegate_to: localhost
+
+- name: Wait for VM to stop
+  kubernetes.core.k8s_info:
+    api_version: kubevirt.io/v1
+    kind: VirtualMachineInstance
+    name: "{{ inventory_hostname }}"
+    namespace: "{{ vm_namespace }}"
+  register: shadowman_snapshot_restore_ocpv_vmi_info
+  until: shadowman_snapshot_restore_ocpv_vmi_info.resources | length == 0
+  retries: 30
+  delay: 10
+  delegate_to: localhost
+
+- name: Restore from Snapshot for OpenShift Virtualization VM
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: snapshot.kubevirt.io/v1beta1
+      kind: VirtualMachineRestore
+      metadata:
+        name: "{{ name_of_snapshot }}-restore"
+        namespace: "{{ vm_namespace }}"
+      spec:
+        target:
+          apiGroup: kubevirt.io
+          kind: VirtualMachine
+          name: "{{ inventory_hostname }}"
+        virtualMachineSnapshotName: "{{ name_of_snapshot }}"
+  delegate_to: localhost
+
+- name: Wait for Restore to complete
+  kubernetes.core.k8s_info:
+    api_version: snapshot.kubevirt.io/v1beta1
+    kind: VirtualMachineRestore
+    name: "{{ name_of_snapshot }}-restore"
+    namespace: "{{ vm_namespace }}"
+  register: shadowman_snapshot_restore_ocpv_restore_info
+  until: shadowman_snapshot_restore_ocpv_restore_info.resources[0].status.complete | default(false)
+  retries: 30
+  delay: 10
+  delegate_to: localhost
+
+- name: Start OpenShift Virtualization VM
+  kubernetes.core.k8s:
+    state: present
+    definition:
+      apiVersion: kubevirt.io/v1
+      kind: VirtualMachine
+      metadata:
+        name: "{{ inventory_hostname }}"
+        namespace: "{{ vm_namespace }}"
+      spec:
+        running: true
+  delegate_to: localhost

@@ -1,3 +1,3 @@
 ---
-description: "pre_patch"
-snap_name: "pre_patch_snapshot"
+name_of_snapshot: "{{ inventory_hostname }}-{{ now(fmt='%Y-%m-%d') }}"
+snapshot_description: "Pre-patch-snapshot"
