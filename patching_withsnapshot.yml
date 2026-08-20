@@ -21,3 +21,10 @@
         - name: Snapshot restore on failure
           ansible.builtin.include_role:
             name: shadowman_snapshot_restore
+
+    - name: Build the report
+      ansible.builtin.include_role:
+        name: shadowman.reports.build_report_patch
+        apply:
+          delegate_to: report.shadowman.dev
+          run_once: true
