@@ -1,0 +1,8 @@
+---
+- name: Check RHEL
+  ansible.builtin.include_tasks: check_rhel.yml
+  when: os is match("rhel.*") or os == "Red Hat BYOL Linux"
+
+- name: Check Windows
+  ansible.builtin.include_tasks: check_windows.yml
+  when: os is match("windows.*") or os is match("2016.*") or os == "Windows"

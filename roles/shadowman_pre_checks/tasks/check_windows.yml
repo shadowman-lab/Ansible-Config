@@ -1,0 +1,35 @@
+---
+- name: Check available disk space on system drive
+  ansible.windows.win_powershell:
+    script: |
+      $requiredMb = {{ required_disk_space_mb }}
+      $freeMb = [math]::Round((Get-PSDrive -Name C).Free / 1MB)
+      if ($freeMb -lt $requiredMb) {
+        throw "Insufficient space on C: drive. Available: ${freeMb} MB, required: ${requiredMb} MB."
+      }
+
+- name: Detect pending reboot before patching
+  ansible.windows.win_powershell:
+    script: |
+      $pending = $false
+      if (Test-Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired') {
+        $pending = $true
+      }
+      if (Test-Path 'HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Component Based Servicing\RebootPending') {
+        $pending = $true
+      }
+      $pfro = Get-ItemProperty 'HKLM:\SYSTEM\CurrentControlSet\Control\Session Manager' `
+        -Name PendingFileRenameOperations -ErrorAction SilentlyContinue
+      if ($null -ne $pfro.PendingFileRenameOperations) {
+        $pending = $true
+      }
+      $pending
+  register: pre_reboot_pending
+  changed_when: false
+
+- name: Record currently running services
+  ansible.windows.win_shell: >
+    powershell -NoProfile -Command
+    "Get-Service | Where-Object { $_.Status -eq 'Running' } | Select-Object -ExpandProperty Name"
+  register: pre_patch_services
+  changed_when: false

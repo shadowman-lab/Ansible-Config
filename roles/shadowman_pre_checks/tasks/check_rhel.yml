@@ -1,0 +1,15 @@
+---
+- name: Check available disk space on `/var`
+  ansible.builtin.assert:
+    that:
+      - (ansible_facts['mounts'] | selectattr('mount', 'equalto', '/var') | map(attribute='size_available') | first | default(0)) > (required_disk_space_mb * 1024 * 1024)
+    fail_msg: "Insufficient space on `/var` for patching. Requires at least {{ required_disk_space_mb }} MB."
+
+- name: Capture the package versions before patching
+  ansible.builtin.package_facts:
+    manager: auto
+
+- name: Record the currently running critical services
+  ansible.builtin.command: "systemctl list-units --type=service --state=running --no-legend"
+  register: pre_patch_services
+  changed_when: false

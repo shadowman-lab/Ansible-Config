@@ -1,0 +1,12 @@
+---
+- name: Record the running services after patching
+  ansible.builtin.command: "systemctl list-units --type=service --state=running --no-legend"
+  register: post_patch_services
+  changed_when: false
+
+- name: Verify that the critical services recovered
+  ansible.builtin.assert:
+    that:
+      - (pre_patch_services.stdout_lines | difference(post_patch_services.stdout_lines)) | length == 0
+    fail_msg: "One or more services that were running before patching did not recover."
+  when: pre_patch_services.stdout_lines | length > 0

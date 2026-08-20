@@ -5,9 +5,17 @@
   tasks:
     - name: Block for Patching
       block:
+        - name: Pre-check role
+          ansible.builtin.include_role:
+            name: shadowman_pre_checks
+
         - name: Patching role
           ansible.builtin.include_role:
             name: shadowman_patching
+
+        - name: Post-check role
+          ansible.builtin.include_role:
+            name: shadowman_post_checks
 
       rescue:
         - name: Snapshot restore on failure
