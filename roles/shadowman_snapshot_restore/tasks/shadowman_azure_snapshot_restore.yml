@@ -33,9 +33,8 @@
   azure.azcollection.azure_rm_virtualmachine:
     resource_group: "{{ resource_group }}"
     name: "{{ inventory_hostname }}"
-    os_disk:
-      name: "{{ inventory_hostname }}-osdisk-restored"
-      managed_disk_type: "{{ shadowman_snapshot_restore_azure_vm_info.vms[0].storage_profile.os_disk.managed_disk.storage_account_type | default('Standard_LRS') }}"
+    os_disk_name: "{{ inventory_hostname }}-osdisk-restored"
+    managed_disk_type: "{{ shadowman_snapshot_restore_azure_vm_info.vms[0].storage_profile.os_disk.managed_disk.storage_account_type | default('Standard_LRS') }}"
   delegate_to: localhost
 
 - name: Start Azure VM
