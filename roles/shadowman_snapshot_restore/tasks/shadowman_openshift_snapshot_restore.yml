@@ -35,6 +35,7 @@
   retries: 30
   delay: 10
   delegate_to: localhost
+  when: not ansible_check_mode
 
 - name: Start OpenShift Virtualization VM
   redhat.openshift_virtualization.kubevirt_vm:
