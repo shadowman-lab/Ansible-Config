@@ -1,0 +1,9 @@
+---
+- name: Restore Snapshot
+  hosts: all
+
+  tasks:
+
+    - name: Snapshot restore
+      ansible.builtin.include_role:
+        name: shadowman_snapshot_restore
