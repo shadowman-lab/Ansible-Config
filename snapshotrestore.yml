@@ -1,6 +1,7 @@
 ---
 - name: Restore Snapshot
   hosts: all
+  gather_facts: false
 
   tasks:
 
