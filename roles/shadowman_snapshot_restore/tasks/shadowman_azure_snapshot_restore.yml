@@ -26,7 +26,7 @@
     name: "{{ inventory_hostname }}-osdisk-restored"
     location: "{{ shadowman_snapshot_restore_azure_vm_info.vms[0].location }}"
     create_option: copy
-    source_uri: "{{ shadowman_snapshot_restore_azure_snapshot_info.snapshots[0].id }}"
+    source_uri: "{{ shadowman_snapshot_restore_azure_snapshot_info.state[0].id }}"
   delegate_to: localhost
 
 - name: Swap OS Disk on Azure VM

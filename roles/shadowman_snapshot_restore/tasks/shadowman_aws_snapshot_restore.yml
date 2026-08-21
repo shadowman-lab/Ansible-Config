@@ -49,6 +49,7 @@
     instance: "{{ shadowman_snapshot_restore_aws_instance_info.instances[0].instance_id }}"
     device_name: "{{ shadowman_snapshot_restore_aws_instance_info.instances[0].root_device_name }}"
   delegate_to: localhost
+  when: not ansible_check_mode
 
 - name: Start AWS EC2 instance
   amazon.aws.ec2_instance:
