@@ -9,5 +9,5 @@
   ansible.builtin.assert:
     that:
       - (pre_patch_services.stdout_lines | difference(post_patch_services.stdout_lines)) | length == 0
-    fail_msg: "One or more services that were running before patching did not recover."
+    fail_msg: "One or more services that were running before patching did not recover. The services that did not recover are: {{ pre_patch_services.output | difference(post_patch_services.output) }}"
   when: pre_patch_services.stdout_lines | length > 0
