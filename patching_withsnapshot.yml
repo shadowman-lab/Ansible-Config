@@ -1,6 +1,7 @@
 ---
 - name: Patch Servers
   hosts: all
+  serial: "{{ patching_serial | default('100%') }}"
 
   tasks:
     - name: Block for Patching
