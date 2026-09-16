@@ -15,7 +15,7 @@
         value: "false"
       - name: "host_registration_remote_execution"
         parameter_type: "boolean"
-        value: "false"
+        value: "true"
       - name: "host_registration_remote_execution_pull"
         parameter_type: "boolean"
         value: "false"
