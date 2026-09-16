@@ -1,0 +1,29 @@
+---
+argument_specs:
+  main:
+    version_added: 2.1.0
+    short_description: Perform Windows disk cleanup maintenance.
+    description:
+      - Reclaim disk space on Windows hosts by removing superseded Windows Update
+        component files and optionally clearing Windows event logs.
+    options:
+      windows_manage_disk_cleanup_windows_update_files:
+        type: bool
+        default: false
+        description:
+          - Remove older (superseded) versions of Windows Update component files
+            using DISM component cleanup (C(/StartComponentCleanup)).
+      windows_manage_disk_cleanup_windows_update_reset:
+        type: bool
+        default: false
+        description:
+          - When C(windows_manage_disk_cleanup_windows_update_files) is enabled,
+            also remove the files required to uninstall previously installed
+            updates (DISM C(/ResetBase)).
+          - "B(WARNING): This is irreversible; installed updates can no longer be
+            uninstalled afterwards."
+      windows_manage_disk_cleanup_event_logs:
+        type: bool
+        default: false
+        description:
+          - Clear all Windows event log channels.

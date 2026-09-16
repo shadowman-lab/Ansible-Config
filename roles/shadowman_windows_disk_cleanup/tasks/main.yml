@@ -1,0 +1,31 @@
+---
+- name: Clean superseded Windows Update component files
+  vars:
+    windows_manage_disk_cleanup__reset_base: "{{ '/ResetBase' if windows_manage_disk_cleanup_windows_update_reset | bool else '' }}"
+  ansible.windows.win_command: >-
+    Dism.exe /Online /Quiet /Cleanup-Image /StartComponentCleanup
+    {{ windows_manage_disk_cleanup__reset_base }}
+  # DISM component cleanup is a maintenance action with no queryable "already
+  # clean" state, so the task is always reported as changed when it runs.
+  changed_when: true
+  when: windows_manage_disk_cleanup_windows_update_files | bool
+
+- name: Clear Windows event logs
+  # No native Ansible module can enumerate and clear every Windows event log
+  # channel, so win_powershell is used here (confirmed native-module gap).
+  ansible.windows.win_powershell:
+    error_action: stop
+    script: |
+      $Ansible.Changed = $false
+      $session = New-Object System.Diagnostics.Eventing.Reader.EventLogSession
+      foreach ($log in $session.GetLogNames()) {
+        try {
+          if (-not $Ansible.CheckMode) {
+            $session.ClearLog($log)
+          }
+          $Ansible.Changed = $true
+        } catch {
+          # Analytical/debug or read-only channels cannot be cleared; skip them.
+        }
+      }
+  when: windows_manage_disk_cleanup_event_logs | bool

@@ -1,0 +1,10 @@
+---
+# Remove older (superseded) versions of Windows Update component files via DISM.
+windows_manage_disk_cleanup_windows_update_files: false
+
+# When removing Windows Update files, also remove the files needed to
+# uninstall previously installed updates (DISM /ResetBase). Irreversible.
+windows_manage_disk_cleanup_windows_update_reset: false
+
+# Clear all Windows event log channels.
+windows_manage_disk_cleanup_event_logs: false

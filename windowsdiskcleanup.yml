@@ -1,0 +1,6 @@
+---
+- name: Windows Disk Clean
+  hosts: all
+
+  roles:
+    - shadowman_windows_disk_cleanup
