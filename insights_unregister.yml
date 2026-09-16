@@ -1,0 +1,7 @@
+---
+- name: Unregister Insights Client
+  hosts: all
+  gather_facts: false
+
+  roles:
+    - shadowman_unregister_insights

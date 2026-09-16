@@ -1,0 +1,4 @@
+---
+- name: Unregister Insights Client
+  redhat.insights.insights_register:
+    state: absent
