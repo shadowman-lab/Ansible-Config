@@ -1,6 +1,6 @@
 ---
 acceptlist: ''
 rejectlist: ''
-categories: '*'
+windows_categories: '*'
 exclude_packages: "{{ exclude.split(',') }}"
 exclude: ''
