@@ -16,6 +16,12 @@
     parameters:
       - name: "host_registration_insights"
         value: "true"
+      - name: "host_registration_remote_execution"
+        value: "true"
+      - name: "host_registration_remote_execution_pull"
+        value: "false"
+      - name: "host_update_packages"
+        value: "false"
   when: shadowman_provision_hypervisor|default('RHV') == "VMWare"
 
 - name: Register Insights Client
