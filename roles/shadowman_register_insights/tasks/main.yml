@@ -7,6 +7,17 @@
       - insights-client
     state: present
 
+- name: Ensure Satellite Parameter is set to allow Insights
+  redhat.satellite.host:
+    name: "{{ inventory_hostname }}"
+    username: "{{ username }}"
+    password: "{{ password }}"
+    server_url: "{{ server_url }}"
+    parameters:
+      - name: "host_registration_insights"
+        value: "true"
+  when: shadowman_provision_hypervisor|default('RHV') == "VMWare"
+
 - name: Register Insights Client
   redhat.insights.insights_register:
     state: present

@@ -2,3 +2,14 @@
 - name: Unregister Insights Client
   redhat.insights.insights_register:
     state: absent
+
+- name: Ensure Satellite Parameter is set to not allow Insights
+  redhat.satellite.host:
+    name: "{{ inventory_hostname }}"
+    username: "{{ username }}"
+    password: "{{ password }}"
+    server_url: "{{ server_url }}"
+    parameters:
+      - name: "host_registration_insights"
+        value: "false"
+  when: shadowman_provision_hypervisor|default('RHV') == "VMWare"
