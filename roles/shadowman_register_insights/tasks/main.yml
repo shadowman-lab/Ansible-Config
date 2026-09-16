@@ -15,12 +15,16 @@
     server_url: "{{ server_url }}"
     parameters:
       - name: "host_registration_insights"
+        parameter_type: "boolean"
         value: "true"
       - name: "host_registration_remote_execution"
+        parameter_type: "boolean"
         value: "true"
       - name: "host_registration_remote_execution_pull"
+        parameter_type: "boolean"
         value: "false"
       - name: "host_update_packages"
+        parameter_type: "boolean"
         value: "false"
   when: shadowman_provision_hypervisor|default('RHV') == "VMWare"
 
