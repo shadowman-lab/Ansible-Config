@@ -1,17 +1,18 @@
 ---
 - name: Get VM info
-  vmware.vmware_rest.vcenter_vm_info:
-    filter_names:
-      - "{{ inventory_hostname }}"
-    vcenter_validate_certs: false
+  vmware.vmware.guest_info:
+    name: "{{ inventory_hostname }}"
+    datacenter: "Shadowman-DC"
+    validate_certs: false
   register: vm_info
   delegate_to: localhost
 
 - name: Turn off VM
-  vmware.vmware_rest.vcenter_vm_power:
-    state: stop
-    vm: '{{ vm_info.value[0].vm }}'
-    vcenter_validate_certs: false
+  vmware.vmware.vm_powerstate:
+    moid: "{{ vm_info.guests[0].moid }}"
+    datacenter: "Shadowman-DC"
+    state: powered-off
+    validate_certs: false
   delegate_to: localhost
 
 - name: Revert to Snapshot for VMWare
@@ -24,8 +25,9 @@
   delegate_to: localhost
 
 - name: Turn on VM
-  vmware.vmware_rest.vcenter_vm_power:
-    state: start
-    vm: '{{ vm_info.value[0].vm }}'
-    vcenter_validate_certs: false
+  vmware.vmware.vm_powerstate:
+    moid: "{{ vm_info.guests[0].moid }}"
+    datacenter: "Shadowman-DC"
+    state: powered-on
+    validate_certs: false
   delegate_to: localhost
