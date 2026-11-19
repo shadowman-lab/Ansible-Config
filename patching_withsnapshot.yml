@@ -25,6 +25,7 @@
 
 - name: Report on Patching
   hosts: all
+  gather_facts: false
 
   tasks:
 
