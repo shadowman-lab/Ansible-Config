@@ -23,6 +23,11 @@
           ansible.builtin.include_role:
             name: shadowman_snapshot_restore
 
+- name: Report on Patching
+  hosts: all
+
+  tasks:
+
     - name: Build the report
       ansible.builtin.include_role:
         name: shadowman.reports.build_report_patch
