@@ -37,7 +37,7 @@
 #       run_once: true
 
 - name: Delete a snapshot
-  community.vmware.vmware_guest_snapshot:
+  vmware.vmware.vm_snapshot:
     datacenter: "Shadowman-DC"
     folder: "Lab virtual machine"
     name: "{{ inventory_hostname }}"

@@ -1,10 +1,10 @@
 ---
 - name: Get VMWare tag info
-  community.vmware.vmware_vm_info:
+  vmware.vmware.vm_info:
     validate_certs: false
-    show_tag: true
+    gather_tags: true
     folder: "/Shadowman-DC/vm/Lab virtual machine"
-    vm_type: "vm"
+    folder_paths_are_absolute: true
   register: vmware_info
 
 - name: Get Azure VM Info
